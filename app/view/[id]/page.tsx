@@ -64,8 +64,8 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   };
 
   const copyToClipboard = () => {
-    if (data?.content) {
-      navigator.clipboard.writeText(data.content);
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -235,23 +235,48 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Footer */}
-            <div className="flex flex-wrap gap-4 justify-between items-center pt-6 border-t border-white/10">
-              <div className="text-sm text-gray-400">
-                <p>Oluşturulma: {data && format(new Date(data.createdAt), 'dd MMM yyyy HH:mm', { locale: tr })}</p>
-                {data?.expiresAt && (
-                  <p>Son Kullanma: {format(new Date(data.expiresAt), 'dd MMM yyyy HH:mm', { locale: tr })}</p>
-                )}
+            <div className="flex flex-col gap-4 pt-6 border-t border-white/10">
+              {/* QR URL Section */}
+              <div className="p-4 rounded-xl glow-border bg-white/5 border-white/10">
+                <p className="text-gray-400 text-sm mb-2">QR Kod URL</p>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={typeof window !== 'undefined' ? window.location.href : ''}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-blue-400 font-mono text-sm break-all hover:text-blue-300 transition-colors"
+                  >
+                    {typeof window !== 'undefined' ? window.location.href : ''}
+                  </a>
+                  <button
+                    onClick={copyToClipboard}
+                    className="flex items-center gap-1 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm transition-colors glow-border"
+                  >
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied ? 'Kopyalandı' : 'Kopyala'}
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all duration-200 glow-border text-sm"
-                >
-                  <Plus className="w-4 h-4" />
-                  Kendi QR Oluştur
-                </Link>
-                <div className="text-blue-500 font-mono text-sm">
-                  LuxQr
+
+              {/* Info and Actions */}
+              <div className="flex flex-wrap gap-4 justify-between items-center">
+                <div className="text-sm text-gray-400">
+                  <p>Oluşturulma: {data && format(new Date(data.createdAt), 'dd MMM yyyy HH:mm', { locale: tr })}</p>
+                  {data?.expiresAt && (
+                    <p>Son Kullanma: {format(new Date(data.expiresAt), 'dd MMM yyyy HH:mm', { locale: tr })}</p>
+                  )}
+                </div>
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all duration-200 glow-border text-sm"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Kendi QR Oluştur
+                  </Link>
+                  <div className="text-blue-500 font-mono text-sm">
+                    LuxQr
+                  </div>
                 </div>
               </div>
             </div>
