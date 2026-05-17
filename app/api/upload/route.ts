@@ -7,11 +7,10 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const contentType = formData.get('contentType') as string;
 
     if (!file) {
       return NextResponse.json(
-        { success: false, error: 'No file uploaded' },
+        { success: false, error: 'Dosya yüklenmedi' },
         { status: 400 }
       );
     }
@@ -24,8 +23,9 @@ export async function POST(request: NextRequest) {
 
     // Generate unique filename
     const timestamp = Date.now();
+    const randomStr = Math.random().toString(36).substring(2, 8);
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const fileName = `${timestamp}_${originalName}`;
+    const fileName = `${timestamp}_${randomStr}_${originalName}`;
     const filePath = join(uploadsDir, fileName);
 
     // Convert file to buffer and save
@@ -39,9 +39,9 @@ export async function POST(request: NextRequest) {
       filePath: `/uploads/${fileName}`,
     });
   } catch (error) {
-    console.error('Error uploading file:', error);
+    console.error('Dosya yükleme hatası:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to upload file' },
+      { success: false, error: 'Dosya yüklenirken hata oluştu' },
       { status: 500 }
     );
   }

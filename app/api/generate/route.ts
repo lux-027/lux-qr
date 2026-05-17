@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { addDays, addWeeks, addMonths } from 'date-fns';
+import { saveQrCode } from '@/lib/db';
+import { randomUUID } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,21 +19,25 @@ export async function POST(request: NextRequest) {
     }
     // 'unlimited' means expiresAt stays null
 
+    // Generate unique ID
+    const id = randomUUID();
+
     // Create QR code record
-    const qrCode = await prisma.qrCode.create({
-      data: {
-        content,
-        contentType,
-        fileName: fileName || null,
-        filePath: filePath || null,
-        expiresAt,
-      },
-    });
+    const qrCode = {
+      id,
+      content: content || '',
+      contentType: contentType as 'text' | 'image' | 'video' | 'file',
+      fileName: fileName || null,
+      filePath: filePath || null,
+      expiresAt: expiresAt ? expiresAt.toISOString() : null,
+      createdAt: new Date().toISOString(),
+    };
+
+    await saveQrCode(qrCode);
 
     return NextResponse.json({ 
       success: true, 
-      id: qrCode.id,
-      url: `/view/${qrCode.id}`
+      id
     });
   } catch (error) {
     console.error('Error generating QR code:', error);

@@ -9,10 +9,14 @@ import {
   Image as ImageIcon, 
   Video, 
   Type,
-  Clock
+  Clock,
+  Copy,
+  Check,
+  Plus
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
+import Link from 'next/link';
 
 type QrCodeData = {
   id: string;
@@ -29,6 +33,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [expired, setExpired] = useState(false);
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchQrCode();
@@ -41,6 +46,11 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
       if (result.success) {
         setData(result.data);
+        // Client-side expiration check for extra safety
+        if (result.data.expiresAt && new Date() > new Date(result.data.expiresAt)) {
+          setExpired(true);
+          setData(null);
+        }
       } else if (result.expired) {
         setExpired(true);
       } else {
@@ -50,6 +60,14 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       setError('Bir hata oluştu');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (data?.content) {
+      navigator.clipboard.writeText(data.content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -88,16 +106,26 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   if (expired) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8 max-w-md w-full text-center">
-          <Clock className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Süre Doldu</h2>
-          <p className="text-gray-400 mb-6">
-            Bu QR kodun süresi dolmuştur ve içeriğe erişim engellenmiştir.
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-3xl p-10 max-w-md w-full text-center border border-red-500/20"
+        >
+          <motion.div
+            initial={{ rotate: -10 }}
+            animate={{ rotate: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Clock className="w-20 h-20 text-red-500 mx-auto mb-6" />
+          </motion.div>
+          <h2 className="text-3xl font-bold text-white mb-3">Süre Doldu</h2>
+          <p className="text-gray-400 mb-8 text-lg leading-relaxed">
+            Bu QR kodun geçerlilik süresi dolmuştur. İçeriğe erişim güvenlik nedeniyle engellenmiştir.
           </p>
-          <div className="p-4 rounded-xl glow-border bg-white/5 border-white/10">
-            <p className="text-blue-500 font-mono text-sm">LuxQr</p>
+          <div className="p-5 rounded-2xl glow-border bg-gradient-to-r from-red-500/10 to-orange-500/10 border-red-500/30">
+            <p className="text-red-400 font-mono text-sm tracking-wider">LUXQR • EXPIRED</p>
           </div>
-        </div>
+        </motion.div>
       </main>
     );
   }
@@ -123,38 +151,47 @@ export default function ViewPage({ params }: { params: { id: string } }) {
     switch (data.contentType) {
       case 'text':
         return (
-          <div className="p-6 rounded-xl glow-border bg-white/5 border-white/10">
-            <p className="text-white whitespace-pre-wrap">{data.content}</p>
+          <div className="relative">
+            <div className="p-6 rounded-2xl glow-border bg-gradient-to-br from-white/5 to-white/0 border-white/10 backdrop-blur-sm">
+              <p className="text-white whitespace-pre-wrap text-lg leading-relaxed font-light">{data.content}</p>
+            </div>
+            <button
+              onClick={copyToClipboard}
+              className="mt-4 flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-200 glow-border mx-auto"
+            >
+              {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+              {copied ? 'Kopyalandı' : 'Kopyala'}
+            </button>
           </div>
         );
       case 'image':
         return (
-          <div className="rounded-xl overflow-hidden glow-border border-2 border-white/10">
+          <div className="rounded-2xl overflow-hidden glow-border border-2 border-white/10 backdrop-blur-sm">
             <img
               src={data.filePath || ''}
               alt={data.fileName || 'Image'}
-              className="w-full h-auto max-h-96 object-contain bg-black"
+              className="w-full h-auto max-h-[600px] object-contain bg-black"
             />
           </div>
         );
       case 'video':
         return (
-          <div className="rounded-xl overflow-hidden glow-border border-2 border-white/10">
+          <div className="rounded-2xl overflow-hidden glow-border border-2 border-white/10 backdrop-blur-sm">
             <video
               src={data.filePath || ''}
               controls
-              className="w-full h-auto max-h-96 bg-black"
+              className="w-full h-auto max-h-[600px] bg-black"
             />
           </div>
         );
       case 'file':
         return (
-          <div className="p-8 rounded-xl glow-border bg-white/5 border-white/10 text-center">
-            <FileText className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-            <p className="text-white font-medium mb-2">{data.fileName}</p>
+          <div className="p-10 rounded-2xl glow-border bg-gradient-to-br from-white/5 to-white/0 border-white/10 text-center backdrop-blur-sm">
+            <FileText className="w-20 h-20 text-blue-500 mx-auto mb-6" />
+            <p className="text-white font-medium mb-2 text-xl">{data.fileName}</p>
             <button
               onClick={downloadFile}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors mx-auto glow-border"
+              className="flex items-center gap-2 px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-200 glow-border mx-auto"
             >
               <Download className="w-5 h-5" />
               Dosyayı İndir
@@ -205,8 +242,17 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   <p>Son Kullanma: {format(new Date(data.expiresAt), 'dd MMM yyyy HH:mm', { locale: tr })}</p>
                 )}
               </div>
-              <div className="text-blue-500 font-mono text-sm">
-                LuxQr
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all duration-200 glow-border text-sm"
+                >
+                  <Plus className="w-4 h-4" />
+                  Kendi QR Oluştur
+                </Link>
+                <div className="text-blue-500 font-mono text-sm">
+                  LuxQr
+                </div>
               </div>
             </div>
           </div>

@@ -50,10 +50,9 @@ export default function Home() {
     setFile(selectedFile);
     setError('');
 
-    // Upload file
+    // Upload file immediately
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('contentType', contentType);
 
     try {
       const response = await fetch('/api/upload', {
@@ -77,18 +76,14 @@ export default function Home() {
     setError('');
 
     try {
-      let content = text;
-      let fileName = file?.name || null;
-      let filePath = uploadedFilePath || null;
-
-      if (contentType !== 'text' && !filePath) {
-        setError('Lütfen bir dosya seçin');
+      if (contentType === 'text' && !text) {
+        setError('Lütfen bir metin girin');
         setLoading(false);
         return;
       }
 
-      if (contentType === 'text' && !text) {
-        setError('Lütfen bir metin girin');
+      if (contentType !== 'text' && !uploadedFilePath) {
+        setError('Lütfen bir dosya seçin ve yükleyin');
         setLoading(false);
         return;
       }
@@ -99,10 +94,10 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content,
+          content: contentType === 'text' ? text : '',
           contentType,
-          fileName,
-          filePath,
+          fileName: file?.name || null,
+          filePath: uploadedFilePath || null,
           expiration,
         }),
       });
@@ -112,7 +107,7 @@ export default function Home() {
         setQrCodeId(data.id);
         setQrCodeUrl(`${window.location.origin}/view/${data.id}`);
       } else {
-        setError('QR kod oluşturulurken hata oluştu');
+        setError(data.error || 'QR kod oluşturulurken hata oluştu');
       }
     } catch (err) {
       setError('QR kod oluşturulurken hata oluştu');
