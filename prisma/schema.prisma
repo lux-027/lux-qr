@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model QrCode {
@@ -15,6 +15,6 @@ model QrCode {
   filePath    String?
   expiresAt   DateTime?
   createdAt   DateTime @default(now())
-  
+
   @@index([id])
 }

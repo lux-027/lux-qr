@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getQrCodeById } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const qrCode = await getQrCodeById(params.id);
+    const qrCode = await prisma.qrCode.findUnique({
+      where: { id: params.id },
+    });
 
     if (!qrCode) {
       return NextResponse.json(
@@ -16,7 +18,7 @@ export async function GET(
     }
 
     // Check if expired
-    if (qrCode.expiresAt && new Date() > new Date(qrCode.expiresAt)) {
+    if (qrCode.expiresAt && new Date() > qrCode.expiresAt) {
       return NextResponse.json({
         success: false,
         expired: true,
