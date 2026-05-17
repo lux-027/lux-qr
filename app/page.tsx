@@ -105,9 +105,8 @@ export default function Home() {
       const data = await response.json();
       if (data.success) {
         setQrCodeId(data.id);
-        // Use environment variable for site URL, fallback to current origin
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-        setQrCodeUrl(`${baseUrl}/view/${data.id}`);
+        const qrLink = 'https://lux-qr-delta.vercel.app/view/' + data.id;
+        setQrCodeUrl(qrLink);
       } else {
         setError(data.error || 'QR kod oluşturulurken hata oluştu');
       }
