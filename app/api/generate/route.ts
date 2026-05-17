@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addDays, addWeeks, addMonths } from 'date-fns';
-import { prisma } from '@/lib/prisma';
+import { saveQrCode, QrCodeData } from '@/lib/db';
+import { v4 as uuidv4 } from 'uuid';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,15 +22,18 @@ export async function POST(request: NextRequest) {
     // 'unlimited' means expiresAt stays null
 
     // Create QR code record
-    const qrCode = await prisma.qrCode.create({
-      data: {
-        content: content || '',
-        contentType,
-        fileName: fileName || null,
-        filePath: filePath || null,
-        expiresAt,
-      },
-    });
+    const qrCode: QrCodeData = {
+      id: uuidv4(),
+      content: content || '',
+      contentType,
+      fileName: fileName || null,
+      filePath: filePath || null,
+      expiresAt: expiresAt ? expiresAt.toISOString() : null,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Save to Vercel KV
+    await saveQrCode(qrCode);
 
     return NextResponse.json({ 
       success: true, 
@@ -35,6 +41,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error generating QR code:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return NextResponse.json(
       { success: false, error: 'Failed to generate QR code' },
       { status: 500 }

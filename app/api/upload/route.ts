@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -31,6 +33,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Dosya yükleme hatası:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return NextResponse.json(
       { success: false, error: 'Dosya yüklenirken hata oluştu' },
       { status: 500 }

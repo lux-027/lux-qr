@@ -21,8 +21,8 @@ Modern, premium QR code generation and management web application with expiratio
 - **QR Code Generation**: qrcode.react
 - **Date Handling**: date-fns
 - **Animations**: Framer Motion
-- **Database**: SQLite with Prisma ORM
-- **File Storage**: Local file system
+- **Database**: Vercel KV (Redis)
+- **File Storage**: Vercel Blob
 
 ## Getting Started
 
@@ -30,25 +30,48 @@ Modern, premium QR code generation and management web application with expiratio
 
 - Node.js 18+ installed
 - npm or yarn package manager
+- Vercel account (for deployment)
 
-### Installation
+### Local Development
 
 1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Set up the database:
+2. Set up environment variables:
 ```bash
-npx prisma migrate dev --name init
+cp .env.local.example .env.local
 ```
 
-3. Run the development server:
+3. For local development, you can use mock environment variables or set up Vercel KV/Blob locally
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### Vercel Deployment
+
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Set up Vercel KV:
+   - Go to Storage tab in Vercel dashboard
+   - Add Vercel KV integration
+   - Copy environment variables
+4. Set up Vercel Blob:
+   - Go to Storage tab in Vercel dashboard
+   - Add Vercel Blob integration
+   - Copy BLOB_READ_WRITE_TOKEN
+5. Add environment variables in Vercel project settings:
+   - `KV_URL`
+   - `KV_REST_API_URL`
+   - `KV_REST_API_TOKEN`
+   - `KV_REST_API_READ_ONLY_TOKEN`
+   - `BLOB_READ_WRITE_TOKEN`
+6. Deploy
 
 ## Project Structure
 
@@ -56,21 +79,18 @@ npm run dev
 LuxQr/
 ├── app/
 │   ├── api/
-│   │   ├── generate/      # QR code generation API
-│   │   ├── upload/        # File upload API
-│   │   └── qr/[id]/       # QR code retrieval API
+│   │   ├── generate/      # QR code generation API (Vercel KV)
+│   │   ├── upload/        # File upload API (Vercel Blob)
+│   │   └── qr/[id]/       # QR code retrieval API (Vercel KV)
 │   ├── view/[id]/         # QR code view page
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
 ├── lib/
-│   ├── prisma.ts          # Prisma client
+│   ├── db.ts              # Vercel KV database functions
 │   └── utils.ts           # Utility functions
-├── prisma/
-│   ├── schema.prisma      # Database schema
-│   └── dev.db             # SQLite database
 ├── public/
-│   └── uploads/           # Uploaded files storage
+│   └── uploads/           # Local uploads (dev only)
 └── components/             # Reusable components
 ```
 
@@ -116,16 +136,16 @@ Creates a new QR code with the provided content.
 ```
 
 ### POST /api/upload
-Uploads a file to the server.
+Uploads a file to Vercel Blob storage.
 
-**Request:** FormData with file and contentType
+**Request:** FormData with file
 
 **Response:**
 ```json
 {
   "success": true,
   "fileName": "string",
-  "filePath": "/uploads/{filename}"
+  "filePath": "https://blob-url"
 }
 ```
 
@@ -164,15 +184,17 @@ Retrieves QR code data by ID.
 
 ## Database Schema
 
-```prisma
-model QrCode {
-  id          String   @id @default(uuid())
-  content     String
-  contentType String   // text, image, video, file
-  fileName    String?
-  filePath    String?
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
+Data is stored in Vercel KV (Redis) with the following structure:
+
+```typescript
+interface QrCodeData {
+  id: string;
+  content: string;
+  contentType: 'text' | 'image' | 'video' | 'file';
+  fileName: string | null;
+  filePath: string | null;  // Vercel Blob URL
+  expiresAt: string | null;
+  createdAt: string;
 }
 ```
 
@@ -191,7 +213,7 @@ npm run lint
 
 ### Reset Database
 ```bash
-npx prisma migrate reset
+# Clear Vercel KV data via Vercel dashboard or CLI
 ```
 
 ## License

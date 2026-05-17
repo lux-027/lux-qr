@@ -1,6 +1,4 @@
-import { writeFile, readFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import { join } from 'path';
+import { kv } from '@vercel/kv';
 
 export interface QrCodeData {
   id: string;
@@ -12,53 +10,48 @@ export interface QrCodeData {
   createdAt: string;
 }
 
-const DB_PATH = join(process.cwd(), 'data', 'qr-codes.json');
-const DATA_DIR = join(process.cwd(), 'data');
-
-// Initialize database
-async function initDb() {
-  if (!existsSync(DATA_DIR)) {
-    await mkdir(DATA_DIR, { recursive: true });
-  }
-  
-  if (!existsSync(DB_PATH)) {
-    await writeFile(DB_PATH, JSON.stringify([], null, 2));
-  }
-}
-
-// Read all QR codes
-export async function getAllQrCodes(): Promise<QrCodeData[]> {
-  await initDb();
-  try {
-    const data = await readFile(DB_PATH, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-}
+const QR_PREFIX = 'qr:';
+const QR_LIST_KEY = 'qr:all';
 
 // Get QR code by ID
 export async function getQrCodeById(id: string): Promise<QrCodeData | null> {
-  const qrCodes = await getAllQrCodes();
-  return qrCodes.find(qr => qr.id === id) || null;
+  try {
+    const data = await kv.get<QrCodeData>(`${QR_PREFIX}${id}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching QR code from KV:', error);
+    return null;
+  }
 }
 
 // Save QR code
 export async function saveQrCode(qrCode: QrCodeData): Promise<void> {
-  await initDb();
-  const qrCodes = await getAllQrCodes();
-  qrCodes.push(qrCode);
-  await writeFile(DB_PATH, JSON.stringify(qrCodes, null, 2));
+  try {
+    // Save individual QR code
+    await kv.set(`${QR_PREFIX}${qrCode.id}`, qrCode);
+    
+    // Add to list of all QR codes
+    await kv.sadd(QR_LIST_KEY, qrCode.id);
+  } catch (error) {
+    console.error('Error saving QR code to KV:', error);
+    throw error;
+  }
 }
 
 // Delete expired QR codes (optional cleanup)
 export async function deleteExpiredQrCodes(): Promise<void> {
-  await initDb();
-  const qrCodes = await getAllQrCodes();
-  const now = new Date();
-  const validQrCodes = qrCodes.filter(qr => {
-    if (!qr.expiresAt) return true;
-    return new Date(qr.expiresAt) > now;
-  });
-  await writeFile(DB_PATH, JSON.stringify(validQrCodes, null, 2));
+  try {
+    const qrIds = await kv.smembers(QR_LIST_KEY);
+    const now = new Date();
+    
+    for (const id of qrIds) {
+      const qrCode = await getQrCodeById(id);
+      if (qrCode && qrCode.expiresAt && new Date(qrCode.expiresAt) < now) {
+        await kv.del(`${QR_PREFIX}${id}`);
+        await kv.srem(QR_LIST_KEY, id);
+      }
+    }
+  } catch (error) {
+    console.error('Error deleting expired QR codes:', error);
+  }
 }

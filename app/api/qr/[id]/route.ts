@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getQrCodeById } from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const qrCode = await prisma.qrCode.findUnique({
-      where: { id: params.id },
-    });
+    const qrCode = await getQrCodeById(params.id);
 
     if (!qrCode) {
       return NextResponse.json(
@@ -18,7 +18,7 @@ export async function GET(
     }
 
     // Check if expired
-    if (qrCode.expiresAt && new Date() > qrCode.expiresAt) {
+    if (qrCode.expiresAt && new Date() > new Date(qrCode.expiresAt)) {
       return NextResponse.json({
         success: false,
         expired: true,
@@ -32,6 +32,7 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error fetching QR code:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return NextResponse.json(
       { success: false, error: 'Failed to fetch QR code' },
       { status: 500 }
