@@ -105,10 +105,8 @@ export default function Home() {
       const data = await response.json();
       if (data.success) {
         setQrCodeId(data.id);
-        // Use production domain if on Vercel preview, otherwise use current origin
-        const baseUrl = window.location.origin.includes('vercel.app') 
-          ? 'https://lux-qr.vercel.app' // Replace with your production domain
-          : window.location.origin;
+        // Use environment variable for site URL, fallback to current origin
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
         setQrCodeUrl(`${baseUrl}/view/${data.id}`);
       } else {
         setError(data.error || 'QR kod oluşturulurken hata oluştu');
