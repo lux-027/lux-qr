@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
@@ -11,22 +11,29 @@ import {
   Clock, 
   Download,
   CheckCircle,
-  Upload
+  Upload,
+  QrCode,
+  Zap,
+  Shield,
+  Sparkles,
+  UploadCloud,
+  Share2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type ContentType = 'text' | 'image' | 'video' | 'file';
-type ExpirationType = '1day' | '1week' | '1month' | 'unlimited';
+type ExpirationType = '1day' | '1week' | '1month' | '3months';
 
 export default function Home() {
   const [contentType, setContentType] = useState<ContentType>('text');
-  const [expiration, setExpiration] = useState<ExpirationType>('1day');
+  const [expiration, setExpiration] = useState<ExpirationType>('1week');
   const [text, setText] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [uploadedFilePath, setUploadedFilePath] = useState('');
   const [qrCodeId, setQrCodeId] = useState('');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   const contentTypes = [
@@ -40,15 +47,23 @@ export default function Home() {
     { id: '1day' as ExpirationType, label: '1 Gün' },
     { id: '1week' as ExpirationType, label: '1 Hafta' },
     { id: '1month' as ExpirationType, label: '1 Ay' },
-    { id: 'unlimited' as ExpirationType, label: 'Süresiz' },
+    { id: '3months' as ExpirationType, label: '3 Ay' },
   ];
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
+    // File size validation (100MB limit)
+    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError('Dosya boyutu çok büyük (Max 100MB)');
+      return;
+    }
+
     setFile(selectedFile);
     setError('');
+    setUploading(true);
 
     // Upload file immediately
     const formData = new FormData();
@@ -64,11 +79,20 @@ export default function Home() {
       if (data.success) {
         setUploadedFilePath(data.filePath);
       } else {
-        setError('Dosya yüklenirken hata oluştu');
+        setError(data.error || 'Dosya yüklenirken hata oluştu');
       }
     } catch (err) {
-      setError('Dosya yüklenirken hata oluştu');
+      setError('Sunucu bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.');
+    } finally {
+      setUploading(false);
     }
+  };
+
+  const isButtonDisabled = () => {
+    if (loading || uploading) return true;
+    if (contentType === 'text' && !text.trim()) return true;
+    if (contentType !== 'text' && !uploadedFilePath) return true;
+    return false;
   };
 
   const generateQRCode = async () => {
@@ -141,17 +165,42 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-3 text-white">
-            LuxQr
-          </h1>
-          <p className="text-lg text-gray-400">
-            Modern QR Kod Oluşturma
-          </p>
-        </div>
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+    >
+      <div className="flex">
+        {/* Left Ad Placeholder - 160x600 */}
+        {/* <div className="hidden lg:block w-[160px] flex-shrink-0 p-4">
+          <div className="w-full h-[600px] border border-white/10 rounded-xl bg-white/5 flex items-center justify-center">
+            <p className="text-gray-500 text-xs text-center px-2">Reklam Alanı<br/>160x600</p>
+          </div>
+        </div> */}
+
+        <div className="flex-1">
+          <div className="container mx-auto px-4 py-12">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <div className="relative inline-block">
+                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+                <h1 className="relative text-5xl md:text-6xl font-bold text-white mb-3">
+                  LuxQr
+                </h1>
+              </div>
+              <p className="text-2xl md:text-3xl font-bold text-gray-300">
+                Modern{' '}
+                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                  QR Kod Oluşturma
+                </span>
+              </p>
+            </motion.div>
 
         <div className="max-w-3xl mx-auto">
           {!qrCodeId ? (
@@ -170,6 +219,7 @@ export default function Home() {
                         setFile(null);
                         setUploadedFilePath('');
                         setText('');
+                        setError('');
                       }}
                       className={cn(
                         'p-4 rounded-xl border transition-all duration-200 flex flex-col items-center gap-2',
@@ -210,23 +260,50 @@ export default function Home() {
                     <input
                       type="file"
                       onChange={handleFileChange}
-                      accept={contentType === 'image' ? 'image/*' : contentType === 'video' ? 'video/*' : '*/*'}
+                      accept={
+                        contentType === 'image' 
+                          ? 'image/png,image/jpeg,image/gif,image/webp' 
+                          : contentType === 'video' 
+                          ? 'video/mp4,video/webm,video/quicktime' 
+                          : '.pdf,.docx,.zip,.txt,.png,.jpg,.jpeg,.gif,.mp4,.webm'
+                      }
                       className="hidden"
                       id="file-input"
+                      disabled={uploading}
                     />
                     <label
                       htmlFor="file-input"
-                      className="cursor-pointer flex flex-col items-center gap-3"
+                      className={`cursor-pointer flex flex-col items-center gap-3 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      <Upload className="w-10 h-10 text-gray-400" />
-                      <div>
-                        <p className="text-white font-medium">
-                          {file ? file.name : 'Dosya seçmek için tıklayın'}
-                        </p>
-                        <p className="text-gray-500 text-sm mt-1">
-                          {contentType === 'image' ? 'PNG, JPG, GIF' : contentType === 'video' ? 'MP4, MOV, AVI' : 'Herhangi bir dosya'}
-                        </p>
-                      </div>
+                      {uploading ? (
+                        <>
+                          <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <div>
+                            <p className="text-white font-medium">
+                              Dosya yükleniyor...
+                            </p>
+                            <p className="text-gray-500 text-sm mt-1">
+                              Lütfen bekleyin
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-10 h-10 text-gray-400" />
+                          <div>
+                            <p className="text-white font-medium">
+                              {file ? file.name : 'Dosya seçmek için tıklayın'}
+                            </p>
+                            <p className="text-gray-500 text-sm mt-1">
+                              {contentType === 'image' 
+                                ? 'PNG, JPG, GIF, WebP (Max 100MB)' 
+                                : contentType === 'video' 
+                                ? 'MP4, WebM, MOV (Max 100MB)' 
+                                : 'PDF, DOCX, ZIP, TXT, Resim, Video (Max 100MB)'}
+                            </p>
+                          </div>
+                        </>
+                      )}
                     </label>
                   </div>
                 )}
@@ -274,10 +351,22 @@ export default function Home() {
               {/* Generate Button */}
               <button
                 onClick={generateQRCode}
-                disabled={loading}
-                className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed glow-border-strong"
+                disabled={isButtonDisabled()}
+                className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed glow-border-strong flex items-center justify-center gap-2"
               >
-                {loading ? 'QR Kod Oluşturuluyor...' : 'QR Kod Oluştur'}
+                {loading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    QR Kod Oluşturuluyor...
+                  </>
+                ) : uploading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Yükleniyor...
+                  </>
+                ) : (
+                  'QR Kod Oluştur'
+                )}
               </button>
             </div>
           ) : (
@@ -331,7 +420,250 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* SEO Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="max-w-6xl mx-auto mt-16 space-y-12"
+        >
+          {/* How It Works - Two Column Layout */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <div className="relative inline-block">
+                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+                <h2 className="relative text-5xl md:text-6xl font-bold text-white mb-4">
+                  Sistemimizle Adım Adım{' '}
+                  <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                    QR Kodları
+                  </span>{' '}
+                  Oluşturun
+                </h2>
+              </div>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                Dijital içeriklerinizi saniyeler içinde yüksek kaliteli ve güvenli QR kodlara dönüştürün.
+              </p>
+            </motion.div>
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              {/* Left Column - UI Illustration */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="relative"
+              >
+                <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-3xl p-8 relative overflow-hidden">
+                  {/* Glassmorphism UI Mockup */}
+                  <div className="space-y-4">
+                    {/* Mock Header */}
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
+                        <QrCode className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="h-4 bg-white/20 rounded w-24 mb-2"></div>
+                        <div className="h-3 bg-white/10 rounded w-32"></div>
+                      </div>
+                    </div>
+
+                    {/* Mock Content Type Selection */}
+                    <div className="grid grid-cols-4 gap-2 mb-4">
+                      {[1, 2, 3, 4].map((i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.5 + i * 0.1 }}
+                          className={`p-3 rounded-xl border ${
+                            i === 1
+                              ? 'glow-border-active border-blue-500 bg-blue-500/10'
+                              : 'glow-border border-white/10 bg-white/5'
+                          }`}
+                        >
+                          <div className="w-4 h-4 rounded-full mx-auto mb-2 bg-blue-400/50"></div>
+                          <div className="h-2 bg-white/20 rounded"></div>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Mock Content Input */}
+                    <div className="p-4 rounded-xl glow-border bg-white/5 border-white/10 mb-4">
+                      <div className="h-3 bg-white/10 rounded w-full mb-2"></div>
+                      <div className="h-3 bg-white/10 rounded w-3/4"></div>
+                    </div>
+
+                    {/* Mock Expiration */}
+                    <div className="grid grid-cols-4 gap-2 mb-4">
+                      {[1, 2, 3, 4].map((i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.6 + i * 0.1 }}
+                          className={`p-2 rounded-xl border ${
+                            i === 2
+                              ? 'glow-border-active border-blue-500 bg-blue-500/10'
+                              : 'glow-border border-white/10 bg-white/5'
+                          }`}
+                        >
+                          <div className="h-2 bg-white/20 rounded"></div>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Mock Button */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 }}
+                      className="h-12 rounded-xl bg-blue-600 glow-border-strong"
+                    ></motion.div>
+                  </div>
+
+                  {/* Decorative Elements */}
+                  <div className="absolute -top-4 -right-4 w-20 h-20 bg-blue-500/20 rounded-full blur-xl"></div>
+                  <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500/20 rounded-full blur-xl"></div>
+                </div>
+              </motion.div>
+
+              {/* Right Column - Step by Step */}
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                  className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
+                      <Type className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white mb-2">Seçim Yapın</h3>
+                      <p className="text-gray-400">
+                        İçerik türünü (Metin, Dosya, Video) belirleyin.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
+                      <UploadCloud className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white mb-2">Buluta Yükleyin</h3>
+                      <p className="text-gray-400">
+                        Verinizi şifreli Vercel Blob depolarımıza aktarın.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
+                      <Share2 className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white mb-2">QR Kodunuz Hazır</h3>
+                      <p className="text-gray-400">
+                        Saniyeler içinde oluşan kodu indirin veya link olarak paylaşın.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+
+          {/* Why LuxQr */}
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
+                <Sparkles className="w-6 h-6 text-blue-400" />
+              </div>
+              <h2 className="text-3xl font-bold text-white">
+                Neden LuxQr Kullanmalısınız?
+              </h2>
+            </div>
+            
+            <div className="space-y-4 text-gray-400 leading-relaxed">
+              <p>
+                LuxQr, dijital dünyada dosya ve metin paylaşımını saniyeler içinde gerçekleştiren 
+                yenilikçi bir QR kod platformudur. Geleneksel paylaşım yöntemlerinin karmaşıklığına 
+                son vererek, kullanıcıların metin, resim, video ve dosyalarını güvenli ve hızlı bir 
+                şekilde paylaşmalarını sağlar.
+              </p>
+              
+              <p>
+                <strong className="text-white">Hız ve Performans:</strong> LuxQr, Next.js 14 ve modern 
+                web teknolojileri ile oluşturulmuş olup, QR kodlarınızı milisaniyeler içinde oluşturur. 
+                Vercel'in güçlü altyapısı sayesinde, dünya çapında anında erişilebilir ve kesintisiz 
+                bir deneyim sunar.
+              </p>
+              
+              <p>
+                <strong className="text-white">Güvenlik ve Gizlilik:</strong> Verileriniz Vercel KV ve 
+                Blob teknolojileri ile şifreli olarak saklanır. Kişisel bilgilerinizi toplamayız ve 
+                paylaşımlarınız sadece QR kod URL'sini bilen kişiler tarafından erişilebilir. 
+                Geçerlilik süresi seçeneği ile verilerinizin ne kadar süre saklanacağını siz kontrol 
+                edersiniz. Süresi dolan paylaşımlar otomatik olarak sistemden temizlenir.
+              </p>
+              
+              <p>
+                <strong className="text-white">Modern Tasarım:</strong> LuxQr, kullanıcı dostu arayüzü, 
+                akıcı animasyonları ve şık tasarımı ile mükemmel bir kullanıcı deneyimi sunar. Mobil 
+                uyumlu ve responsive yapısı sayesinde her cihazda kusursuz çalışır. Framer Motion ile 
+                güçlendirilmiş animasyonlar, uygulamanızı sadece işlevsel değil, aynı zamanda görsel 
+                olarak da çekici kılar.
+              </p>
+              
+              <p>
+                İster kişisel kullanım, ister iş amaçlı olsun, LuxQr ile paylaşım sürecinizi basitleştirin 
+                ve dijital iletişiminizi bir üst seviyeye taşıyın.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+          </div>
+        </div>
+
+        {/* Right Ad Placeholder - 160x600 */}
+        {/* <div className="hidden lg:block w-[160px] flex-shrink-0 p-4">
+          <div className="w-full h-[600px] border border-white/10 rounded-xl bg-white/5 flex items-center justify-center">
+            <p className="text-gray-500 text-xs text-center px-2">Reklam Alanı<br/>160x600</p>
+          </div>
+        </div> */}
       </div>
-    </main>
+
+      {/* Bottom Ad Placeholder - 728x90 */}
+      {/* <div className="hidden md:block container mx-auto px-4 py-4">
+        <div className="w-full h-[90px] border border-white/10 rounded-xl bg-white/5 flex items-center justify-center mx-auto max-w-[728px]">
+          <p className="text-gray-500 text-xs text-center px-2">Reklam Alanı 728x90</p>
+        </div>
+      </div> */}
+    </motion.main>
   );
 }
