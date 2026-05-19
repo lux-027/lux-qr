@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addDays, addWeeks, addMonths } from 'date-fns';
-import { saveQrCode, QrCodeData } from '@/lib/db';
+import { saveQrCode, QrCodeData, incrementGlobalCounter } from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 
 export const dynamic = 'force-dynamic';
@@ -10,16 +10,24 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { content, contentType, fileName, filePath, expiration } = body;
 
-    // Calculate expiration date
+    // Calculate expiration date and TTL (in seconds)
     let expiresAt = null;
+    let ttlSeconds = null;
+    const MAX_TTL_SECONDS = 90 * 24 * 60 * 60; // 90 days = 7,776,000 seconds (3 months)
+
     if (expiration === '1day') {
       expiresAt = addDays(new Date(), 1);
+      ttlSeconds = 24 * 60 * 60; // 1 day
     } else if (expiration === '1week') {
       expiresAt = addWeeks(new Date(), 1);
+      ttlSeconds = 7 * 24 * 60 * 60; // 7 days
     } else if (expiration === '1month') {
       expiresAt = addMonths(new Date(), 1);
+      ttlSeconds = 30 * 24 * 60 * 60; // 30 days
+    } else if (expiration === '3months') {
+      expiresAt = addMonths(new Date(), 3);
+      ttlSeconds = MAX_TTL_SECONDS; // 90 days (3 months)
     }
-    // 'unlimited' means expiresAt stays null
 
     // Create QR code record
     const qrCode: QrCodeData = {
@@ -32,8 +40,11 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    // Save to Vercel KV
-    await saveQrCode(qrCode);
+    // Save to Vercel KV with TTL
+    await saveQrCode(qrCode, ttlSeconds);
+
+    // Increment global counter
+    await incrementGlobalCounter();
 
     return NextResponse.json({ 
       success: true, 

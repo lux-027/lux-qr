@@ -12,6 +12,8 @@ export interface QrCodeData {
 
 const QR_PREFIX = 'qr:';
 const QR_LIST_KEY = 'qr:all';
+const GLOBAL_COUNTER_KEY = 'global:counter';
+const INITIAL_COUNTER_VALUE = 1723;
 
 // Get QR code by ID
 export async function getQrCodeById(id: string): Promise<QrCodeData | null> {
@@ -25,10 +27,14 @@ export async function getQrCodeById(id: string): Promise<QrCodeData | null> {
 }
 
 // Save QR code
-export async function saveQrCode(qrCode: QrCodeData): Promise<void> {
+export async function saveQrCode(qrCode: QrCodeData, ttlSeconds?: number | null): Promise<void> {
   try {
-    // Save individual QR code
-    await kv.set(`${QR_PREFIX}${qrCode.id}`, qrCode);
+    // Save individual QR code with TTL if provided
+    if (ttlSeconds) {
+      await kv.set(`${QR_PREFIX}${qrCode.id}`, qrCode, { ex: ttlSeconds });
+    } else {
+      await kv.set(`${QR_PREFIX}${qrCode.id}`, qrCode);
+    }
     
     // Add to list of all QR codes
     await kv.sadd(QR_LIST_KEY, qrCode.id);
@@ -53,5 +59,29 @@ export async function deleteExpiredQrCodes(): Promise<void> {
     }
   } catch (error) {
     console.error('Error deleting expired QR codes:', error);
+  }
+}
+
+// Get global counter value
+export async function getGlobalCounter(): Promise<number> {
+  try {
+    const current = await kv.get<number>(GLOBAL_COUNTER_KEY);
+    return current || INITIAL_COUNTER_VALUE;
+  } catch (error) {
+    console.error('Error fetching global counter:', error);
+    return INITIAL_COUNTER_VALUE;
+  }
+}
+
+// Increment global counter
+export async function incrementGlobalCounter(): Promise<number> {
+  try {
+    const current = await getGlobalCounter();
+    const newValue = current + 1;
+    await kv.set(GLOBAL_COUNTER_KEY, newValue);
+    return newValue;
+  } catch (error) {
+    console.error('Error incrementing global counter:', error);
+    return INITIAL_COUNTER_VALUE;
   }
 }

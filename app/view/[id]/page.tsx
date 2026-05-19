@@ -12,7 +12,9 @@ import {
   Clock,
   Copy,
   Check,
-  Plus
+  Plus,
+  Home,
+  QrCode
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
@@ -204,8 +206,35 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+    >
       <div className="container mx-auto px-4 py-12">
+        {/* Back to Home Button */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-8"
+        >
+          <Link
+            href="/"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <QrCode className="w-5 h-5 text-blue-400" />
+              <span className="font-bold">LuxQr</span>
+            </div>
+            <div className="w-px h-4 bg-white/20"></div>
+            <div className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Ana Sayfaya Dön
+            </div>
+          </Link>
+        </motion.div>
+
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2 text-white">
             LuxQr
@@ -238,13 +267,13 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             <div className="flex flex-col gap-4 pt-6 border-t border-white/10">
               {/* QR URL Section */}
               <div className="p-4 rounded-xl glow-border bg-white/5 border-white/10">
-                <p className="text-gray-400 text-sm mb-2">QR Kod URL</p>
+                <p className="text-gray-400 text-sm mb-2 hidden md:block">QR Kod URL</p>
                 <div className="flex items-center gap-2">
                   <a
                     href={typeof window !== 'undefined' ? window.location.href : ''}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-blue-400 font-mono text-sm break-all hover:text-blue-300 transition-colors"
+                    className="flex-1 text-blue-400 font-mono text-sm break-all hover:text-blue-300 transition-colors hidden md:block"
                   >
                     {typeof window !== 'undefined' ? window.location.href : ''}
                   </a>
@@ -283,6 +312,6 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-    </main>
+    </motion.main>
   );
 }
