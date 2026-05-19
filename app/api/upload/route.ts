@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload to Supabase Storage
+    console.log('Starting upload to Supabase:', { fileName, fileSize: file.size, contentType: file.type });
     const { data, error } = await supabaseAdmin.storage
       .from('luxqr-files')
       .upload(fileName, buffer, {
@@ -44,8 +45,10 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Supabase upload error:', error);
+      console.error('Supabase upload error details:', JSON.stringify(error, null, 2));
+      console.error('Upload attempt details:', { fileName, fileSize: buffer.length, bucket: 'luxqr-files' });
       return NextResponse.json(
-        { success: false, error: 'Dosya yüklenirken hata oluştu' },
+        { success: false, error: 'Dosya yüklenirken hata oluştu', details: error.message },
         { status: 500 }
       );
     }
