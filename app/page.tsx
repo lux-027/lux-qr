@@ -17,7 +17,8 @@ import {
   Shield,
   Sparkles,
   UploadCloud,
-  Share2
+  Share2,
+  Link as LinkIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AdBanner from '@/components/AdBanner';
@@ -39,6 +40,7 @@ export default function Home() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
+  const [imageShared, setImageShared] = useState(false);
   const { incrementCounter } = useCounter();
 
   const contentTypes = [
@@ -180,7 +182,7 @@ export default function Home() {
     }
   };
 
-  const handleShare = async () => {
+  const handleShareLink = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
@@ -200,6 +202,55 @@ export default function Home() {
       } catch (err) {
         console.error('Failed to copy:', err);
       }
+    }
+  };
+
+  const handleShareImage = async () => {
+    const svg = document.getElementById('qr-code-svg');
+    if (!svg) return;
+
+    try {
+      // Convert SVG to canvas
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = async () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        
+        // Convert canvas to blob
+        canvas.toBlob(async (blob) => {
+          if (!blob) return;
+          
+          const file = new File([blob], 'luxqr.png', { type: 'image/png' });
+          
+          if (navigator.share && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: 'LuxQr - QR Kodum',
+                text: 'Oluşturduğum QR kodu görselini paylaş!',
+                files: [file],
+              });
+            } catch (err) {
+              console.error('Image share failed:', err);
+              // Fallback: download
+              downloadQRCode();
+            }
+          } else {
+            // Fallback: download
+            downloadQRCode();
+          }
+        }, 'image/png');
+      };
+
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+    } catch (err) {
+      console.error('Failed to share image:', err);
+      // Fallback: download
+      downloadQRCode();
     }
   };
 
@@ -468,7 +519,7 @@ export default function Home() {
                     İndir
                   </button>
                   <button
-                    onClick={handleShare}
+                    onClick={handleShareLink}
                     className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
                   >
                     {shared ? (
@@ -478,8 +529,24 @@ export default function Home() {
                       </>
                     ) : (
                       <>
-                        <Share2 className="w-4 h-4 lg:w-5 lg:h-5" />
-                        Paylaş
+                        <LinkIcon className="w-4 h-4 lg:w-5 lg:h-5" />
+                        Linki Paylaş
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleShareImage}
+                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
+                  >
+                    {imageShared ? (
+                      <>
+                        <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
+                        İndirildi!
+                      </>
+                    ) : (
+                      <>
+                        <QrCode className="w-4 h-4 lg:w-5 lg:h-5" />
+                        QR Paylaş
                       </>
                     )}
                   </button>
