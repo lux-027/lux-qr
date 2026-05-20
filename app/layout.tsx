@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
 import Script from "next/script";
+import { CounterProvider } from "@/context/CounterContext";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,8 +28,10 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        {children}
-        <Footer />
+        <CounterProvider>
+          {children}
+          <Footer />
+        </CounterProvider>
       </body>
     </html>
   );

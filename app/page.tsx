@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AdBanner from '@/components/AdBanner';
+import { useCounter } from '@/context/CounterContext';
 
 type ContentType = 'text' | 'image' | 'video' | 'file';
 type ExpirationType = '1day' | '1week' | '1month' | '3months';
@@ -37,6 +38,7 @@ export default function Home() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const { incrementCounter } = useCounter();
 
   const contentTypes = [
     { id: 'text' as ContentType, label: 'Not/Metin', icon: Type },
@@ -133,6 +135,7 @@ export default function Home() {
         setQrCodeId(data.id);
         const qrLink = 'https://lux-qr-delta.vercel.app/view/' + data.id;
         setQrCodeUrl(qrLink);
+        incrementCounter();
       } else {
         setError(data.error || 'QR kod oluşturulurken hata oluştu');
       }

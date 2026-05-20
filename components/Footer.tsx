@@ -1,27 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { QrCode, HelpCircle, Info, FileText, MessageSquare, BarChart3, ScanLine, ChevronRight } from 'lucide-react';
+import { useCounter } from '@/context/CounterContext';
 
 export default function Footer() {
-  const [globalCounter, setGlobalCounter] = useState(1723);
-
-  useEffect(() => {
-    fetchGlobalCounter();
-  }, []);
-
-  const fetchGlobalCounter = async () => {
-    try {
-      const response = await fetch('/api/counter');
-      const data = await response.json();
-      if (data.success) {
-        setGlobalCounter(data.counter);
-      }
-    } catch (err) {
-      console.error('Error fetching global counter:', err);
-    }
-  };
+  const { globalCounter } = useCounter();
 
   return (
     <footer className="border-t border-white/10 bg-slate-900/50 backdrop-blur-sm">
