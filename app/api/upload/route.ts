@@ -23,23 +23,25 @@ export async function POST(request: Request) {
     // Benzersiz dosya adı üretme
     const fileExt = file.name.split('.').pop();
     const fileName = `luxqr-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+    const safeFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
 
     // Supabase Storage'a yükleme
     const { data, error: uploadError } = await supabase.storage
       .from('LUXQR-FILES')
-      .upload(fileName, buffer, {
+      .upload(safeFileName, buffer, {
         contentType: file.type,
         upsert: true
       });
 
     if (uploadError) {
+      console.error('Detayli Supabase Hatasi:', uploadError);
       return NextResponse.json({ error: uploadError.message }, { status: 400 });
     }
 
     // Public URL alma
     const { data: urlData } = supabase.storage
       .from('LUXQR-FILES')
-      .getPublicUrl(fileName);
+      .getPublicUrl(safeFileName);
 
     if (!urlData || !urlData.publicUrl) {
       return NextResponse.json({ error: 'Public URL alınamadı' }, { status: 500 });
