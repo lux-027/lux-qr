@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     // Upload to Supabase Storage
     console.log('Starting upload to Supabase:', { fileName, fileSize: file.size, contentType: file.type });
-    const { data, error } = await supabaseAdmin.storage
+    const { data, error } = await supabase.storage
       .from('luxqr-files')
       .upload(fileName, buffer, {
         contentType: file.type,
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get public URL
-    const { data: { publicUrl } } = supabaseAdmin.storage
+    const { data: { publicUrl } } = supabase.storage
       .from('luxqr-files')
       .getPublicUrl(fileName);
 
@@ -63,30 +63,8 @@ export async function POST(request: NextRequest) {
       fileName,
       filePath: publicUrl,
     });
-  } catch (error) {
-    console.log("DETAYLI UPLOAD HATASI:", error);
-    console.error('Dosya yükleme hatası:', error);
-    console.error('Error details:', JSON.stringify(error, null, 2));
-    
-    // Check for specific error types
-    if (error instanceof Error) {
-      if (error.message.includes('size') || error.message.includes('too large')) {
-        return NextResponse.json(
-          { success: false, error: 'Dosya boyutu çok büyük (Max 100MB)' },
-          { status: 400 }
-        );
-      }
-      if (error.message.includes('network') || error.message.includes('connection')) {
-        return NextResponse.json(
-          { success: false, error: 'Sunucu bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.' },
-          { status: 500 }
-        );
-      }
-    }
-    
-    return NextResponse.json(
-      { success: false, error: 'Dosya yüklenirken hata oluştu' },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    console.error("Yükleme sırasında hata:", error);
+    return NextResponse.json({ error: error.message || "Dosya yüklenemedi" }, { status: 500 });
   }
 }
