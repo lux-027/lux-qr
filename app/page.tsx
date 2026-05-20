@@ -77,7 +77,7 @@ export default function Home() {
 
       const data = await response.json();
       if (data.success) {
-        setUploadedFilePath(data.filePath);
+        setUploadedFilePath(data.url);
       } else {
         setError(data.error || 'Dosya yüklenirken hata oluştu');
       }
