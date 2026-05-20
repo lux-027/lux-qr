@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       id: qrCode.id
     });
   } catch (error) {
+    console.error('QR Üretim Hatası:', error);
     console.error('Error generating QR code:', error);
     console.error('Error details:', JSON.stringify(error, null, 2));
     return NextResponse.json(
