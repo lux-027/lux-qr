@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
     // Supabase Storage'a yükleme
     const { data, error: uploadError } = await supabase.storage
-      .from('LUXQR-FILES')
+      .from('luxqr-files')
       .upload(safeFileName, buffer, {
         contentType: file.type,
         upsert: true
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     // Public URL alma
     const { data: urlData } = supabase.storage
-      .from('LUXQR-FILES')
+      .from('luxqr-files')
       .getPublicUrl(safeFileName);
 
     if (!urlData || !urlData.publicUrl) {
