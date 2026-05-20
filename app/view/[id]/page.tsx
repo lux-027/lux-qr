@@ -19,6 +19,7 @@ import {
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import Link from 'next/link';
+import AdBanner from '@/components/AdBanner';
 
 type QrCodeData = {
   id: string;
@@ -240,6 +241,14 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             LuxQr
           </h1>
         </div>
+
+        {/* Ad Banner - Redirect Page */}
+        <AdBanner
+          slot="yonlendirme_sayfasi"
+          format="auto"
+          responsive={true}
+          className="w-full max-w-3xl mx-auto mb-8"
+        />
 
         <div className="max-w-3xl mx-auto">
           <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">

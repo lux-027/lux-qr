@@ -20,6 +20,7 @@ import {
   Share2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AdBanner from '@/components/AdBanner';
 
 type ContentType = 'text' | 'image' | 'video' | 'file';
 type ExpirationType = '1day' | '1week' | '1month' | '3months';
@@ -35,6 +36,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const contentTypes = [
     { id: 'text' as ContentType, label: 'Not/Metin', icon: Type },
@@ -164,6 +166,16 @@ export default function Home() {
     img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
   };
 
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(qrCodeUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -171,15 +183,19 @@ export default function Home() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
-      <div className="flex">
-        {/* Left Ad Placeholder - 160x600 */}
-        {/* <div className="hidden lg:block w-[160px] flex-shrink-0 p-4">
-          <div className="w-full h-[600px] border border-white/10 rounded-xl bg-white/5 flex items-center justify-center">
-            <p className="text-gray-500 text-xs text-center px-2">Reklam Alanı<br/>160x600</p>
-          </div>
-        </div> */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Left Vertical Ad */}
+        <div className="hidden lg:block sticky top-4 h-[80vh]">
+          <AdBanner
+            slot="sol_dikey"
+            format="vertical"
+            responsive={false}
+            className="h-full"
+          />
+        </div>
 
-        <div className="flex-1">
+        {/* Main Content Area */}
+        <div className="col-span-1 lg:col-span-3">
           <div className="container mx-auto px-4 py-12">
             {/* Header */}
             <motion.div
@@ -390,9 +406,30 @@ export default function Home() {
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 rounded-xl glow-border bg-white/5 border-white/10">
+                {/* Desktop URL Display */}
+                <div className="hidden md:block p-4 rounded-xl glow-border bg-white/5 border-white/10">
                   <p className="text-gray-400 text-sm mb-1">QR Kod URL</p>
                   <p className="text-blue-400 font-mono text-sm break-all">{qrCodeUrl}</p>
+                </div>
+
+                {/* Mobile Copy Button */}
+                <div className="block md:hidden">
+                  <button
+                    onClick={copyToClipboard}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors glow-border"
+                  >
+                    {copied ? (
+                      <>
+                        <CheckCircle className="w-5 h-5" />
+                        Kopyalandı!
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-5 h-5" />
+                        Linki Kopyala
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 <div className="flex gap-4 justify-center">
@@ -428,6 +465,14 @@ export default function Home() {
           transition={{ delay: 0.3 }}
           className="max-w-6xl mx-auto mt-16 space-y-12"
         >
+          {/* Horizontal Banner Ad - Above "How It Works" */}
+          <AdBanner
+            slot="yazi_ustu_1"
+            format="horizontal"
+            responsive={true}
+            className="w-full"
+          />
+
           {/* How It Works - Two Column Layout */}
           <div>
             <motion.div
@@ -598,6 +643,14 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Horizontal Banner Ad - Above "Why LuxQr" */}
+          <AdBanner
+            slot="yazi_ustu_2"
+            format="horizontal"
+            responsive={true}
+            className="w-full"
+          />
+
           {/* Why LuxQr */}
           <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
@@ -650,12 +703,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Ad Placeholder - 160x600 */}
-        {/* <div className="hidden lg:block w-[160px] flex-shrink-0 p-4">
-          <div className="w-full h-[600px] border border-white/10 rounded-xl bg-white/5 flex items-center justify-center">
-            <p className="text-gray-500 text-xs text-center px-2">Reklam Alanı<br/>160x600</p>
-          </div>
-        </div> */}
+        {/* Right Vertical Ad */}
+        <div className="hidden lg:block sticky top-4 h-[80vh]">
+          <AdBanner
+            slot="sag_dikey"
+            format="vertical"
+            responsive={false}
+            className="h-full"
+          />
+        </div>
       </div>
 
       {/* Bottom Ad Placeholder - 728x90 */}
