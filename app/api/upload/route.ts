@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
       filePath: publicUrl,
     });
   } catch (error) {
+    console.log("DETAYLI UPLOAD HATASI:", error);
     console.error('Dosya yükleme hatası:', error);
     console.error('Error details:', JSON.stringify(error, null, 2));
     
