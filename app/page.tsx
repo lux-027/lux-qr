@@ -187,7 +187,7 @@ export default function Home() {
       try {
         await navigator.share({
           title: 'LuxQr - QR Kodum',
-          text: 'Oluşturduğum QR koda bu linkten ulaşabilirsin!',
+          text: 'LuxQr ile yeni bir QR kod oluşturdum, bir göz at tarzı! 👇\n\nhttps://luxqrpro.site',
           url: qrCodeUrl,
         });
       } catch (err) {
@@ -231,7 +231,7 @@ export default function Home() {
             try {
               await navigator.share({
                 title: 'LuxQr - QR Kodum',
-                text: 'Oluşturduğum QR kodu görselini paylaş!',
+                text: 'LuxQr ile yeni bir QR kod oluşturdum, bir göz at tarzı! 👇\n\nhttps://luxqrpro.site',
                 files: [file],
               });
             } catch (err) {
@@ -525,7 +525,7 @@ export default function Home() {
                     {shared ? (
                       <>
                         <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
-                        Kopyalandı!
+                        Link panoya kopyalandı! Bir göz at tarzı 😉
                       </>
                     ) : (
                       <>
@@ -546,7 +546,7 @@ export default function Home() {
                     ) : (
                       <>
                         <QrCode className="w-4 h-4 lg:w-5 lg:h-5" />
-                        QR Paylaş
+                        QR Kodu Paylaş
                       </>
                     )}
                   </button>
