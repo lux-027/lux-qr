@@ -459,26 +459,26 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div className="flex gap-4 justify-center">
+                <div className="grid grid-cols-2 lg:flex gap-2 lg:gap-4 justify-center">
                   <button
                     onClick={downloadQRCode}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors glow-border"
+                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
                   >
-                    <Download className="w-5 h-5" />
+                    <Download className="w-4 h-4 lg:w-5 lg:h-5" />
                     İndir
                   </button>
                   <button
                     onClick={handleShare}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-colors glow-border"
+                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
                   >
                     {shared ? (
                       <>
-                        <CheckCircle className="w-5 h-5" />
+                        <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
                         Kopyalandı!
                       </>
                     ) : (
                       <>
-                        <Share2 className="w-5 h-5" />
+                        <Share2 className="w-4 h-4 lg:w-5 lg:h-5" />
                         Paylaş
                       </>
                     )}
@@ -491,7 +491,7 @@ export default function Home() {
                       setFile(null);
                       setUploadedFilePath('');
                     }}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 glow-border border-white/20 text-white font-semibold hover:bg-white/20 transition-colors"
+                    className="col-span-2 lg:col-span-1 flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-white/10 glow-border border-white/20 text-white text-sm lg:text-base font-semibold hover:bg-white/20 transition-colors"
                   >
                     Yeni QR Kod
                   </button>
