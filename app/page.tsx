@@ -38,6 +38,7 @@ export default function Home() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [shared, setShared] = useState(false);
   const { incrementCounter } = useCounter();
 
   const contentTypes = [
@@ -176,6 +177,29 @@ export default function Home() {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'LuxQr - QR Kodum',
+          text: 'Oluşturduğum QR koda bu linkten ulaşabilirsin!',
+          url: qrCodeUrl,
+        });
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(qrCodeUrl);
+        setShared(true);
+        setTimeout(() => setShared(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
     }
   };
 
@@ -442,6 +466,22 @@ export default function Home() {
                   >
                     <Download className="w-5 h-5" />
                     İndir
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-colors glow-border"
+                  >
+                    {shared ? (
+                      <>
+                        <CheckCircle className="w-5 h-5" />
+                        Kopyalandı!
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-5 h-5" />
+                        Paylaş
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={() => {
