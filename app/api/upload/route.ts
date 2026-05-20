@@ -1,70 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-export const dynamic = 'force-dynamic';
+// Supabase bağlantısını doğrudan burada garantiye alıyoruz
+const supabaseUrl = 'https://uiltqydfbdqbsqkxaaqh.supabase.co';
+const supabaseAnonKey = 'sb_publishable_I4n8V4BZBrzmUogv8j9Z1g_I1-20MJj';
 
-export async function POST(request: NextRequest) {
+const supabase = createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || supabaseAnonKey);
+
+export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
+    const file = formData.get('file') as File | null;
 
     if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'Dosya yüklenmedi' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 });
     }
 
-    // File size validation (100MB limit)
-    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { success: false, error: 'Dosya boyutu çok büyük (Max 100MB)' },
-        { status: 400 }
-      );
-    }
+    // Dosyayı buffer'a güvenli çevirme (Sunucu çökmesini engeller)
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const randomStr = Math.random().toString(36).substring(2, 8);
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const fileName = `${timestamp}_${randomStr}_${originalName}`;
+    // Benzersiz dosya adı üretme
+    const fileExt = file.name.split('.').pop();
+    const fileName = `luxqr-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
 
-    // Convert file to ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Upload to Supabase Storage
-    console.log('Starting upload to Supabase:', { fileName, fileSize: file.size, contentType: file.type });
-    const { data, error } = await supabase.storage
-      .from('luxqr-files')
+    // Supabase Storage'a yükleme
+    const { data, error: uploadError } = await supabase.storage
+      .from('LUXQR-FILES')
       .upload(fileName, buffer, {
         contentType: file.type,
-        upsert: false,
+        upsert: true
       });
 
-    if (error) {
-      console.error('Supabase upload error:', error);
-      console.error('Supabase upload error details:', JSON.stringify(error, null, 2));
-      console.error('Upload attempt details:', { fileName, fileSize: buffer.length, bucket: 'luxqr-files' });
-      return NextResponse.json(
-        { success: false, error: 'Dosya yüklenirken hata oluştu', details: error.message },
-        { status: 500 }
-      );
+    if (uploadError) {
+      return NextResponse.json({ error: uploadError.message }, { status: 400 });
     }
 
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('luxqr-files')
+    // Public URL alma
+    const { data: urlData } = supabase.storage
+      .from('LUXQR-FILES')
       .getPublicUrl(fileName);
 
-    return NextResponse.json({
-      success: true,
-      fileName,
-      filePath: publicUrl,
-    });
+    if (!urlData || !urlData.publicUrl) {
+      return NextResponse.json({ error: 'Public URL alınamadı' }, { status: 500 });
+    }
+
+    // QR kod frontend tarafında mı yoksa burada mı üretiliyor kontrol et. 
+    // Eğer api içinde qrcode kütüphanesi patlıyorsa sadece linki dönmek en temizidir:
+    return NextResponse.json({ success: true, url: urlData.publicUrl });
+
   } catch (error: any) {
-    console.error("Yükleme sırasında hata:", error);
-    return NextResponse.json({ error: error.message || "Dosya yüklenemedi" }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Sunucu içi hata' }, { status: 500 });
   }
 }
