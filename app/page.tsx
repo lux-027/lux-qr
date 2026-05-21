@@ -231,7 +231,7 @@ export default function Home() {
             try {
               await navigator.share({
                 title: 'LuxQr - QR Kodum',
-                text: 'LuxQr ile yeni bir QR kod oluşturdum, Hemen QR kodumu tarat.\n\nSenden de QR oluştur: https://luxqrpro.site',
+                text: 'LuxQr ile yeni bir QR kod oluşturdum, içeriğe ulaşmak için kodu taratabilirsin! 👇\n\nhttps://luxqrpro.site',
                 files: [file],
               });
             } catch (err) {
@@ -490,26 +490,6 @@ export default function Home() {
                   <p className="text-blue-400 font-mono text-sm break-all">{qrCodeUrl}</p>
                 </div>
 
-                {/* Mobile Copy Button */}
-                <div className="block md:hidden">
-                  <button
-                    onClick={copyToClipboard}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors glow-border"
-                  >
-                    {copied ? (
-                      <>
-                        <CheckCircle className="w-5 h-5" />
-                        Kopyalandı!
-                      </>
-                    ) : (
-                      <>
-                        <Share2 className="w-5 h-5" />
-                        Linki Kopyala
-                      </>
-                    )}
-                  </button>
-                </div>
-
                 <div className="grid grid-cols-2 lg:flex gap-2 lg:gap-4 justify-center">
                   <button
                     onClick={downloadQRCode}
@@ -547,6 +527,22 @@ export default function Home() {
                       <>
                         <QrCode className="w-4 h-4 lg:w-5 lg:h-5" />
                         QR Paylaş
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={copyToClipboard}
+                    className="col-span-2 lg:col-span-1 flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
+                  >
+                    {copied ? (
+                      <>
+                        <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
+                        Kopyalandı!
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-4 h-4 lg:w-5 lg:h-5" />
+                        Linki Kopyala
                       </>
                     )}
                   </button>
