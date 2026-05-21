@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calendar, ArrowRight, QrCode } from 'lucide-react';
+import { Calendar, ArrowRight, QrCode, Home } from 'lucide-react';
 import { getAllPosts } from '@/lib/db';
 
 export const metadata: Metadata = {
@@ -33,6 +33,17 @@ export default async function BlogPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="container mx-auto px-4 py-12">
+        {/* Back to Home Button */}
+        <div className="mb-8">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white font-semibold hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+          >
+            <Home className="w-5 h-5" />
+            Ana Sayfaya Dön
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="relative inline-block mb-4">
