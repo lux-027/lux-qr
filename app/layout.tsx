@@ -8,8 +8,31 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LuxQr - Premium QR Code Generator",
-  description: "Create beautiful, premium QR codes with expiration dates",
+  title: {
+    default: "LuxQr - Premium QR Code Generator",
+    template: "%s | LuxQr"
+  },
+  description: "Dijital içeriklerinizi, metinlerinizi ve dosyalarınızı saniyeler içinde yüksek kaliteli, güvenli ve modern QR kodlara dönüştürün.",
+  keywords: ["qr kod oluştur", "free qr generator", "premium qr", "dosya qr yapma", "luxqr"],
+  authors: [{ name: "LuxQr Team" }],
+  openGraph: {
+    title: "LuxQr - Premium QR Code Generator",
+    description: "Modern ve hızlı QR kod oluşturma platformu.",
+    url: "https://luxqrpro.site",
+    siteName: "LuxQr",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "tr_TR",
+    type: "website",
+  },
+  other: {
+    "google-adsense-account": "ca-pub-6964506660604767",
+  },
 };
 
 export default function RootLayout({
