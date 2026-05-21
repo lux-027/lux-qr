@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Calendar, ArrowRight, QrCode } from 'lucide-react';
+import { getAllPosts } from '@/lib/db';
 
 export const metadata: Metadata = {
   title: 'LuxQr Blog - QR Kod Rehberi ve Güncel Haberler',
@@ -17,15 +18,9 @@ export const metadata: Metadata = {
 
 async function getPosts() {
   try {
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://luxqrpro.site' 
-      : 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/blog`, {
-      cache: 'no-store',
-    });
-    const data = await response.json();
-    console.log('Posts data:', data);
-    return data.posts || [];
+    const posts = await getAllPosts();
+    console.log('Posts data:', posts);
+    return posts || [];
   } catch (error) {
     console.error('Error fetching posts:', error);
     return [];
