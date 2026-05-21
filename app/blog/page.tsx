@@ -17,10 +17,14 @@ export const metadata: Metadata = {
 
 async function getPosts() {
   try {
-    const response = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/blog`, {
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/blog`, {
       cache: 'no-store',
     });
     const data = await response.json();
+    console.log('Posts data:', data);
     return data.posts || [];
   } catch (error) {
     console.error('Error fetching posts:', error);
