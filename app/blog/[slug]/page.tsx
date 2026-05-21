@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calendar, ArrowLeft, QrCode, Share2 } from 'lucide-react';
+import { Calendar, ArrowLeft, QrCode } from 'lucide-react';
 import { getPostBySlug, getAllPosts } from '@/lib/db';
+import ShareButton from './ShareButton';
 
 interface PageProps {
   params: {
     slug: string;
   };
 }
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
@@ -170,23 +173,11 @@ export default async function BlogPostPage({ params }: PageProps) {
               <QrCode className="w-5 h-5 text-blue-400" />
               <span className="text-gray-300">Bu yazıyı paylaş</span>
             </div>
-            <button
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: post.title,
-                    text: post.description,
-                    url: `https://luxqrpro.site/blog/${post.slug}`,
-                  });
-                } else {
-                  navigator.clipboard.writeText(`https://luxqrpro.site/blog/${post.slug}`);
-                }
-              }}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
-            >
-              <Share2 className="w-4 h-4" />
-              Paylaş
-            </button>
+            <ShareButton
+              title={post.title}
+              description={post.description}
+              slug={post.slug}
+            />
           </div>
         </article>
       </div>
