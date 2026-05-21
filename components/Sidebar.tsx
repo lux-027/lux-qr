@@ -27,7 +27,7 @@ export default function Sidebar() {
       {/* Hamburger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 left-4 z-50 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 glow-border"
+        className="fixed top-6 md:top-4 left-4 z-50 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 glow-border"
         style={{
           boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)',
         }}
