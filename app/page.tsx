@@ -532,7 +532,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={copyToClipboard}
-                    className="col-span-2 lg:col-span-1 flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
+                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
                   >
                     {copied ? (
                       <>
