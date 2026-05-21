@@ -10,10 +10,25 @@ export interface QrCodeData {
   createdAt: string;
 }
 
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  description: string;
+  mainImage: string;
+  category: string;
+  createdAt: string;
+  published: boolean;
+}
+
 const QR_PREFIX = 'qr:';
 const QR_LIST_KEY = 'qr:all';
 const GLOBAL_COUNTER_KEY = 'global:counter';
 const INITIAL_COUNTER_VALUE = 1723;
+
+const POST_PREFIX = 'post:';
+const POST_LIST_KEY = 'posts:all';
 
 // Get QR code by ID
 export async function getQrCodeById(id: string): Promise<QrCodeData | null> {
@@ -83,5 +98,82 @@ export async function incrementGlobalCounter(): Promise<number> {
   } catch (error) {
     console.error('Error incrementing global counter:', error);
     return INITIAL_COUNTER_VALUE;
+  }
+}
+
+// Blog Post Functions
+
+// Get all published posts
+export async function getAllPosts(): Promise<Post[]> {
+  try {
+    const postIds = await kv.smembers(POST_LIST_KEY);
+    const posts: Post[] = [];
+    
+    for (const id of postIds) {
+      const post = await getPostById(id);
+      if (post && post.published) {
+        posts.push(post);
+      }
+    }
+    
+    // Sort by date (newest first)
+    return posts.sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  } catch (error) {
+    console.error('Error fetching all posts:', error);
+    return [];
+  }
+}
+
+// Get post by ID
+export async function getPostById(id: string): Promise<Post | null> {
+  try {
+    const data = await kv.get<Post>(`${POST_PREFIX}${id}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching post from KV:', error);
+    return null;
+  }
+}
+
+// Get post by slug
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const postIds = await kv.smembers(POST_LIST_KEY);
+    
+    for (const id of postIds) {
+      const post = await getPostById(id);
+      if (post && post.slug === slug) {
+        return post;
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching post by slug:', error);
+    return null;
+  }
+}
+
+// Save post
+export async function savePost(post: Post): Promise<void> {
+  try {
+    await kv.set(`${POST_PREFIX}${post.id}`, post);
+    await kv.sadd(POST_LIST_KEY, post.id);
+  } catch (error) {
+    console.error('Error saving post to KV:', error);
+    throw error;
+  }
+}
+
+// Delete post
+export async function deletePost(id: string): Promise<void> {
+  try {
+    await kv.del(`${POST_PREFIX}${id}`);
+    await kv.srem(POST_LIST_KEY, id);
+  } catch (error) {
+    console.error('Error deleting post from KV:', error);
+    throw error;
   }
 }

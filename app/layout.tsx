@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
 import Script from "next/script";
 import { CounterProvider } from "@/context/CounterContext";
 import "./globals.css";
@@ -51,6 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+        <Sidebar />
         <CounterProvider>
           {children}
           <Footer />
