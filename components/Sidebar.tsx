@@ -27,12 +27,12 @@ export default function Sidebar() {
       {/* Hamburger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-16 md:top-4 left-4 z-50 p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white transition-all duration-300 glow-border-strong hover:scale-110 active:scale-95"
+        className="fixed top-16 md:top-4 left-4 z-50 p-3 md:p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white transition-all duration-300 glow-border-strong hover:scale-110 active:scale-95"
         style={{
           boxShadow: '0 0 30px rgba(59, 130, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.3)',
         }}
       >
-        <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        <svg className="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
           <line x1="4" y1="5" x2="20" y2="5" />
           <line x1="4" y1="12" x2="16" y2="12" />
           <line x1="4" y1="19" x2="12" y2="19" />
