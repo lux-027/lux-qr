@@ -1,10 +1,10 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const size = { width: 512, height: 512 };
+export const size = { width: 180, height: 180 };
 export const contentType = 'image/png';
 
-export default function Icon() {
+export default function AppleIcon() {
   return new ImageResponse(
     (
       <div
@@ -15,32 +15,32 @@ export default function Icon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: '24%',
-          border: '8px solid #3b82f6',
-          boxShadow: '0 0 60px rgba(59, 130, 246, 0.5)',
+          borderRadius: '40px',
+          border: '4px solid #3b82f6',
+          boxShadow: '0 0 30px rgba(59, 130, 246, 0.4)',
         }}
       >
         {/* Background Glow - matching page.tsx */}
         <div
           style={{
             position: 'absolute',
-            width: '300px',
-            height: '300px',
+            width: '120px',
+            height: '120px',
             background: 'rgba(59, 130, 246, 0.2)',
-            filter: 'blur(60px)',
+            filter: 'blur(40px)',
             borderRadius: '50%',
           }}
         />
         
         {/* QR Code Icon - matching page.tsx QrCode component */}
         <svg
-          width="280"
-          height="280"
+          width="100"
+          height="100"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           style={{
-            filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.6))',
+            filter: 'drop-shadow(0 0 10px rgba(59, 130, 246, 0.6))',
           }}
         >
           <rect x="3" y="3" width="7" height="7" rx="1" fill="#60a5fa" />
