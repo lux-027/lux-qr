@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info } from 'lucide-react';
+import ShareButton from './ShareButton';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,9 +63,12 @@ export default function Sidebar() {
 
         {/* Logo */}
         <div className="px-6 pt-8 pb-6 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <QrCode className="w-8 h-8 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
-            <span className="text-2xl font-bold text-white">LuxQr</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <QrCode className="w-8 h-8 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
+              <span className="text-2xl font-bold text-white">LuxQr</span>
+            </div>
+            <ShareButton />
           </div>
         </div>
 
