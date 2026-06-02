@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Calendar, ArrowRight, QrCode, Home } from 'lucide-react';
 import { getAllPosts } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'LuxQr Blog - QR Kod Rehberi ve Güncel Haberler',
   description: 'QR kod oluşturma ipuçları, kullanım rehberleri ve en son teknoloji haberleri. LuxQr blogunda QR kod dünyasını keşfedin.',

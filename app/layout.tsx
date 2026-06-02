@@ -9,6 +9,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.luxqrpro.site'),
   title: {
     default: "LuxQr - Premium QR Code Generator",
     template: "%s | LuxQr"
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "LuxQr - Premium QR Code Generator",
     description: "Modern ve hızlı QR kod oluşturma platformu.",
-    url: "https://luxqrpro.site",
+    url: "https://www.luxqrpro.site",
     siteName: "LuxQr",
     images: [
       {
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
+        <link rel="canonical" href="https://www.luxqrpro.site/" />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6964506660604767"
