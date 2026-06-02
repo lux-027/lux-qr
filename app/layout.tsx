@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
+import PageWrapper from "@/components/PageWrapper";
 import Script from "next/script";
 import { CounterProvider } from "@/context/CounterContext";
 import "./globals.css";
@@ -58,7 +59,9 @@ export default function RootLayout({
         <Sidebar />
         <div className="md:ml-64">
           <CounterProvider>
-            {children}
+            <PageWrapper>
+              {children}
+            </PageWrapper>
             <Footer />
           </CounterProvider>
         </div>

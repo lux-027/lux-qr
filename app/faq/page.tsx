@@ -70,21 +70,14 @@ export default function FAQPage() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-8"
+          className="mb-8 flex justify-end"
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 text-white font-semibold hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
           >
-            <div className="flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-blue-400" />
-              <span className="font-bold">LuxQr</span>
-            </div>
-            <div className="w-px h-4 bg-white/20"></div>
-            <div className="flex items-center gap-2">
-              <Home className="w-4 h-4" />
-              Ana Sayfaya Dön
-            </div>
+            <Home className="w-5 h-5" />
+            Ana Sayfaya Dön
           </Link>
         </motion.div>
 

@@ -28,7 +28,7 @@ export default function Sidebar() {
       {/* Hamburger Button - Only show on mobile */}
       <button
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed top-16 left-4 z-50 p-3 rounded-2xl bg-slate-800/50 text-blue-500 hover:text-blue-400 hover:bg-slate-700/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300 border border-white/10"
+        className="md:hidden fixed top-4 left-4 z-50 p-3 rounded-2xl bg-slate-800/50 text-blue-500 hover:text-blue-400 hover:bg-slate-700/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300 border border-white/10"
       >
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
           <line x1="4" y1="5" x2="20" y2="5" />
