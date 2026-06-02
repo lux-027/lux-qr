@@ -130,24 +130,38 @@ export default async function BlogPostPage({ params }: PageProps) {
       
       <div className="container mx-auto px-4 py-12">
         {/* Mobile Back Button */}
-        <div className="mb-8 md:hidden">
+        <div className="mb-8 md:hidden flex justify-end">
           <Link
             href="/blog"
-            className="fixed top-4 right-4 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white font-semibold hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] z-50"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors text-sm z-10"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Blog'a Dön
+            <div className="flex items-center gap-2">
+              <QrCode className="w-5 h-5 text-blue-400" />
+              <span className="font-bold">LuxQr</span>
+            </div>
+            <div className="w-px h-4 bg-white/20"></div>
+            <div className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Blog'a Dön
+            </div>
           </Link>
         </div>
         
         {/* Desktop Back Button */}
-        <div className="mb-8 hidden md:block">
+        <div className="mb-8 hidden md:block flex justify-start">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white font-semibold hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors z-10"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Blog'a Dön
+            <div className="flex items-center gap-2">
+              <QrCode className="w-5 h-5 text-blue-400" />
+              <span className="font-bold">LuxQr</span>
+            </div>
+            <div className="w-px h-4 bg-white/20"></div>
+            <div className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Blog'a Dön
+            </div>
           </Link>
         </div>
 
