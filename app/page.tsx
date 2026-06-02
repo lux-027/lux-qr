@@ -275,7 +275,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Area - QR Generator */}
-        <div className="col-span-1 lg:col-span-2" style={{ marginLeft: '-350px' }}>
+        <div className="col-span-1 lg:col-span-2 lg:-ml-[350px]">
           <div className="px-4 py-12">
             {/* Header */}
             <motion.div

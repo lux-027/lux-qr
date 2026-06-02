@@ -43,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <head>
         <meta charSet="UTF-8" />
         <link rel="canonical" href="https://www.luxqrpro.site/" />
@@ -54,7 +54,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} overflow-x-hidden`}>
         <Sidebar />
         <div className="md:ml-64">
           <CounterProvider>
