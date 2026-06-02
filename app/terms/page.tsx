@@ -9,6 +9,7 @@ import {
   Clock,
   Home
 } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 
 export default function TermsPage() {
   return (
@@ -19,11 +20,14 @@ export default function TermsPage() {
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
       <div className="container mx-auto px-4 py-16">
-        {/* Back to Home Button */}
+        {/* Mobile Back Button */}
+        <BackButton href="/" label="Ana Sayfaya Dön" />
+
+        {/* Desktop Back to Home Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-8"
+          className="mb-8 hidden md:block"
         >
           <Link
             href="/"
