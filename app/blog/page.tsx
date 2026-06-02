@@ -51,15 +51,24 @@ export default async function BlogPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="container mx-auto px-4 py-12">
-        {/* Back to Home Button */}
-        <div className="mb-8">
+        {/* Header with Hamburger Menu and Back Button */}
+        <div className="mb-8 flex justify-between items-center">
+          <div className="md:hidden w-12"></div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white font-semibold hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm z-10"
           >
-            <Home className="w-5 h-5" />
-            Ana Sayfaya Dön
+            <div className="flex items-center gap-2">
+              <QrCode className="w-5 h-5 text-blue-400" />
+              <span className="font-bold">LuxQr</span>
+            </div>
+            <div className="w-px h-4 bg-white/20"></div>
+            <div className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Ana Sayfaya Dön
+            </div>
           </Link>
+          <div className="md:hidden w-12"></div>
         </div>
 
         {/* Header */}

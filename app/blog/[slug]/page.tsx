@@ -129,11 +129,12 @@ export default async function BlogPostPage({ params }: PageProps) {
       />
       
       <div className="container mx-auto px-4 py-12">
-        {/* Mobile Back Button */}
-        <div className="mb-8 md:hidden flex justify-end">
+        {/* Header with Hamburger Menu and Back Button */}
+        <div className="mb-8 flex justify-between items-center">
+          <div className="md:hidden w-12"></div>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors text-sm z-10"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm z-10"
           >
             <div className="flex items-center gap-2">
               <QrCode className="w-5 h-5 text-blue-400" />
@@ -145,24 +146,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               Blog'a Dön
             </div>
           </Link>
-        </div>
-        
-        {/* Desktop Back Button */}
-        <div className="mb-8 hidden md:block flex justify-start">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors z-10"
-          >
-            <div className="flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-blue-400" />
-              <span className="font-bold">LuxQr</span>
-            </div>
-            <div className="w-px h-4 bg-white/20"></div>
-            <div className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Blog'a Dön
-            </div>
-          </Link>
+          <div className="md:hidden w-12"></div>
         </div>
 
         {/* Article */}

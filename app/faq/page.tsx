@@ -66,12 +66,9 @@ export default function FAQPage() {
       />
 
       <div className="container mx-auto px-4 py-16">
-        {/* Back to Home Button */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="mb-8 max-md:justify-end md:justify-start flex"
-        >
+        {/* Header with Hamburger Menu and Back Button */}
+        <div className="mb-8 flex justify-between items-center">
+          <div className="md:hidden w-12"></div>
           <Link
             href="/"
             className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm z-10"
@@ -86,7 +83,8 @@ export default function FAQPage() {
               Ana Sayfaya Dön
             </div>
           </Link>
-        </motion.div>
+          <div className="md:hidden w-12"></div>
+        </div>
 
         {/* Header */}
         <motion.div
