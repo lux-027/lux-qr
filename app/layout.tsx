@@ -56,10 +56,12 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Sidebar />
-        <CounterProvider>
-          {children}
-          <Footer />
-        </CounterProvider>
+        <div className="md:ml-64">
+          <CounterProvider>
+            {children}
+            <Footer />
+          </CounterProvider>
+        </div>
       </body>
     </html>
   );

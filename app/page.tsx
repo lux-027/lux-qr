@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AdBanner from '@/components/AdBanner';
+import RandomBlogs from '@/components/RandomBlogs';
 import { useCounter } from '@/context/CounterContext';
 
 type ContentType = 'text' | 'image' | 'video' | 'file';
@@ -261,7 +262,7 @@ export default function Home() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Left Vertical Ad */}
         <div className="hidden lg:block sticky top-4 h-[80vh]">
           <AdBanner
@@ -272,9 +273,9 @@ export default function Home() {
           />
         </div>
 
-        {/* Main Content Area */}
-        <div className="col-span-1 lg:col-span-3">
-          <div className="container mx-auto px-4 py-12">
+        {/* Main Content Area - QR Generator */}
+        <div className="col-span-1 lg:col-span-2">
+          <div className="px-4 py-12 -ml-80">
             {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -812,14 +813,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Vertical Ad */}
-        <div className="hidden lg:block sticky top-4 h-[80vh]">
-          <AdBanner
-            slot="sag_dikey"
-            format="vertical"
-            responsive={false}
-            className="h-full"
-          />
+        {/* Random Blogs - Right Side */}
+        <div className="hidden lg:block">
+          <RandomBlogs />
         </div>
       </div>
 
