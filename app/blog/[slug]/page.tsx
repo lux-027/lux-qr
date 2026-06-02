@@ -130,11 +130,10 @@ export default async function BlogPostPage({ params }: PageProps) {
       
       <div className="container mx-auto px-4 py-12">
         {/* Header with Hamburger Menu and Back Button */}
-        <div className="mb-8 flex justify-between items-center">
-          <div className="md:hidden w-12"></div>
+        <div className="mb-8 max-md:flex max-md:justify-end max-md:items-center">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm z-10"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm max-md:px-3 max-md:py-1.5 z-10"
           >
             <div className="flex items-center gap-2">
               <QrCode className="w-5 h-5 text-blue-400" />
@@ -146,7 +145,6 @@ export default async function BlogPostPage({ params }: PageProps) {
               Blog'a Dön
             </div>
           </Link>
-          <div className="md:hidden w-12"></div>
         </div>
 
         {/* Article */}
@@ -183,11 +181,11 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
 
           {/* Main Image and Content */}
-          <div className="flex flex-col md:flex-row gap-8 items-start">
+          <div className="flex flex-col gap-8">
             {/* Main Image */}
             {post.mainImage && (
-              <div className="w-full md:w-1/3 max-w-md flex-shrink-0">
-                <div className="rounded-2xl overflow-hidden shadow-lg glow-border">
+              <div className="w-full max-w-3xl mx-auto">
+                <div className="rounded-2xl overflow-hidden shadow-2xl glow-border">
                   <img
                     src={post.mainImage}
                     alt={post.title}
@@ -198,7 +196,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             )}
 
             {/* Content */}
-            <div className="flex-1 bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-8 md:p-12">
+            <div className="prose prose-invert prose-lg max-w-none prose-slate prose-headings:text-white prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-h2:bg-gradient-to-r prose-h2:from-blue-400 prose-h2:to-purple-400 prose-h2:bg-clip-text prose-h2:text-transparent prose-h3:text-2xl prose-h3:font-bold prose-h3:mt-10 prose-h3:mb-4 prose-h3:text-blue-300 prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-lg prose-p:mb-6 prose-strong:text-white prose-strong:font-bold prose-strong:bg-gradient-to-r prose-strong:from-blue-400 prose-strong:to-purple-400 prose-strong:bg-clip-text prose-strong:text-transparent prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-ul:text-gray-300 prose-ol:text-gray-300 prose-li:mb-3 prose-li:text-lg prose-li:leading-relaxed prose-code:text-blue-300 prose-code:bg-blue-500/10 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-700 prose-blockquote:bg-slate-900 prose-blockquote:border-l-4 prose-blockquote:border-green-500 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-gray-300">
               <BlogContent content={post.content} />
             </div>
           </div>
