@@ -14,7 +14,23 @@ export const metadata: Metadata = {
     description: 'QR kod oluşturma ipuçları, kullanım rehberleri ve en son teknoloji haberleri.',
     url: 'https://luxqrpro.site/blog',
     siteName: 'LuxQr',
+    images: [
+      {
+        url: '/api/og/blog',
+        width: 1200,
+        height: 630,
+        alt: 'LuxQr Blog',
+      },
+    ],
     type: 'website',
+    locale: 'tr_TR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LuxQr Blog - QR Kod Rehberi ve Güncel Haberler',
+    description: 'QR kod oluşturma ipuçları, kullanım rehberleri ve en son teknoloji haberleri.',
+    images: ['/api/og/blog'],
+    creator: '@luxqrpro',
   },
 };
 

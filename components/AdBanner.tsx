@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { ADS_ENABLED, getAdClassName } from '@/lib/ads';
 
 interface AdBannerProps {
   slot: string;
@@ -18,7 +19,7 @@ export default function AdBanner({
   const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+    if (ADS_ENABLED && typeof window !== 'undefined' && (window as any).adsbygoogle) {
       try {
         (window as any).adsbygoogle.push({});
       } catch (err) {
@@ -26,6 +27,10 @@ export default function AdBanner({
       }
     }
   }, []);
+
+  if (!ADS_ENABLED) {
+    return null;
+  }
 
   return (
     <div ref={adRef} className={className}>

@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import AdBanner from '@/components/AdBanner';
 import RandomBlogs from '@/components/RandomBlogs';
 import { useCounter } from '@/context/CounterContext';
+import { ADS_ENABLED } from '@/lib/ads';
 
 type ContentType = 'text' | 'image' | 'video' | 'file';
 type ExpirationType = '1day' | '1week' | '1month' | '3months';
@@ -275,7 +276,7 @@ export default function Home() {
 
         {/* Main Content Area - QR Generator */}
         <div className="col-span-1 lg:col-span-2">
-          <div className="px-4 py-12 -ml-80">
+          <div className="px-4 py-12">
             {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -573,15 +574,17 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="max-w-6xl mx-auto mt-16 space-y-12"
+          className={`max-w-6xl mx-auto mt-16 ${ADS_ENABLED ? 'space-y-12' : 'space-y-0'}`}
         >
           {/* Horizontal Banner Ad - Above "How It Works" */}
-          <AdBanner
-            slot="yazi_ustu_1"
-            format="horizontal"
-            responsive={true}
-            className="w-full"
-          />
+          {ADS_ENABLED && (
+            <AdBanner
+              slot="yazi_ustu_1"
+              format="horizontal"
+              responsive={true}
+              className="w-full"
+            />
+          )}
 
           {/* How It Works - Two Column Layout */}
           <div>
@@ -754,12 +757,14 @@ export default function Home() {
           </div>
 
           {/* Horizontal Banner Ad - Above "Why LuxQr" */}
-          <AdBanner
-            slot="yazi_ustu_2"
-            format="horizontal"
-            responsive={true}
-            className="w-full"
-          />
+          {ADS_ENABLED && (
+            <AdBanner
+              slot="yazi_ustu_2"
+              format="horizontal"
+              responsive={true}
+              className="w-full"
+            />
+          )}
 
           {/* Why LuxQr */}
           <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">

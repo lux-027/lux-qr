@@ -20,6 +20,7 @@ import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import Link from 'next/link';
 import AdBanner from '@/components/AdBanner';
+import { ADS_ENABLED } from '@/lib/ads';
 
 type QrCodeData = {
   id: string;
@@ -243,12 +244,14 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Ad Banner - Redirect Page */}
-        <AdBanner
-          slot="yonlendirme_sayfasi"
-          format="auto"
-          responsive={true}
-          className="w-full max-w-3xl mx-auto mb-8"
-        />
+        {ADS_ENABLED && (
+          <AdBanner
+            slot="yonlendirme_sayfasi"
+            format="auto"
+            responsive={true}
+            className="w-full max-w-3xl mx-auto mb-8"
+          />
+        )}
 
         <div className="max-w-3xl mx-auto">
           <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">

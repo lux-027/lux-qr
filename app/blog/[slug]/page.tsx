@@ -4,6 +4,7 @@ import { Calendar, ArrowLeft, QrCode, Clock, User, ChevronLeft, ChevronRight, Ho
 import { getPostBySlug, getAllPosts } from '@/lib/db';
 import ShareButton from './ShareButton';
 import RelatedPostsCarousel from './RelatedPostsCarousel';
+import BlogContent from '@/components/BlogContent';
 
 interface PageProps {
   params: {
@@ -33,12 +34,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         siteName: 'LuxQr',
         images: [
           {
-            url: post.mainImage,
+            url: `/api/og/blog/${post.slug}`,
             width: 1200,
             height: 630,
+            alt: post.title,
           },
         ],
         type: 'article',
+        locale: 'tr_TR',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title,
+        description: post.description,
+        images: [`/api/og/blog/${post.slug}`],
+        creator: '@luxqrpro',
       },
     };
   } catch (error) {
@@ -185,23 +195,25 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
           </div>
 
-          {/* Main Image */}
-          {post.mainImage && (
-            <div className="mb-8 rounded-2xl overflow-hidden glow-border">
-              <img
-                src={post.mainImage}
-                alt={post.title}
-                className="w-full h-auto"
-              />
-            </div>
-          )}
+          {/* Main Image and Content */}
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            {/* Main Image */}
+            {post.mainImage && (
+              <div className="w-full md:w-1/3 max-w-md flex-shrink-0">
+                <div className="rounded-2xl overflow-hidden shadow-lg glow-border">
+                  <img
+                    src={post.mainImage}
+                    alt={post.title}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+            )}
 
-          {/* Content */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-8 md:p-12">
-            <div
-              className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-h2:bg-gradient-to-r prose-h2:from-blue-400 prose-h2:to-purple-400 prose-h2:bg-clip-text prose-h2:text-transparent prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-blue-300 prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4 prose-strong:text-white prose-strong:font-bold prose-strong:bg-gradient-to-r prose-strong:from-blue-400 prose-strong:to-purple-400 prose-strong:bg-clip-text prose-strong:text-transparent prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-ul:text-gray-300 prose-ol:text-gray-300 prose-li:mb-2 prose-li:marker:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-500/10 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-700 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-400"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+            {/* Content */}
+            <div className="flex-1 bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-8 md:p-12">
+              <BlogContent content={post.content} />
+            </div>
           </div>
 
           {/* Share Section */}
