@@ -1,7 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Vercel build hatalarını ve boş key sorununu tamamen çözmek için doğrudan tanımlama
-const supabaseUrl = 'https://uiltqydfbdqbsqkxaaqh.supabase.co';
-const supabaseAnonKey = 'sb_publishable_I4n8V4BZBrzmUogv8j9Z1g_I1-20MJj';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_ANON_KEY) tanımlı değil. Lütfen .env.local dosyasını kontrol edin.');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
