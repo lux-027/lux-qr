@@ -2,8 +2,18 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase bağlantısını doğrudan burada garantiye alıyoruz
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uiltqydfbdqbsqkxaaqh.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_I4n8V4BZBrzmUogv8j9Z1g_I1-20MJj';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Environment değişkenlerinin doğruluğunu kontrol et
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase Environment Variables Missing:', {
+    hasUrl: !!supabaseUrl,
+    hasAnonKey: !!supabaseAnonKey,
+    env: process.env.NODE_ENV
+  });
+  throw new Error('Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_ANON_KEY) tanımlı değil. Lütfen .env.local dosyasını kontrol edin.');
+}
 
 console.log('Supabase Configuration:', {
   url: supabaseUrl,
