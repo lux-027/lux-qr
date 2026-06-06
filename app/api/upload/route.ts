@@ -3,30 +3,26 @@ import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 
-// Supabase bağlantısını doğrudan burada garantiye alıyoruz
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-// Environment değişkenlerinin doğruluğunu kontrol et
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase Environment Variables Missing:', {
-    hasUrl: !!supabaseUrl,
-    hasAnonKey: !!supabaseAnonKey,
-    env: process.env.NODE_ENV
-  });
-  throw new Error('Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_ANON_KEY) tanımlı değil. Lütfen .env.local dosyasını kontrol edin.');
-}
-
-console.log('Supabase Configuration:', {
-  url: supabaseUrl,
-  hasAnonKey: !!supabaseAnonKey,
-  usingEnv: !!process.env.NEXT_PUBLIC_SUPABASE_URL
-});
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 export async function POST(request: Request) {
   try {
+    // Environment değişkenlerinin doğruluğunu kontrol et
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Supabase Environment Variables Missing:', {
+        hasUrl: !!supabaseUrl,
+        hasAnonKey: !!supabaseAnonKey,
+        env: process.env.NODE_ENV
+      });
+      return NextResponse.json({ 
+        error: 'Supabase environment variables tanımlı değil. Lütfen Vercel Environment Variables kısmından NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_ANON_KEY değerlerini ekleyin.',
+        details: 'Missing environment variables'
+      }, { status: 500 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
 
