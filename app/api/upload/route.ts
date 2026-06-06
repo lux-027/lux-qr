@@ -18,8 +18,21 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
 
+    // FormData içeriğini debug için logla
+    console.log('FormData Debug:', {
+      hasFile: !!file,
+      fileKeys: Array.from(formData.keys()),
+      fileSize: file?.size,
+      fileType: file?.type,
+      fileName: file?.name
+    });
+
     if (!file) {
-      return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 });
+      console.error('Dosya bulunamadı - FormData keys:', Array.from(formData.keys()));
+      return NextResponse.json({ 
+        error: 'Dosya objesi bulunamadı. FormData\'da "file" key\'i eksik olabilir.',
+        debug: { keys: Array.from(formData.keys()) }
+      }, { status: 400 });
     }
 
     // Dosyayı buffer'a güvenli çevirme (Sunucu çökmesini engeller)
@@ -32,6 +45,14 @@ export async function POST(request: Request) {
     const safeFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
 
     // Supabase Storage'a yükleme
+    console.log('Supabase Upload Başlatılıyor:', {
+      fileName: safeFileName,
+      originalFileName: file.name,
+      fileSize: buffer.length,
+      contentType: file.type,
+      bucket: 'luxqr-files'
+    });
+
     const { data, error: uploadError } = await supabase.storage
       .from('luxqr-files')
       .upload(safeFileName, buffer, {
@@ -40,17 +61,32 @@ export async function POST(request: Request) {
       });
 
     if (uploadError) {
-      console.error('Detayli Supabase Hatasi:', uploadError);
-      return NextResponse.json({ error: uploadError.message }, { status: 400 });
+      console.error('Supabase Upload Hatası:', {
+        message: uploadError.message,
+        statusCode: uploadError.statusCode,
+        error: uploadError,
+        fileName: safeFileName,
+        fileSize: buffer.length
+      });
+      return NextResponse.json({ 
+        error: `Supabase yükleme hatası: ${uploadError.message}`,
+        details: uploadError.message,
+        code: uploadError.statusCode
+      }, { status: 400 });
     }
 
     // Public URL alma
+    console.log('Public URL Alınıyor:', { fileName: safeFileName });
     const { data: urlData } = supabase.storage
       .from('luxqr-files')
       .getPublicUrl(safeFileName);
 
     if (!urlData || !urlData.publicUrl) {
-      return NextResponse.json({ error: 'Public URL alınamadı' }, { status: 500 });
+      console.error('Public URL Alınamadı:', { urlData, fileName: safeFileName });
+      return NextResponse.json({ 
+        error: 'Public URL alınamadı. Dosya başarıyla yüklendi ancak URL oluşturulamadı.',
+        fileName: safeFileName
+      }, { status: 500 });
     }
 
     // QR kod frontend tarafında mı yoksa burada mı üretiliyor kontrol et. 
