@@ -2,10 +2,16 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase bağlantısını doğrudan burada garantiye alıyoruz
-const supabaseUrl = 'https://uiltqydfbdqbsqkxaaqh.supabase.co';
-const supabaseAnonKey = 'sb_publishable_I4n8V4BZBrzmUogv8j9Z1g_I1-20MJj';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uiltqydfbdqbsqkxaaqh.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_I4n8V4BZBrzmUogv8j9Z1g_I1-20MJj';
 
-const supabase = createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || supabaseAnonKey);
+console.log('Supabase Configuration:', {
+  url: supabaseUrl,
+  hasAnonKey: !!supabaseAnonKey,
+  usingEnv: !!process.env.NEXT_PUBLIC_SUPABASE_URL
+});
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function POST(request: Request) {
   try {
@@ -52,6 +58,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, url: urlData.publicUrl });
 
   } catch (error: any) {
+    console.error('Dosya Yükleme Hatası:', error);
+    console.error('Hata detayları:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     return NextResponse.json({ error: error.message || 'Sunucu içi hata' }, { status: 500 });
   }
 }
