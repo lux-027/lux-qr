@@ -275,7 +275,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Area - QR Generator */}
-        <div className="col-span-1 lg:col-span-2 lg:-ml-[350px] w-full">
+        <div className="col-span-1 lg:col-span-2 lg:-ml-[175px] w-full">
           <div className="px-4 py-8 md:py-12 max-w-4xl mx-auto">
             {/* Header */}
             <motion.div
@@ -287,8 +287,8 @@ export default function Home() {
               <div className="relative inline-block">
                 <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
                 <div className="relative flex items-center justify-center gap-3 mb-3">
-                  <QrCode className="w-10 h-10 md:w-12 md:h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
-                  <h1 className="text-5xl md:text-6xl font-bold text-white">
+                  <QrCode className="w-8 h-8 md:w-10 md:h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
                     LuxQr
                   </h1>
                 </div>
