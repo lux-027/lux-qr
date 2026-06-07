@@ -47,9 +47,10 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Benzersiz dosya adı üretme
+    // Benzersiz dosya adı üretme (crypto.randomUUID kullanarak tam benzersizlik)
     const fileExt = file.name.split('.').pop();
-    const fileName = `luxqr-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+    const uniqueId = crypto.randomUUID();
+    const fileName = `${Date.now()}-${uniqueId}.${fileExt}`;
     const safeFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
 
     // Supabase Storage'a yükleme
@@ -58,35 +59,29 @@ export async function POST(request: Request) {
       originalFileName: file.name,
       fileSize: buffer.length,
       contentType: file.type,
-      bucket: 'luxqr-files'
+      bucket: 'qrcodes'
     });
 
-    const { data, error: uploadError } = await supabase.storage
-      .from('luxqr-files')
+    const { data, error: storageError } = await supabase.storage
+      .from('qrcodes')
       .upload(safeFileName, buffer, {
         contentType: file.type,
         upsert: true
       });
 
-    if (uploadError) {
-      console.error('Supabase Upload Hatası:', {
-        message: uploadError.message,
-        statusCode: uploadError.statusCode,
-        error: uploadError,
-        fileName: safeFileName,
-        fileSize: buffer.length
-      });
+    if (storageError) {
+      console.error('Supabase Detaylı Storage Hatası:', storageError.message, storageError);
       return NextResponse.json({ 
-        error: `Supabase yükleme hatası: ${uploadError.message}`,
-        details: uploadError.message,
-        code: uploadError.statusCode
+        error: storageError.message,
+        details: storageError.message,
+        code: storageError.statusCode
       }, { status: 400 });
     }
 
     // Public URL alma
     console.log('Public URL Alınıyor:', { fileName: safeFileName });
     const { data: urlData } = supabase.storage
-      .from('luxqr-files')
+      .from('qrcodes')
       .getPublicUrl(safeFileName);
 
     if (!urlData || !urlData.publicUrl) {
