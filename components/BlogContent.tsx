@@ -36,7 +36,8 @@ export default function BlogContent({ content }: BlogContentProps) {
     });
 
     // Convert line breaks to paragraphs (but not inside lists or headings)
-    html = html.split('\n\n').map(para => {
+    const paragraphs = html?.split('\n\n') || [];
+    html = paragraphs.map(para => {
       if (para.trim() === '') return '';
       if (para.startsWith('<h2>') || para.startsWith('<h3>') || para.startsWith('<ul>') || para.startsWith('<ol>')) {
         return para;

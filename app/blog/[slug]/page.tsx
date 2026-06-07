@@ -159,7 +159,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               </span>
               <div className="flex items-center gap-2 text-gray-400 text-sm">
                 <Clock className="w-4 h-4 text-blue-400" />
-                <span>{Math.ceil(post.content.split(' ').length / 200)} dk okuma</span>
+                <span>{Math.ceil((post.content?.split(' ')?.length || 0) / 200)} dk okuma</span>
               </div>
               <div className="flex items-center gap-2 text-gray-400 text-sm">
                 <Calendar className="w-4 h-4 text-blue-400" />
