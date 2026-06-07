@@ -59,11 +59,11 @@ export async function POST(request: Request) {
       originalFileName: file.name,
       fileSize: buffer.length,
       contentType: file.type,
-      bucket: 'qrcodes'
+      bucket: 'luxqr-files'
     });
 
     const { data, error: storageError } = await supabase.storage
-      .from('qrcodes')
+      .from('luxqr-files')
       .upload(safeFileName, buffer, {
         contentType: file.type,
         upsert: true
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
     // Public URL alma
     console.log('Public URL Alınıyor:', { fileName: safeFileName });
     const { data: urlData } = supabase.storage
-      .from('qrcodes')
+      .from('luxqr-files')
       .getPublicUrl(safeFileName);
 
     if (!urlData || !urlData.publicUrl) {
