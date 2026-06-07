@@ -275,8 +275,8 @@ export default function Home() {
         </div>
 
         {/* Main Content Area - QR Generator */}
-        <div className="col-span-1 lg:col-span-2 lg:-ml-[350px]">
-          <div className="px-4 py-12">
+        <div className="col-span-1 lg:col-span-2 lg:-ml-[350px] w-full">
+          <div className="px-4 py-8 md:py-12 max-w-4xl mx-auto">
             {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -293,7 +293,7 @@ export default function Home() {
                   </h1>
                 </div>
               </div>
-              <p className="text-2xl md:text-3xl font-bold text-gray-300">
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-300">
                 Modern{' '}
                 <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
                   QR Kod Oluşturma
@@ -301,9 +301,9 @@ export default function Home() {
               </p>
             </motion.div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto w-full">
           {!qrCodeId ? (
-            <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
+            <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-6 md:p-8">
               {/* Content Type Selection */}
               <div className="mb-8">
                 <h2 className="text-xl font-semibold mb-4 text-white">
