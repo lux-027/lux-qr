@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Create QR code record
     const qrId = uuidv4();
-    const viewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/view/${qrId}`;
+    const viewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.luxqrpro.site'}/view/${qrId}`;
     const qrCode: QrCodeData = {
       id: qrId,
       content: content || '',

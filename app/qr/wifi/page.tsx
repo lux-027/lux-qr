@@ -19,39 +19,6 @@ export default function WifiPage() {
   const [loading, setLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [scanningWifi, setScanningWifi] = useState(false);
-  const [availableNetworks, setAvailableNetworks] = useState<string[]>([]);
-  const [showNetworkList, setShowNetworkList] = useState(false);
-
-  const handleWifiScan = async () => {
-    setScanningWifi(true);
-    setShowNetworkList(true);
-    
-    // Simulate WiFi scanning (browsers don't support actual WiFi scanning for security)
-    // In a real app, this would use native APIs or require a backend service
-    setTimeout(() => {
-      // Common WiFi network names as examples
-      const mockNetworks = [
-        'TURKSAT-KABLONET-2.4',
-        'TURKSAT-KABLONET-5.0',
-        'TurkTelekom_WiFi',
-        'Vodafone_Home',
-        'TurkNet_WiFi',
-        'HomeNetwork',
-        'Guest_WiFi',
-        'Office_Network'
-      ];
-      setAvailableNetworks(mockNetworks);
-      setScanningWifi(false);
-      showNotification('WiFi ağları tarandı (demo modu)', 'info');
-    }, 1500);
-  };
-
-  const handleNetworkSelect = (ssid: string) => {
-    setFormData({ ...formData, ssid });
-    setShowNetworkList(false);
-    showNotification(`"${ssid}" seçildi`, 'success');
-  };
 
   const handleGenerate = async () => {
     if (!formData.ssid) {
@@ -149,47 +116,6 @@ export default function WifiPage() {
           transition={{ delay: 0.3 }}
           className="card-premium p-8 mb-8"
         >
-          {/* WiFi Scan Button */}
-          <div className="mb-6">
-            <button
-              onClick={handleWifiScan}
-              disabled={scanningWifi}
-              className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-6 py-3 rounded-2xl transition-all hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Wifi className="w-5 h-5" />
-              <span className="font-medium">{scanningWifi ? 'Taranıyor...' : 'WiFi Bul'}</span>
-            </button>
-          </div>
-
-          {/* Available Networks List */}
-          {showNetworkList && (
-            <div className="mb-6 bg-slate-800/50 border border-white/10 rounded-xl p-4">
-              <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                <Wifi className="w-5 h-5 text-cyan-400" />
-                Mevcut Ağlar
-              </h4>
-              {scanningWifi ? (
-                <div className="flex items-center gap-2 text-gray-400">
-                  <div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-                  <span>Taranıyor...</span>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {availableNetworks.map((network) => (
-                    <button
-                      key={network}
-                      onClick={() => handleNetworkSelect(network)}
-                      className="w-full text-left px-4 py-3 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-colors flex items-center gap-2"
-                    >
-                      <Wifi className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                      <span className="break-words whitespace-normal flex-1">{network}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">

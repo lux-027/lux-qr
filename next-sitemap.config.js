@@ -8,11 +8,31 @@ module.exports = {
   sitemapSize: 7000,
   exclude: ['/api/*', '/view/*'],
   transform: async (config, path) => {
+    // Higher priority for QR creation pages
+    let priority = config.priority;
+    let changefreq = config.changefreq;
+    
+    if (path.startsWith('/qr/')) {
+      priority = 0.9;
+      changefreq = 'weekly';
+    }
+    
     return {
       loc: path,
-      changefreq: config.changefreq,
-      priority: config.priority,
+      changefreq: changefreq,
+      priority: priority,
       lastmod: new Date().toISOString(),
     }
+  },
+  additionalPaths: async (config) => {
+    const qrPages = [
+      { loc: '/qr/metin-belge', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/qr/kartvizit', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/qr/wifi', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/qr/sosyal-medya', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/qr/ses-dosyasi', priority: 0.9, changefreq: 'weekly' },
+    ];
+    
+    return qrPages;
   },
 }

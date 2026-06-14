@@ -1,0 +1,49 @@
+{
+  "name": "LuxQr - Ücretsiz QR Kod Oluşturucu",
+  "short_name": "LuxQr",
+  "description": "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.svg",
+      "sizes": "200x200",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Metin QR",
+      "short_name": "Metin",
+      "description": "Metin için QR kod oluştur",
+      "url": "/qr/metin-belge",
+      "icons": [{ "src": "/favicon.svg", "sizes": "32x32" }]
+    },
+    {
+      "name": "WiFi QR",
+      "short_name": "WiFi",
+      "description": "WiFi için QR kod oluştur",
+      "url": "/qr/wifi",
+      "icons": [{ "src": "/favicon.svg", "sizes": "32x32" }]
+    },
+    {
+      "name": "Kartvizit QR",
+      "short_name": "Kartvizit",
+      "description": "Kartvizit için QR kod oluştur",
+      "url": "/qr/kartvizit",
+      "icons": [{ "src": "/favicon.svg", "sizes": "32x32" }]
+    }
+  ]
+}
