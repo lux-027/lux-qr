@@ -25,8 +25,20 @@ export function CounterProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const incrementCounter = () => {
-    setGlobalCounter(prev => prev + 1);
+  const incrementCounter = async () => {
+    try {
+      const response = await fetch('/api/counter', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      if (data.success) {
+        setGlobalCounter(data.counter);
+      }
+    } catch (err) {
+      console.error('Error incrementing global counter:', err);
+      // Fallback to local increment if API fails
+      setGlobalCounter(prev => prev + 1);
+    }
   };
 
   useEffect(() => {

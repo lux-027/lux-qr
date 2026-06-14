@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { content, contentType, fileName, filePath, expiration } = body;
+    const { content, contentType, fileName, filePath, expiration, note } = body;
 
     // Calculate expiration date and TTL (in seconds)
     let expiresAt = null;
@@ -30,14 +30,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Create QR code record
+    const qrId = uuidv4();
+    const viewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/view/${qrId}`;
     const qrCode: QrCodeData = {
-      id: uuidv4(),
+      id: qrId,
       content: content || '',
       contentType,
       fileName: fileName || null,
       filePath: filePath || null,
+      note: note || null,
       expiresAt: expiresAt ? expiresAt.toISOString() : null,
       createdAt: new Date().toISOString(),
+      viewUrl,
     };
 
     // Save to Vercel KV with TTL
@@ -48,7 +52,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ 
       success: true, 
-      id: qrCode.id
+      id: qrCode.id,
+      viewUrl: qrCode.viewUrl
     });
   } catch (error) {
     console.error('QR Üretim Hatası:', error);

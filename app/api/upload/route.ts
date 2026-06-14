@@ -2,9 +2,12 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
+export const maxDuration = 300; // 300 second timeout for Vercel (5 minutes)
 
 export async function POST(request: Request) {
   try {
+    console.log('Upload API called');
+    
     // Environment değişkenlerinin doğruluğunu kontrol et
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -43,9 +46,22 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
 
+    // Check file size before processing (Supabase limit is typically 50MB, but we use 100MB for user convenience)
+    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+    if (file.size > MAX_FILE_SIZE) {
+      console.error('File size exceeds limit:', file.size, 'Max:', MAX_FILE_SIZE);
+      return NextResponse.json({ 
+        error: 'Dosya boyutu çok büyük. Maksimum 100MB limiti var.',
+        details: `Dosya boyutu: ${(file.size / 1024 / 1024).toFixed(2)}MB, Maksimum: 100MB`,
+        code: '413'
+      }, { status: 413 });
+    }
+
     // Dosyayı buffer'a güvenli çevirme (Sunucu çökmesini engeller)
+    console.log('Converting file to buffer...');
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    console.log('Buffer created, size:', buffer.length);
 
     // Benzersiz dosya adı üretme (crypto.randomUUID kullanarak tam benzersizlik)
     const fileExt = file.name.split('.').pop();
@@ -62,12 +78,15 @@ export async function POST(request: Request) {
       bucket: 'luxqr-files'
     });
 
+    console.log('Starting Supabase upload...');
     const { data, error: storageError } = await supabase.storage
       .from('luxqr-files')
       .upload(safeFileName, buffer, {
         contentType: file.type,
-        upsert: true
+        upsert: true,
+        cacheControl: '3600'
       });
+    console.log('Supabase upload completed');
 
     if (storageError) {
       console.error('Supabase Detaylı Storage Hatası:', storageError.message, storageError);
@@ -83,6 +102,7 @@ export async function POST(request: Request) {
     const { data: urlData } = supabase.storage
       .from('luxqr-files')
       .getPublicUrl(safeFileName);
+    console.log('Public URL obtained:', urlData?.publicUrl);
 
     if (!urlData || !urlData.publicUrl) {
       console.error('Public URL Alınamadı:', { urlData, fileName: safeFileName });

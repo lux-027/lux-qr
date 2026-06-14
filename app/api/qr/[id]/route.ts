@@ -8,9 +8,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    console.log('Fetching QR code with ID:', params.id);
     const qrCode = await getQrCodeById(params.id);
+    console.log('QR code data:', qrCode);
 
     if (!qrCode) {
+      console.log('QR code not found');
       return NextResponse.json(
         { success: false, error: 'QR code not found' },
         { 
@@ -25,6 +28,7 @@ export async function GET(
 
     // Check if expired
     if (qrCode.expiresAt && new Date() > new Date(qrCode.expiresAt)) {
+      console.log('QR code expired');
       return NextResponse.json({
         success: false,
         expired: true,
@@ -37,6 +41,7 @@ export async function GET(
       });
     }
 
+    console.log('QR code found and valid');
     return NextResponse.json({
       success: true,
       data: qrCode,

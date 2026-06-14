@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import PageWrapper from "@/components/PageWrapper";
 import Script from "next/script";
 import { CounterProvider } from "@/context/CounterContext";
+import { NotificationProvider } from "@/components/Notification";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -44,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-x-hidden">
+    <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
       <head>
         <meta charSet="UTF-8" />
         <link rel="canonical" href="https://www.luxqrpro.site/" />
@@ -59,10 +60,12 @@ export default function RootLayout({
         <Sidebar />
         <div className="md:ml-64">
           <CounterProvider>
-            <PageWrapper>
-              {children}
-            </PageWrapper>
-            <Footer />
+            <NotificationProvider>
+              <PageWrapper>
+                {children}
+              </PageWrapper>
+              <Footer />
+            </NotificationProvider>
           </CounterProvider>
         </div>
       </body>

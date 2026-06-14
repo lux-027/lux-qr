@@ -81,8 +81,8 @@ export default function ContactPage() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-3 mb-6">
-            <MessageSquare className="w-12 h-12 text-blue-500" />
-            <h1 className="text-5xl font-bold text-white">
+            <MessageSquare className="w-12 h-12 text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+            <h1 className="text-5xl font-bold text-white text-gradient">
               İletişim
             </h1>
           </div>
@@ -98,11 +98,13 @@ export default function ContactPage() {
           transition={{ delay: 0.2 }}
           className="max-w-2xl mx-auto"
         >
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
+          <div className="card-premium p-8">
             {submitted ? (
               <div className="text-center py-12">
-                <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
-                <h2 className="text-3xl font-bold text-white mb-4">Mesaj Gönderildi!</h2>
+                <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 mb-6 shadow-lg">
+                  <CheckCircle className="w-20 h-20 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-4 text-gradient">Mesaj Gönderildi!</h2>
                 <p className="text-gray-400 text-lg">
                   Mesajınız başarıyla iletildi. En kısa sürede size dönüş yapacağız.
                 </p>
@@ -117,7 +119,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 glow-border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="Adınız Soyadınız"
                   />
                 </div>
@@ -130,7 +132,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 glow-border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="ornek@email.com"
                   />
                 </div>
@@ -143,7 +145,7 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 glow-border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="Mesaj konusu"
                   />
                 </div>
@@ -156,7 +158,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 glow-border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
                     placeholder="Mesajınızı buraya yazın..."
                   />
                 </div>
@@ -164,7 +166,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed glow-border-strong flex items-center justify-center gap-2"
+                  className="btn-primary w-full py-4 rounded-2xl text-white font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -190,16 +192,16 @@ export default function ContactPage() {
           transition={{ delay: 0.4 }}
           className="max-w-2xl mx-auto mt-12"
         >
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-white mb-6">İletişim Bilgileri</h2>
+          <div className="card-premium p-8">
+            <h2 className="text-2xl font-bold text-white mb-6 text-gradient">İletişim Bilgileri</h2>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                  <Mail className="w-5 h-5 text-blue-400" />
+                <div className="flex-shrink-0 p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
+                  <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">E-posta</p>
-                  <p className="text-white">contact@luxqr.com</p>
+                  <p className="text-white font-medium">luxqrpro@gmail.com</p>
                 </div>
               </div>
             </div>

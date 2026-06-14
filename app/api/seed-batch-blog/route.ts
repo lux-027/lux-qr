@@ -92,7 +92,7 @@ LuxQr ile restoranınız için profesyonel QR menü oluşturmak hemen başlayabi
         published: true,
       },
       {
-        id: 'post-3',
+        id: '3',
         title: 'Kişisel Kartvizitlerde QR Kod Devrimi',
         slug: 'kisisel-kartvizitlerde-qr-kod-devrimi',
         description: 'İletişim bilgilerinizi tek bir kodla paylaşın. Kartvizitinizde artık karmaşık bilgiler yerine profesyonel bir QR kod olsun.',
@@ -165,7 +165,7 @@ Güvenli QR kod oluşturmak için LuxQr'ı tercih edin!`,
         published: true,
       },
       {
-        id: 'post-5',
+        id: '5',
         title: 'Etkinlik ve Biletleme Sistemlerinde QR Kod',
         slug: 'etkinlik-ve-biletleme-sistemlerinde-qr-kod',
         description: 'Girişleri hızlandırın, sahteciliği önleyin. Etkinlik yönetimi artık sadece bir tarama uzağınızda.',

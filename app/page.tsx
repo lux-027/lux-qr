@@ -1,260 +1,74 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { QRCodeSVG } from 'qrcode.react';
-import { 
-  Type, 
-  Image as ImageIcon, 
-  Video, 
-  FileText, 
-  Clock, 
-  Download,
-  CheckCircle,
-  Upload,
-  QrCode,
-  Zap,
-  Shield,
-  Sparkles,
-  UploadCloud,
-  Share2,
-  Link as LinkIcon
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import AdBanner from '@/components/AdBanner';
-import RandomBlogs from '@/components/RandomBlogs';
-import { useCounter } from '@/context/CounterContext';
-import { ADS_ENABLED } from '@/lib/ads';
+import Link from 'next/link';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown } from 'lucide-react';
+import BlogSlider from '@/components/BlogSlider';
+import { useState } from 'react';
 
-type ContentType = 'text' | 'image' | 'video' | 'file';
-type ExpirationType = '1day' | '1week' | '1month' | '3months';
+const qrCategories = [
+  {
+    title: 'Metin, Resim, Video',
+    description: 'Metin, resim, video ve belge yükleyerek QR kod oluşturun',
+    icon: Type,
+    href: '/qr/metin-belge',
+    color: 'from-blue-500 to-purple-500',
+  },
+  {
+    title: 'Kartvizit',
+    description: 'vCard formatında dijital kartvizit oluşturun ve paylaşın',
+    icon: CreditCard,
+    href: '/qr/kartvizit',
+    color: 'from-purple-500 to-pink-500',
+  },
+  {
+    title: 'WiFi',
+    description: 'WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın',
+    icon: Wifi,
+    href: '/qr/wifi',
+    color: 'from-cyan-500 to-blue-500',
+  },
+  {
+    title: 'Sosyal Medya',
+    description: 'Instagram, TikTok ve Link-in-bio sayfalarınız için QR kod',
+    icon: Share2,
+    href: '/qr/sosyal-medya',
+    color: 'from-pink-500 to-rose-500',
+  },
+  {
+    title: 'Ses Dosyası',
+    description: 'Ses dosyalarınız yükleyerek QR kod oluşturun',
+    icon: Mic,
+    href: '/qr/ses-dosyasi',
+    color: 'from-orange-500 to-red-500',
+  },
+];
 
 export default function Home() {
-  const [contentType, setContentType] = useState<ContentType>('text');
-  const [expiration, setExpiration] = useState<ExpirationType>('1week');
-  const [text, setText] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const [uploadedFilePath, setUploadedFilePath] = useState('');
-  const [qrCodeId, setQrCodeId] = useState('');
-  const [qrCodeUrl, setQrCodeUrl] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [shared, setShared] = useState(false);
-  const [imageShared, setImageShared] = useState(false);
-  const { incrementCounter } = useCounter();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const contentTypes = [
-    { id: 'text' as ContentType, label: 'Not/Metin', icon: Type },
-    { id: 'image' as ContentType, label: 'Resim', icon: ImageIcon },
-    { id: 'video' as ContentType, label: 'Video', icon: Video },
-    { id: 'file' as ContentType, label: 'Dosya', icon: FileText },
+  const faqData = [
+    {
+      question: "QR kod ücretsiz mi?",
+      answer: "Evet, LuxQR platformunda QR kod oluşturma tamamen ücretsizdir. Temel özelliklerin tamamını hiçbir ücret ödemeden kullanabilirsiniz."
+    },
+    {
+      question: "QR kodun geçerlilik süresi nedir?",
+      answer: "QR kodlarınız için 1 gün, 1 hafta, 1 ay veya 3 ay geçerlilik süresi seçebilirsiniz. Süre dolduğunda verileriniz otomatik olarak güvenli bir şekilde silinir."
+    },
+    {
+      question: "QR kodu nerede kullanabilirim?",
+      answer: "QR kodlarınızı kartvizitlerde, broşürlerde, menülerde, sosyal medyada, web sitelerinde ve daha birçok yerde kullanabilirsiniz. Yüksek çözünürlüklü baskı kalitesindedir."
+    },
+    {
+      question: "Verilerim güvende mi?",
+      answer: "Evet, tüm verileriniz AES-256 şifreleme ile korunur ve güvenli bulut sistemlerinde saklanır. Belirlediğiniz geçerlilik süresi dolduğunda verileriniz otomatik olarak silinir."
+    },
+    {
+      question: "Dinamik QR kod nedir?",
+      answer: "Dinamik QR kodlar, basılı materyalleri değiştirmeden arkasındaki yönlendirme linkini güncellemenize olanak tanır. Ayrıca tarama istatistiklerini takip edebilirsiniz."
+    }
   ];
-
-  const expirationOptions = [
-    { id: '1day' as ExpirationType, label: '1 Gün' },
-    { id: '1week' as ExpirationType, label: '1 Hafta' },
-    { id: '1month' as ExpirationType, label: '1 Ay' },
-    { id: '3months' as ExpirationType, label: '3 Ay' },
-  ];
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
-
-    // File size validation (100MB limit)
-    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      setError('Dosya boyutu çok büyük (Max 100MB)');
-      return;
-    }
-
-    setFile(selectedFile);
-    setError('');
-    setUploading(true);
-
-    // Upload file immediately
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setUploadedFilePath(data.url);
-      } else {
-        setError(data.error || 'Dosya yüklenirken hata oluştu');
-      }
-    } catch (err) {
-      setError('Sunucu bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.');
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const isButtonDisabled = () => {
-    if (loading || uploading) return true;
-    if (contentType === 'text' && !text.trim()) return true;
-    if (contentType !== 'text' && !uploadedFilePath) return true;
-    return false;
-  };
-
-  const generateQRCode = async () => {
-    setLoading(true);
-    setError('');
-
-    try {
-      if (contentType === 'text' && !text) {
-        setError('Lütfen bir metin girin');
-        setLoading(false);
-        return;
-      }
-
-      if (contentType !== 'text' && !uploadedFilePath) {
-        setError('Lütfen bir dosya seçin ve yükleyin');
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: contentType === 'text' ? text : '',
-          contentType,
-          fileName: file?.name || null,
-          filePath: uploadedFilePath || null,
-          expiration,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setQrCodeId(data.id);
-        const qrLink = 'https://lux-qr-delta.vercel.app/view/' + data.id;
-        setQrCodeUrl(qrLink);
-        incrementCounter();
-      } else {
-        setError(data.error || 'QR kod oluşturulurken hata oluştu');
-      }
-    } catch (err) {
-      setError('QR kod oluşturulurken hata oluştu');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const downloadQRCode = () => {
-    const svg = document.getElementById('qr-code-svg');
-    if (!svg) return;
-
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx?.drawImage(img, 0, 0);
-      const pngFile = canvas.toDataURL('image/png');
-      const downloadLink = document.createElement('a');
-      downloadLink.download = `luxqr-${qrCodeId}.png`;
-      downloadLink.href = pngFile;
-      downloadLink.click();
-    };
-
-    img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(qrCodeUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const handleShareLink = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'LuxQr - QR Kodum',
-          text: 'LuxQr ile yeni bir QR kod oluşturdum, Hemen QR kodumu tarat.\n\nSenden de QR oluştur: https://luxqrpro.site',
-          url: qrCodeUrl,
-        });
-      } catch (err) {
-        console.error('Share failed:', err);
-      }
-    } else {
-      // Fallback: copy to clipboard
-      try {
-        await navigator.clipboard.writeText(qrCodeUrl);
-        setShared(true);
-        setTimeout(() => setShared(false), 2000);
-      } catch (err) {
-        console.error('Failed to copy:', err);
-      }
-    }
-  };
-
-  const handleShareImage = async () => {
-    const svg = document.getElementById('qr-code-svg');
-    if (!svg) return;
-
-    try {
-      // Convert SVG to canvas
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-
-      img.onload = async () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx?.drawImage(img, 0, 0);
-        
-        // Convert canvas to blob
-        canvas.toBlob(async (blob) => {
-          if (!blob) return;
-          
-          const file = new File([blob], 'luxqr.png', { type: 'image/png' });
-          
-          if (navigator.share && navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({
-                title: 'LuxQr - QR Kodum',
-                text: 'LuxQr ile yeni bir QR kod oluşturdum, içeriğe ulaşmak için kodu taratabilirsin! 👇\n\nhttps://luxqrpro.site',
-                files: [file],
-              });
-            } catch (err) {
-              console.error('Image share failed:', err);
-              // Fallback: download
-              downloadQRCode();
-            }
-          } else {
-            // Fallback: download
-            downloadQRCode();
-          }
-        }, 'image/png');
-      };
-
-      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
-    } catch (err) {
-      console.error('Failed to share image:', err);
-      // Fallback: download
-      downloadQRCode();
-    }
-  };
 
   return (
     <motion.main
@@ -263,573 +77,383 @@ export default function Home() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        {/* Left Vertical Ad */}
-        <div className="hidden lg:block sticky top-4 h-[80vh]">
-          <AdBanner
-            slot="sol_dikey"
-            format="vertical"
-            responsive={false}
-            className="h-full"
-          />
-        </div>
+      <div className="px-4 py-8 md:py-12 max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+            <div className="relative flex items-center justify-center gap-3 mb-4">
+              <QrCode className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">
+                LuxQr
+              </h1>
+            </div>
+          </div>
+          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-300 mb-4">
+            Modern{' '}
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+              QR Kod Oluşturma
+            </span>
+          </p>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            İhtiyacınıza uygun QR kod türünü seçin ve saniyeler içinde profesyonel QR kodlar oluşturun
+          </p>
+        </motion.div>
 
-        {/* Main Content Area - QR Generator */}
-        <div className="col-span-1 lg:col-span-2 lg:-ml-[175px] w-full">
-          <div className="px-4 py-8 md:py-12 max-w-4xl mx-auto">
-            {/* Header */}
+        {/* QR Category Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          {qrCategories.map((category, index) => (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              key={category.href}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
+              transition={{ delay: 0.1 * index, duration: 0.5 }}
             >
-              <div className="relative inline-block">
-                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
-                <div className="relative flex items-center justify-center gap-3 mb-3">
-                  <QrCode className="w-8 h-8 md:w-10 md:h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-                    LuxQr
-                  </h1>
-                </div>
-              </div>
-              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-300">
-                Modern{' '}
-                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
-                  QR Kod Oluşturma
-                </span>
-              </p>
-            </motion.div>
-
-        <div className="max-w-3xl mx-auto w-full">
-          {!qrCodeId ? (
-            <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-6 md:p-8">
-              {/* Content Type Selection */}
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4 text-white">
-                  İçerik Türü
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {contentTypes.map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => {
-                        setContentType(type.id);
-                        setFile(null);
-                        setUploadedFilePath('');
-                        setText('');
-                        setError('');
-                      }}
-                      className={cn(
-                        'p-4 rounded-xl border transition-all duration-200 flex flex-col items-center gap-2',
-                        contentType === type.id
-                          ? 'glow-border-active border-blue-500 bg-blue-500/10'
-                          : 'glow-border border-white/10 bg-white/5 hover:border-white/30'
-                      )}
-                    >
-                      <type.icon className={cn(
-                        'w-6 h-6',
-                        contentType === type.id ? 'text-blue-500' : 'text-gray-400'
-                      )} />
-                      <span className={cn(
-                        'text-sm font-medium',
-                        contentType === type.id ? 'text-blue-500' : 'text-gray-300'
-                      )}>
-                        {type.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Content Input */}
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4 text-white">
-                  İçerik
-                </h2>
-                {contentType === 'text' ? (
-                  <textarea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="Metninizi buraya yazın..."
-                    className="w-full h-32 p-4 rounded-xl bg-white/5 glow-border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
-                  />
-                ) : (
-                  <div className="glow-border border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-white/40 transition-colors">
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                      accept={
-                        contentType === 'image' 
-                          ? 'image/png,image/jpeg,image/gif,image/webp' 
-                          : contentType === 'video' 
-                          ? 'video/mp4,video/webm,video/quicktime' 
-                          : '.pdf,.docx,.zip,.txt,.png,.jpg,.jpeg,.gif,.mp4,.webm'
-                      }
-                      className="hidden"
-                      id="file-input"
-                      disabled={uploading}
-                    />
-                    <label
-                      htmlFor="file-input"
-                      className={`cursor-pointer flex flex-col items-center gap-3 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                      {uploading ? (
-                        <>
-                          <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <div>
-                            <p className="text-white font-medium">
-                              Dosya yükleniyor...
-                            </p>
-                            <p className="text-gray-500 text-sm mt-1">
-                              Lütfen bekleyin
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-10 h-10 text-gray-400" />
-                          <div>
-                            <p className="text-white font-medium">
-                              {file ? file.name : 'Dosya seçmek için tıklayın'}
-                            </p>
-                            <p className="text-gray-500 text-sm mt-1">
-                              {contentType === 'image' 
-                                ? 'PNG, JPG, GIF, WebP (Max 100MB)' 
-                                : contentType === 'video' 
-                                ? 'MP4, WebM, MOV (Max 100MB)' 
-                                : 'PDF, DOCX, ZIP, TXT, Resim, Video (Max 100MB)'}
-                            </p>
-                          </div>
-                        </>
-                      )}
-                    </label>
+              <Link href={category.href}>
+                <div className="card-premium group relative overflow-hidden h-full p-6">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                  
+                  <div className="relative">
+                    <div className={`inline-flex p-3 rounded-2xl bg-gradient-to-br ${category.color} mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <category.icon className="w-7 h-7 text-white" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gradient transition-colors">
+                      {category.title}
+                    </h3>
+                    
+                    <p className="text-gray-400 mb-4 leading-relaxed text-sm">
+                      {category.description}
+                    </p>
+                    
+                    <div className="flex items-center text-blue-400 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                      Başla
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </div>
                   </div>
-                )}
-              </div>
-
-              {/* Expiration Selection */}
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4 text-white">
-                  Geçerlilik Süresi
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {expirationOptions.map((option) => (
-                    <button
-                      key={option.id}
-                      onClick={() => setExpiration(option.id)}
-                      className={cn(
-                        'p-3 rounded-xl border transition-all duration-200 flex items-center justify-center gap-2',
-                        expiration === option.id
-                          ? 'glow-border-active border-blue-500 bg-blue-500/10'
-                          : 'glow-border border-white/10 bg-white/5 hover:border-white/30'
-                      )}
-                    >
-                      <Clock className={cn(
-                        'w-4 h-4',
-                        expiration === option.id ? 'text-blue-500' : 'text-gray-400'
-                      )} />
-                      <span className={cn(
-                        'text-sm font-medium',
-                        expiration === option.id ? 'text-blue-500' : 'text-gray-300'
-                      )}>
-                        {option.label}
-                      </span>
-                    </button>
-                  ))}
                 </div>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <div className="mb-6 p-4 rounded-xl glow-border bg-red-500/10 border-red-500/30 text-red-400 text-center">
-                  {error}
-                </div>
-              )}
-
-              {/* Generate Button */}
-              <button
-                onClick={generateQRCode}
-                disabled={isButtonDisabled()}
-                className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed glow-border-strong flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    QR Kod Oluşturuluyor...
-                  </>
-                ) : uploading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Yükleniyor...
-                  </>
-                ) : (
-                  'QR Kod Oluştur'
-                )}
-              </button>
-            </div>
-          ) : (
-            <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8 text-center">
-              <div className="mb-6">
-                <CheckCircle className="w-14 h-14 text-blue-500 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-white mb-2">QR Kodunuz Hazır!</h2>
-                <p className="text-gray-400">QR kodunuz başarıyla oluşturuldu</p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 inline-block mb-6 glow-border">
-                <QRCodeSVG
-                  id="qr-code-svg"
-                  value={qrCodeUrl}
-                  size={256}
-                  level="H"
-                  includeMargin={true}
-                  bgColor="#ffffff"
-                  fgColor="#000000"
-                />
-              </div>
-
-              <div className="space-y-4">
-                {/* Desktop URL Display */}
-                <div className="hidden md:block p-4 rounded-xl glow-border bg-white/5 border-white/10">
-                  <p className="text-gray-400 text-sm mb-1">QR Kod URL</p>
-                  <p className="text-blue-400 font-mono text-sm break-all">{qrCodeUrl}</p>
-                </div>
-
-                <div className="grid grid-cols-2 lg:flex gap-2 lg:gap-4 justify-center">
-                  <button
-                    onClick={downloadQRCode}
-                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
-                  >
-                    <Download className="w-4 h-4 lg:w-5 lg:h-5" />
-                    İndir
-                  </button>
-                  <button
-                    onClick={handleShareLink}
-                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
-                  >
-                    {shared ? (
-                      <>
-                        <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
-                        Link panoya kopyalandı!
-                      </>
-                    ) : (
-                      <>
-                        <LinkIcon className="w-4 h-4 lg:w-5 lg:h-5" />
-                        Linki Paylaş
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={handleShareImage}
-                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
-                  >
-                    {imageShared ? (
-                      <>
-                        <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
-                        İndirildi!
-                      </>
-                    ) : (
-                      <>
-                        <QrCode className="w-4 h-4 lg:w-5 lg:h-5" />
-                        QR Paylaş
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={copyToClipboard}
-                    className="flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm lg:text-base font-semibold transition-colors glow-border"
-                  >
-                    {copied ? (
-                      <>
-                        <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5" />
-                        Kopyalandı!
-                      </>
-                    ) : (
-                      <>
-                        <Share2 className="w-4 h-4 lg:w-5 lg:h-5" />
-                        Linki Kopyala
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setQrCodeId('');
-                      setQrCodeUrl('');
-                      setText('');
-                      setFile(null);
-                      setUploadedFilePath('');
-                    }}
-                    className="col-span-2 lg:col-span-1 flex items-center justify-center gap-1 lg:gap-2 px-3 py-2 lg:px-6 lg:py-3 rounded-xl bg-white/10 glow-border border-white/20 text-white text-sm lg:text-base font-semibold hover:bg-white/20 transition-colors"
-                  >
-                    Yeni QR Kod
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
-        {/* SEO Section */}
+        {/* Features Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className={`max-w-6xl mx-auto mt-16 ${ADS_ENABLED ? 'space-y-12' : 'space-y-0'}`}
+          transition={{ delay: 0.5 }}
+          className="grid md:grid-cols-3 gap-6 mb-16"
         >
-          {/* Horizontal Banner Ad - Above "How It Works" */}
-          {ADS_ENABLED && (
-            <AdBanner
-              slot="yazi_ustu_1"
-              format="horizontal"
-              responsive={true}
-              className="w-full"
-            />
-          )}
-
-          {/* How It Works - Two Column Layout */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <div className="relative inline-block">
-                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
-                <h2 className="relative text-5xl md:text-6xl font-bold text-white mb-4">
-                  Sistemimizle Adım Adım{' '}
-                  <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
-                    QR Kodları
-                  </span>{' '}
-                  Oluşturun
-                </h2>
-              </div>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Dijital içeriklerinizi saniyeler içinde yüksek kaliteli ve güvenli QR kodlara dönüştürün.
-              </p>
-            </motion.div>
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              {/* Left Column - UI Illustration */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="relative"
-              >
-                <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-3xl p-8 relative overflow-hidden">
-                  {/* Glassmorphism UI Mockup */}
-                  <div className="space-y-4">
-                    {/* Mock Header */}
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
-                        <QrCode className="w-5 h-5 text-blue-400" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="h-4 bg-white/20 rounded w-24 mb-2"></div>
-                        <div className="h-3 bg-white/10 rounded w-32"></div>
-                      </div>
-                    </div>
-
-                    {/* Mock Content Type Selection */}
-                    <div className="grid grid-cols-4 gap-2 mb-4">
-                      {[1, 2, 3, 4].map((i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: 0.5 + i * 0.1 }}
-                          className={`p-3 rounded-xl border ${
-                            i === 1
-                              ? 'glow-border-active border-blue-500 bg-blue-500/10'
-                              : 'glow-border border-white/10 bg-white/5'
-                          }`}
-                        >
-                          <div className="w-4 h-4 rounded-full mx-auto mb-2 bg-blue-400/50"></div>
-                          <div className="h-2 bg-white/20 rounded"></div>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    {/* Mock Content Input */}
-                    <div className="p-4 rounded-xl glow-border bg-white/5 border-white/10 mb-4">
-                      <div className="h-3 bg-white/10 rounded w-full mb-2"></div>
-                      <div className="h-3 bg-white/10 rounded w-3/4"></div>
-                    </div>
-
-                    {/* Mock Expiration */}
-                    <div className="grid grid-cols-4 gap-2 mb-4">
-                      {[1, 2, 3, 4].map((i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: 0.6 + i * 0.1 }}
-                          className={`p-2 rounded-xl border ${
-                            i === 2
-                              ? 'glow-border-active border-blue-500 bg-blue-500/10'
-                              : 'glow-border border-white/10 bg-white/5'
-                          }`}
-                        >
-                          <div className="h-2 bg-white/20 rounded"></div>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    {/* Mock Button */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
-                      className="h-12 rounded-xl bg-blue-600 glow-border-strong"
-                    ></motion.div>
-                  </div>
-
-                  {/* Decorative Elements */}
-                  <div className="absolute -top-4 -right-4 w-20 h-20 bg-blue-500/20 rounded-full blur-xl"></div>
-                  <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500/20 rounded-full blur-xl"></div>
-                </div>
-              </motion.div>
-
-              {/* Right Column - Step by Step */}
-              <div className="space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
-                      <Type className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">Seçim Yapın</h3>
-                      <p className="text-gray-400">
-                        İçerik türünü (Metin, Dosya, Video) belirleyin.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
-                  className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
-                      <UploadCloud className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">Buluta Yükleyin</h3>
-                      <p className="text-gray-400">
-                        Verinizi şifreli Vercel Blob depolarımıza aktarın.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 glow-border flex items-center justify-center">
-                      <Share2 className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">QR Kodunuz Hazır</h3>
-                      <p className="text-gray-400">
-                        Saniyeler içinde oluşan kodu indirin veya link olarak paylaşın.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+          <div className="card-premium p-6 text-center">
+            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4 shadow-lg">
+              <Zap className="w-6 h-6 text-white" />
             </div>
+            <h3 className="text-xl font-semibold text-white mb-2">Hızlı ve Kolay</h3>
+            <p className="text-gray-400 text-sm">Saniyeler içinde QR kod oluşturun</p>
           </div>
+          
+          <div className="card-premium p-6 text-center">
+            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-4 shadow-lg">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">Güvenli Depolama</h3>
+            <p className="text-gray-400 text-sm">Verileriniz şifreli olarak saklanır</p>
+          </div>
+          
+          <div className="card-premium p-6 text-center">
+            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-4 shadow-lg">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">Modern Tasarım</h3>
+            <p className="text-gray-400 text-sm">Şık ve kullanıcı dostu arayüz</p>
+          </div>
+        </motion.div>
 
-          {/* Horizontal Banner Ad - Above "Why LuxQr" */}
-          {ADS_ENABLED && (
-            <AdBanner
-              slot="yazi_ustu_2"
-              format="horizontal"
-              responsive={true}
-              className="w-full"
-            />
-          )}
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="text-center card-premium p-8 md:p-12 mb-16 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-gradient">
+              Hemen Başlayın
+            </h2>
+            <p className="text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
+              LuxQr ile dijital içeriklerinizi profesyonel QR kodlara dönüştürün. Ücretsiz ve hızlı.
+            </p>
+            <button
+              onClick={() => {
+                const startPosition = window.pageYOffset;
+                const duration = 1500;
+                let start: number | null = null;
 
-          {/* Why LuxQr */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Sparkles className="w-6 h-6 text-blue-400" />
+                const animation = (currentTime: number) => {
+                  if (!start) start = currentTime;
+                  const timeElapsed = currentTime - start;
+                  const run = easeInOutQuad(timeElapsed, startPosition, -startPosition, duration);
+                  window.scrollTo(0, run);
+                  if (timeElapsed < duration) requestAnimationFrame(animation);
+                };
+
+                const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
+                  t /= d / 2;
+                  if (t < 1) return c / 2 * t * t + b;
+                  t--;
+                  return -c / 2 * (t * (t - 2) - 1) + b;
+                };
+
+                requestAnimationFrame(animation);
+              }}
+              className="btn-primary inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-xl"
+            >
+              İlk QR Kodunuzu Oluşturun
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Blog Slider */}
+        <BlogSlider />
+
+        {/* Advanced QR Code Guide */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="card-premium p-8 md:p-12 mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 text-gradient">
+            LuxQR ile Profesyonel ve Dinamik QR Kod Yönetimi
+          </h2>
+          <div className="space-y-6 text-gray-300 leading-relaxed text-lg">
+            <p className="border-l-4 border-blue-500/50 pl-4">
+              QR kodları, modern iş dünyasında dijital ve fiziksel dünyaları birbirine bağlayan en güçlü araçlardan biri haline gelmiştir. Restoranlarda menülere hızlı erişim sağlamak, sosyal medya hesaplarını büyütmek, dijital pazarlama kampanyalarını optimize etmek ve işletmelerin müşteri deneyimini geliştirmek için QR kod teknolojisi vazgeçilmezdir. LuxQR platformu, bu ihtiyacı karşılamak için gelişmiş QR kod çözümleri sunar.
+            </p>
+            <p className="border-l-4 border-purple-500/50 pl-4">
+              İş dünyasında vCard QR kodları, profesyonel kartvizitlerin dijital dönüşümünü sağlar. Toplantılarda, networking etkinliklerinde ve iş toplantılarında tek bir tarama ile tüm iletişim bilgilerinizi paylaşabilirsiniz. WiFi QR kodları, restoranlar, kafeler, oteller ve ofislerde müşterilere şifre paylaşımı sorununu ortadan kaldırır. Sosyal medya QR kodları, Instagram, TikTok ve diğer platformlarda takipçi kitlenizi artırmanızı sağlarken, Link-in-bio QR kodları ile tüm dijital varlıklarınızı tek bir noktada toplayabilirsiniz.
+            </p>
+            <p className="border-l-4 border-cyan-500/50 pl-4">
+              Dijital pazarlamada QR kodlar, kampanyaların takibini kolaylaştırır, kullanıcı etkileşimini ölçer ve dönüşüm oranlarını artırır. LuxQR ile oluşturulan QR kodlar, yüksek çözünürlüklü baskı kalitesi ve tarama hızı ile markanızın profesyonel imajını güçlendirir. Mobil uyumlu yapısı sayesinde her cihazda kusursuz çalışır ve kullanıcı dostu arayüzü ile QR kod oluşturma sürecini saniyeler içinde tamamlamanızı sağlar.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Dynamic vs Static QR Comparison */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="card-premium p-8 md:p-12 mb-16"
+        >
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 text-gradient">
+            Neden Dinamik QR Kod Tercih Etmelisiniz?
+          </h3>
+          <div className="space-y-8">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold">1</span>
               </div>
-              <h2 className="text-3xl font-bold text-white">
-                Neden LuxQr Kullanmalısınız?
-              </h2>
+              <div>
+                <h4 className="text-xl font-semibold text-white mb-2">İçerik Güncelleme Esnekliği</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Dinamik QR kodlar, basılı materyalleri değiştirmeden arkasındaki yönlendirme linkini güncellemenize olanak tanır. Bu sayede promosyon kampanyalarınızı, ürün bilgilerinizi veya iletişim detaylarınızı anında güncelleyebilirsiniz. Statik QR kodlarda ise bir kez basıldıktan sonra içeriği değiştirilemez.
+                </p>
+              </div>
             </div>
             
-            <div className="space-y-4 text-gray-400 leading-relaxed">
-              <p>
-                LuxQr, dijital dünyada dosya ve metin paylaşımını saniyeler içinde gerçekleştiren 
-                yenilikçi bir QR kod platformudur. Geleneksel paylaşım yöntemlerinin karmaşıklığına 
-                son vererek, kullanıcıların metin, resim, video ve dosyalarını güvenli ve hızlı bir 
-                şekilde paylaşmalarını sağlar.
-              </p>
-              
-              <p>
-                <strong className="text-white">Hız ve Performans:</strong> LuxQr, Next.js 14 ve modern 
-                web teknolojileri ile oluşturulmuş olup, QR kodlarınızı milisaniyeler içinde oluşturur. 
-                Vercel'in güçlü altyapısı sayesinde, dünya çapında anında erişilebilir ve kesintisiz 
-                bir deneyim sunar.
-              </p>
-              
-              <p>
-                <strong className="text-white">Güvenlik ve Gizlilik:</strong> Verileriniz Vercel KV ve 
-                Blob teknolojileri ile şifreli olarak saklanır. Kişisel bilgilerinizi toplamayız ve 
-                paylaşımlarınız sadece QR kod URL'sini bilen kişiler tarafından erişilebilir. 
-                Geçerlilik süresi seçeneği ile verilerinizin ne kadar süre saklanacağını siz kontrol 
-                edersiniz. Süresi dolan paylaşımlar otomatik olarak sistemden temizlenir.
-              </p>
-              
-              <p>
-                <strong className="text-white">Modern Tasarım:</strong> LuxQr, kullanıcı dostu arayüzü, 
-                akıcı animasyonları ve şık tasarımı ile mükemmel bir kullanıcı deneyimi sunar. Mobil 
-                uyumlu ve responsive yapısı sayesinde her cihazda kusursuz çalışır. Framer Motion ile 
-                güçlendirilmiş animasyonlar, uygulamanızı sadece işlevsel değil, aynı zamanda görsel 
-                olarak da çekici kılar.
-              </p>
-              
-              <p>
-                İster kişisel kullanım, ister iş amaçlı olsun, LuxQr ile paylaşım sürecinizi basitleştirin 
-                ve dijital iletişiminizi bir üst seviyeye taşıyın.
-              </p>
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold">2</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold text-white mb-2">Gelişmiş Veri Analitiği</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  LuxQR dinamik QR kodları ile tarama istatistiklerini takip edebilir, coğrafi konum verilerini analiz edebilir ve kullanıcı etkileşimini ölçebilirsiniz. Hangi saatlerde daha fazla tarama yapıldığını, hangi bölgelerden ilgi gördüğünüzü ve kampanyalarınızın performansını detaylı raporlarla inceleyebilirsiniz.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold">3</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold text-white mb-2">Tıklama Takibi ve Optimizasyon</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Her QR kod taraması kaydedilir ve analiz edilir. Bu veriler sayesinde pazarlama stratejilerinizi optimize edebilir, hedef kitlenizin davranışlarını daha iyi anlayabilir ve dönüşüm oranlarınızı artırabilirsiniz. A/B testleri yaparak farklı QR kod versiyonlarının performansını karşılaştırabilirsiniz.
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>
+
+        {/* Step-by-Step Guide */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="card-premium p-8 md:p-12 mb-16"
+        >
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 text-gradient">
+            3 Kolay Adımda QR Kod Oluşturun
+          </h3>
+          <div className="space-y-8">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">1</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold text-white mb-2">Kategori Seçin</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  İhtiyacınıza uygun QR kod türünü seçin. WiFi ağ bilgileri için WiFi QR, dijital kartvizit için vCard QR, sosyal medya hesaplarınız için Sosyal Medya QR, ses dosyaları için Ses Dosyası QR veya metin, resim, video ve belgeler için Metin/Resim/Video QR kategorisini tercih edin. Her kategori özel olarak tasarlanmıştır ve maksimum kullanıcı deneyimi sunar.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">2</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold text-white mb-2">Bilgilerinizi Girin veya Dosyanızı Yükleyin</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Seçtiğiniz kategoriye göre gerekli bilgileri girin. WiFi için ağ adı ve şifre, kartvizit için iletişim bilgileri, sosyal medya için profil linkleri veya metin/resim/video için içeriklerinizi sağlayın. Dosya yüklemeleri için maksimum 100MB boyutunda dosyalarınızı güvenli bir şekilde yükleyebilirsiniz. Tüm veriler şifreli olarak işlenir.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">3</span>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold text-white mb-2">Özelleştirin ve Yüksek Çözünürlüklü Olarak İndirin</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  QR kodunuzu oluşturduktan sonra yüksek çözünürlüklü PNG formatında indirebilir, doğrudan sosyal medyada paylaşabilir veya link olarak kopyalayabilirsiniz. QR kodunuz mobil uyumlu, baskı kalitesinde ve tarama hızı optimize edilmiştir. İsterseniz geçerlilik süresi belirleyerek verilerinizin güvenli bir şekilde saklanmasını sağlayabilirsiniz.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Random Blogs - Right Side */}
-        <div className="hidden lg:block">
-          <RandomBlogs />
-        </div>
+        {/* Security and Privacy */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="card-premium p-8 md:p-12 mb-16 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+          <div className="relative z-10">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="flex-shrink-0 p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 text-gradient">
+                  Güvenlik ve Gizlilik Önceliğimiz
+                </h3>
+                <p className="text-gray-400 text-lg leading-relaxed">
+                  LuxQR platformu, kullanıcı verilerinin güvenliğini ve gizliliğini en üst düzeyde korumayı taahhüt eder. Tüm verileriniz endüstri standardı şifreleme protokolleri ile korunur ve güvenli bulut sistemlerinde saklanır. Kişisel bilgilerinizi asla üçüncü taraflarla paylaşmıyoruz ve veri toplama politikamız şeffaftır.
+                </p>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-blue-500/30 transition-colors">
+                <h4 className="text-lg font-semibold text-white mb-3">Şifreli Veri Saklama</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Tüm QR kod verileriniz AES-256 şifreleme ile korunur. Dosyalarınız ve içerikleriniz güvenli bulut depolama sistemlerinde saklanır ve sadece QR kod URL'sini bilen kişiler tarafından erişilebilir.
+                </p>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-purple-500/30 transition-colors">
+                <h4 className="text-lg font-semibold text-white mb-3">Otomatik Veri Temizleme</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Belirlediğiniz geçerlilik süresi dolduğunda verileriniz otomatik olarak sistemden güvenli bir şekilde silinir. Bu sayede verilerinizin kontrolü sizde kalır ve gizliliğiniz korunur.
+                </p>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-colors">
+                <h4 className="text-lg font-semibold text-white mb-3">GDPR Uyumluluğu</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Platformumuz Avrupa Birliği Genel Veri Koruma Tüzüğü (GDPR) ile tam uyumludur. Veri işleme politikalarımız şeffaftır ve kullanıcı haklarına saygı duyarız.
+                </p>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-pink-500/30 transition-colors">
+                <h4 className="text-lg font-semibold text-white mb-3">Güvenli Altyapı</h4>
+                <p className="text-gray-400 leading-relaxed text-sm">
+                  Vercel'in güçlü altyapısı ve modern güvenlik protokolleri ile platformumuz sürekli olarak güvenlik testlerinden geçer. DDoS koruması, SSL sertifikası ve düzenli güvenlik güncellemeleri ile verileriniz güvende.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* FAQ Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0 }}
+          className="card-premium p-8 md:p-12 mb-16"
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
+              <HelpCircle className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-gradient">
+              Sıkça Sorulan Sorular
+            </h2>
+          </div>
+          
+          <div className="space-y-4">
+            {faqData.map((faq, index) => (
+              <div
+                key={index}
+                className="card-premium overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  className="w-full flex items-center justify-between p-6 text-left"
+                >
+                  <span className="text-lg font-semibold text-white flex-1">
+                    {faq.question}
+                  </span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-blue-400 transition-transform duration-300 ${
+                      openFaq === index ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {openFaq === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="px-6 pb-6"
+                  >
+                    <p className="text-gray-400 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link href="/faq" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-semibold">
+              Tüm Soruları Gör
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </motion.div>
       </div>
-
-      {/* Bottom Ad Placeholder - 728x90 */}
-      {/* <div className="hidden md:block container mx-auto px-4 py-4">
-        <div className="w-full h-[90px] border border-white/10 rounded-xl bg-white/5 flex items-center justify-center mx-auto max-w-[728px]">
-          <p className="text-gray-500 text-xs text-center px-2">Reklam Alanı 728x90</p>
-        </div>
-      </div> */}
     </motion.main>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { Share2 } from 'lucide-react';
+import { showNotification } from '@/components/Notification';
 
 export default function ShareButton() {
   const handleShare = async () => {
@@ -18,7 +19,7 @@ export default function ShareButton() {
       // Fallback: copy to clipboard
       try {
         await navigator.clipboard.writeText('https://www.luxqrpro.site');
-        alert('Link panoya kopyalandı!');
+        showNotification('Link panoya kopyalandı!', 'success');
       } catch (err) {
         console.error('Failed to copy:', err);
       }
