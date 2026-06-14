@@ -58,7 +58,7 @@ export default function Sidebar() {
 
       {/* Sidebar - Fixed on desktop, overlay on mobile */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl z-50 border-r border-white/10 transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-64 bg-slate-800/90 backdrop-blur-xl z-50 border-r border-white/20 transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -73,10 +73,10 @@ export default function Sidebar() {
         </div>
 
         {/* Logo */}
-        <div className="px-6 pt-8 pb-6 border-b border-white/10">
+        <div className="px-6 pt-8 pb-6 border-b border-white/20">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-400 shadow-lg flex items-center justify-center">
                 <QrCode className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold text-white text-gradient">LuxQr</span>
@@ -86,7 +86,7 @@ export default function Sidebar() {
         </div>
 
         {/* Menu Items */}
-        <div className="flex-1 overflow-y-auto py-6 px-4">
+        <div className="flex-1 overflow-y-auto py-6 px-4 bg-slate-700/50">
           <nav className="space-y-2">
             {/* Main Items */}
             {mainItems.map((item) => {
@@ -98,13 +98,13 @@ export default function Sidebar() {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50 text-white'
+                      : 'text-gray-200 hover:bg-white/10 hover:text-white'
                   }`}
                   style={
                     isActive
                       ? {
-                          boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)',
+                          boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)',
                         }
                       : {}
                   }
@@ -116,10 +116,10 @@ export default function Sidebar() {
             })}
 
             {/* Divider */}
-            <div className="border-t border-white/10 my-4"></div>
+            <div className="border-t border-white/20 my-4"></div>
 
             {/* QR Categories */}
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-3 px-2">
+            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 px-2">
               QR Kod Türleri
             </p>
             {qrItems.map((item) => {
@@ -131,13 +131,13 @@ export default function Sidebar() {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50 text-white'
+                      : 'text-gray-200 hover:bg-white/10 hover:text-white'
                   }`}
                   style={
                     isActive
                       ? {
-                          boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)',
+                          boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)',
                         }
                       : {}
                   }
@@ -149,7 +149,7 @@ export default function Sidebar() {
             })}
 
             {/* Divider */}
-            <div className="border-t border-white/10 my-4"></div>
+            <div className="border-t border-white/20 my-4"></div>
 
             {/* Other Items */}
             {otherItems.map((item) => {
@@ -161,13 +161,13 @@ export default function Sidebar() {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50 text-white'
+                      : 'text-gray-200 hover:bg-white/10 hover:text-white'
                   }`}
                   style={
                     isActive
                       ? {
-                          boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)',
+                          boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)',
                         }
                       : {}
                   }

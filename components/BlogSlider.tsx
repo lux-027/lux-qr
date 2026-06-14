@@ -18,10 +18,13 @@ interface BlogPost {
 export default function BlogSlider() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const blogsPerView = 3;
+  const [activeDot, setActiveDot] = useState(0);
 
   useEffect(() => {
     fetchBlogs();
@@ -49,11 +52,98 @@ export default function BlogSlider() {
     }
   };
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    stopAutoSlide();
+    setStartX(e.pageX - sliderRef.current!.offsetLeft);
+    setScrollLeft(sliderRef.current!.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+    startAutoSlide();
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    startAutoSlide();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - sliderRef.current!.offsetLeft;
+    const walk = (x - startX) * 2;
+    sliderRef.current!.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleScroll = () => {
+    if (!sliderRef.current || blogs.length === 0) return;
+    const cardWidth = sliderRef.current.scrollWidth / (blogs.length * 3);
+    const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+    
+    // Calculate active dot based on scroll position
+    const scrollPosition = sliderRef.current.scrollLeft;
+    const totalWidth = sliderRef.current.scrollWidth / 3; // Width of one set of blogs
+    const dotIndex = Math.round(scrollPosition / cardWidth) % blogs.length;
+    setActiveDot(dotIndex);
+    
+    // If scrolled near the end, reset to beginning
+    if (sliderRef.current.scrollLeft >= maxScroll - cardWidth) {
+      sliderRef.current.scrollLeft = sliderRef.current.scrollLeft % (sliderRef.current.scrollWidth / 3);
+    }
+    // If scrolled near the beginning from the right, reset to end
+    if (sliderRef.current.scrollLeft <= cardWidth) {
+      sliderRef.current.scrollLeft = (sliderRef.current.scrollWidth / 3) + sliderRef.current.scrollLeft;
+    }
+  };
+
+  // Create infinite loop by duplicating blogs
+  const getInfiniteBlogs = () => {
+    if (blogs.length === 0) return [];
+    // Duplicate the array multiple times for infinite scroll effect
+    return [...blogs, ...blogs, ...blogs];
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (sliderRef.current) {
+      const scrollAmount = 400;
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const goToSlide = (index: number) => {
+    if (sliderRef.current && blogs.length > 0) {
+      const cardWidth = sliderRef.current.scrollWidth / (blogs.length * 3);
+      const targetScroll = index * cardWidth;
+      sliderRef.current.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+      setActiveDot(index);
+    }
+  };
+
   const startAutoSlide = () => {
     stopAutoSlide();
-    if (blogs.length > blogsPerView) {
+    if (blogs.length > 0) {
       intervalRef.current = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % blogs.length);
+        if (sliderRef.current) {
+          const cardWidth = sliderRef.current.scrollWidth / (blogs.length * 3);
+          const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+          
+          if (sliderRef.current.scrollLeft >= maxScroll - cardWidth) {
+            sliderRef.current.scrollLeft = 0;
+          } else {
+            sliderRef.current.scrollBy({
+              left: cardWidth,
+              behavior: 'smooth'
+            });
+          }
+        }
       }, 5000);
     }
   };
@@ -63,38 +153,6 @@ export default function BlogSlider() {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  };
-
-  const handleNext = () => {
-    stopAutoSlide();
-    setCurrentIndex((prev) => (prev + 1) % blogs.length);
-    startAutoSlide();
-  };
-
-  const handlePrev = () => {
-    stopAutoSlide();
-    setCurrentIndex((prev) => (prev - 1 + blogs.length) % blogs.length);
-    startAutoSlide();
-  };
-
-  const handleDotClick = (index: number) => {
-    stopAutoSlide();
-    setCurrentIndex(index);
-    startAutoSlide();
-  };
-
-  // Create infinite loop of blogs
-  const getDisplayBlogs = () => {
-    if (blogs.length === 0) return [];
-    const result = [...blogs];
-    // Add blogs at the beginning and end for infinite loop effect
-    for (let i = 0; i < blogsPerView; i++) {
-      const indexFromEnd = (blogs.length - 1 - i + blogs.length) % blogs.length;
-      const indexFromStart = i % blogs.length;
-      result.unshift(blogs[indexFromEnd]);
-      result.push(blogs[indexFromStart]);
-    }
-    return result;
   };
 
   if (loading) {
@@ -152,100 +210,97 @@ export default function BlogSlider() {
       <div className="relative">
         {/* Navigation Buttons */}
         <button
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          onClick={() => scroll('left')}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-5 h-5" />
         </button>
         
         <button
-          onClick={handleNext}
-          disabled={blogs.length <= blogsPerView}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          onClick={() => scroll('right')}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-5 h-5" />
         </button>
 
         {/* Horizontal Scroll Container */}
         <div
           ref={sliderRef}
-          className="flex gap-3 overflow-hidden pb-4 px-12"
+          className="flex gap-4 overflow-x-auto py-8 px-16 scrollbar-hide cursor-grab active:cursor-grabbing select-none"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onScroll={handleScroll}
         >
-          {getDisplayBlogs().map((blog, index) => {
-            if (!blog || !blog.slug) return null;
-            
-            const actualIndex = index - blogsPerView;
-            const isVisible = actualIndex >= 0 && actualIndex < blogs.length;
-            
-            return (
-              <motion.div
-                key={`${blog.slug}-${index}`}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: isVisible ? 1 : 0.3, x: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className={`flex-shrink-0 w-full md:w-[calc(33.333%-12px)] transition-all duration-500 ${
-                  isVisible ? 'opacity-100 scale-100' : 'opacity-30 scale-95'
-                }`}
-              >
-                <Link href={`/blog/${blog.slug}`}>
-                  <motion.div
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    transition={{ duration: 0.3 }}
-                    className="card-premium overflow-hidden h-full hover:border-blue-500/50 transition-all duration-300"
-                  >
-                    {blog.mainImage && (
-                      <div className="relative h-36 overflow-hidden">
-                        <motion.img
-                          src={blog.mainImage}
-                          alt={blog.title}
-                          className="w-full h-full object-cover"
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ duration: 0.5 }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent"></div>
-                        <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                          Blog
-                        </div>
-                      </div>
-                    )}
-                    
-                    <div className="p-3">
-                      <h3 className="text-base font-bold text-white mb-2 line-clamp-2 leading-tight">
-                        {blog.title}
-                      </h3>
-                      <p className="text-gray-400 text-xs mb-2 line-clamp-2 leading-relaxed">
-                        {blog.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-xs text-gray-500">
-                          <Clock className="w-3 h-3" />
-                          {format(new Date(blog.createdAt), 'dd MMM yyyy', { locale: tr })}
-                        </div>
-                        <motion.div
-                          whileHover={{ x: 3 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ArrowRight className="w-3 h-3 text-blue-400" />
-                        </motion.div>
+          {getInfiniteBlogs().map((blog, index) => (
+            <motion.div
+              key={`${blog.slug}-${index}`}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: (index % blogs.length) * 0.1, duration: 0.5, ease: "easeOut" }}
+              className="flex-shrink-0 w-full md:w-[calc(33.333%-16px)]"
+            >
+              <Link href={`/blog/${blog.slug}`}>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                  className="card-premium overflow-hidden h-full hover:border-blue-500/50 transition-all duration-300"
+                >
+                  {blog.mainImage && (
+                    <div className="relative h-40 overflow-hidden">
+                      <motion.img
+                        src={blog.mainImage}
+                        alt={blog.title}
+                        className="w-full h-full object-cover"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent"></div>
+                      <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                        Blog
                       </div>
                     </div>
-                  </motion.div>
-                </Link>
-              </motion.div>
-            );
-          })}
+                  )}
+                  
+                  <div className="p-3">
+                    <h3 className="text-base font-bold text-white mb-2 line-clamp-2 leading-tight">
+                      {blog.title}
+                    </h3>
+                    <p className="text-gray-400 text-xs mb-2 line-clamp-2 leading-relaxed">
+                      {blog.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <Clock className="w-3 h-3" />
+                        {format(new Date(blog.createdAt), 'dd MMM yyyy', { locale: tr })}
+                      </div>
+                      <motion.div
+                        whileHover={{ x: 3 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ArrowRight className="w-3 h-3 text-blue-400" />
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* Pagination Dots */}
-      <div className="flex justify-center gap-2 mt-6">
-        {blogs.map((_, i) => (
+      {/* Dot Indicators */}
+      <div className="flex justify-center gap-2 mt-4">
+        {blogs.map((_, index) => (
           <button
-            key={i}
-            onClick={() => handleDotClick(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              currentIndex === i ? 'bg-blue-500 w-6' : 'bg-white/20 hover:bg-white/40'
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              activeDot === index
+                ? 'bg-gradient-to-r from-blue-500 to-cyan-500 w-6'
+                : 'bg-gray-600 hover:bg-gray-500'
             }`}
           />
         ))}
