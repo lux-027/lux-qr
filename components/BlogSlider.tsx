@@ -79,31 +79,14 @@ export default function BlogSlider() {
 
   const handleScroll = () => {
     if (!sliderRef.current || blogs.length === 0) return;
-    const cardWidth = sliderRef.current.scrollWidth / (blogs.length * 3);
-    const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+    const cardWidth = sliderRef.current.scrollWidth / blogs.length;
     
     // Calculate active dot based on scroll position
     const scrollPosition = sliderRef.current.scrollLeft;
-    const totalWidth = sliderRef.current.scrollWidth / 3; // Width of one set of blogs
-    const dotIndex = Math.round(scrollPosition / cardWidth) % blogs.length;
-    setActiveDot(dotIndex);
-    
-    // If scrolled near the end, reset to beginning
-    if (sliderRef.current.scrollLeft >= maxScroll - cardWidth) {
-      sliderRef.current.scrollLeft = sliderRef.current.scrollLeft % (sliderRef.current.scrollWidth / 3);
-    }
-    // If scrolled near the beginning from the right, reset to end
-    if (sliderRef.current.scrollLeft <= cardWidth) {
-      sliderRef.current.scrollLeft = (sliderRef.current.scrollWidth / 3) + sliderRef.current.scrollLeft;
-    }
+    const dotIndex = Math.round(scrollPosition / cardWidth);
+    setActiveDot(Math.min(dotIndex, blogs.length - 1));
   };
 
-  // Create infinite loop by duplicating blogs
-  const getInfiniteBlogs = () => {
-    if (blogs.length === 0) return [];
-    // Duplicate the array multiple times for infinite scroll effect
-    return [...blogs, ...blogs, ...blogs];
-  };
 
   const scroll = (direction: 'left' | 'right') => {
     if (sliderRef.current) {
@@ -117,7 +100,7 @@ export default function BlogSlider() {
 
   const goToSlide = (index: number) => {
     if (sliderRef.current && blogs.length > 0) {
-      const cardWidth = sliderRef.current.scrollWidth / (blogs.length * 3);
+      const cardWidth = sliderRef.current.scrollWidth / blogs.length;
       const targetScroll = index * cardWidth;
       sliderRef.current.scrollTo({
         left: targetScroll,
@@ -132,7 +115,7 @@ export default function BlogSlider() {
     if (blogs.length > 0) {
       intervalRef.current = setInterval(() => {
         if (sliderRef.current) {
-          const cardWidth = sliderRef.current.scrollWidth / (blogs.length * 3);
+          const cardWidth = sliderRef.current.scrollWidth / blogs.length;
           const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
           
           if (sliderRef.current.scrollLeft >= maxScroll - cardWidth) {
@@ -234,12 +217,12 @@ export default function BlogSlider() {
           onMouseMove={handleMouseMove}
           onScroll={handleScroll}
         >
-          {getInfiniteBlogs().map((blog, index) => (
+          {blogs.map((blog, index) => (
             <motion.div
-              key={`${blog.slug}-${index}`}
+              key={blog.slug}
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: (index % blogs.length) * 0.1, duration: 0.5, ease: "easeOut" }}
+              transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
               className="flex-shrink-0 w-full md:w-[calc(33.333%-16px)]"
             >
               <Link href={`/blog/${blog.slug}`}>
