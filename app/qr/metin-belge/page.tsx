@@ -5,18 +5,6 @@ import { Type, ImageIcon, Video, FileText, Upload, QrCode, Clock, Shield, Zap } 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Metin ve Belge QR Kod Oluşturucu - LuxQr',
-  description: 'Metin, resim, video ve belge dosyalarınızı saniyeler içinde QR koda dönüştürün. Ücretsiz ve güvenli QR kod oluşturma.',
-  keywords: ['metin qr kod', 'belge qr kod', 'dosya qr yapma', 'resim qr kod', 'video qr kod', 'qr kod oluşturucu'],
-  openGraph: {
-    title: 'Metin ve Belge QR Kod Oluşturucu - LuxQr',
-    description: 'Metin, resim, video ve belge dosyalarınızı saniyeler içinde QR koda dönüştürün.',
-    url: 'https://www.luxqrpro.site/qr/metin-belge',
-  },
-};
 
 export default function MetinBelgePage() {
   const router = useRouter();
