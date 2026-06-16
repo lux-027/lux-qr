@@ -9,9 +9,21 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-32x32.png",
       "sizes": "32x32",
-      "type": "image/svg+xml",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
@@ -29,21 +41,21 @@
       "short_name": "Metin",
       "description": "Metin için QR kod oluştur",
       "url": "/qr/metin-belge",
-      "icons": [{ "src": "/favicon.svg", "sizes": "32x32" }]
+      "icons": [{ "src": "/logo.svg", "sizes": "200x200" }]
     },
     {
       "name": "WiFi QR",
       "short_name": "WiFi",
       "description": "WiFi için QR kod oluştur",
       "url": "/qr/wifi",
-      "icons": [{ "src": "/favicon.svg", "sizes": "32x32" }]
+      "icons": [{ "src": "/logo.svg", "sizes": "200x200" }]
     },
     {
       "name": "Kartvizit QR",
       "short_name": "Kartvizit",
       "description": "Kartvizit için QR kod oluştur",
       "url": "/qr/kartvizit",
-      "icons": [{ "src": "/favicon.svg", "sizes": "32x32" }]
+      "icons": [{ "src": "/logo.svg", "sizes": "200x200" }]
     }
   ]
 }

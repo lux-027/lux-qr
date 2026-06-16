@@ -1,13 +1,30 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Metin ve Belge QR Kod Oluşturucu - LuxQr',
-  description: 'Metin, resim, video ve belge dosyalarınızı saniyeler içinde QR koda dönüştürün. Ücretsiz ve güvenli QR kod oluşturma.',
+  title: 'PDF, Belge, Resim ve Metin QR Kod Dönüştürücü - LuxQR',
+  description: 'PDF, Word, resim, video ve metin dosyalarınızı saniyeler içinde QR koda dönüştürün, dijital dökümantasyon hızını maksimuma çıkarın.',
   keywords: ['metin qr kod', 'belge qr kod', 'dosya qr yapma', 'resim qr kod', 'video qr kod', 'qr kod oluşturucu'],
   openGraph: {
-    title: 'Metin ve Belge QR Kod Oluşturucu - LuxQr',
-    description: 'Metin, resim, video ve belge dosyalarınızı saniyeler içinde QR koda dönüştürün.',
+    title: 'PDF, Belge, Resim ve Metin QR Kod Dönüştürücü - LuxQR',
+    description: 'PDF, Word, resim, video ve metin dosyalarınızı saniyeler içinde QR koda dönüştürün, dijital dökümantasyon hızını maksimuma çıkarın.',
     url: 'https://www.luxqrpro.site/qr/metin-belge',
+    siteName: 'LuxQR',
+    images: [
+      {
+        url: 'https://www.luxqrpro.site/logo.svg',
+        width: 1200,
+        height: 630,
+        alt: 'LuxQR Logo',
+      },
+    ],
+    locale: 'tr_TR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PDF, Belge, Resim ve Metin QR Kod Dönüştürücü - LuxQR',
+    description: 'PDF, Word, resim, video ve metin dosyalarınızı saniyeler içinde QR koda dönüştürün, dijital dökümantasyon hızını maksimuma çıkarın.',
+    images: ['https://www.luxqrpro.site/logo.svg'],
   },
 };
 

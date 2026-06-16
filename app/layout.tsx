@@ -19,17 +19,28 @@ export const metadata: Metadata = {
   description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
   keywords: ["qr kod oluşturucu", "ücretsiz qr kod", "wifi qr kod", "kartvizit qr", "instagram qr", "tiktok qr", "metin qr", "dosya qr", "türkiye qr kod"],
   authors: [{ name: "LuxQr Team" }],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" }
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "192x192", type: "image/png" }
+    ]
+  },
   openGraph: {
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu | Metin, WiFi, Kartvizit, Sosyal Medya",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Ücretsiz ve güvenli QR kod oluşturma platformu.",
     url: "https://www.luxqrpro.site",
-    siteName: "LuxQr",
+    siteName: "LuxQR",
     images: [
       {
-        url: "/logo.svg",
-        width: 200,
-        height: 200,
-        alt: "LuxQr - QR Kod Oluşturucu",
+        url: "https://www.luxqrpro.site/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "LuxQR - QR Kod Oluşturucu",
       },
     ],
     locale: "tr_TR",
@@ -39,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-    images: ["/logo.svg"],
+    images: ["https://www.luxqrpro.site/logo.svg"],
   },
   other: {
     "google-adsense-account": "ca-pub-6964506660604767",
@@ -55,6 +66,9 @@ export default function RootLayout({
     <html lang="tr" className="overflow-x-hidden" suppressHydrationWarning>
       <head>
         <meta charSet="UTF-8" />
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="canonical" href="https://www.luxqrpro.site/" />
@@ -62,73 +76,71 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="LuxQr" />
-        <link rel="apple-touch-icon" href="/logo.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="192x192" />
         <Script
           id="structured-data-webapp"
           type="application/ld+json"
           strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              "name": "LuxQr - Ücretsiz QR Kod Oluşturucu",
-              "description": "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-              "url": "https://www.luxqrpro.site",
-              "applicationCategory": "UtilityApplication",
-              "operatingSystem": "Web",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "TRY"
-              },
-              "featureList": [
-                "Metin QR kod oluşturma",
-                "WiFi QR kod oluşturma",
-                "Kartvizit QR kod oluşturma",
-                "Sosyal medya QR kod oluşturma",
-                "Dosya QR kod oluşturma",
-                "Ses dosyası QR kod oluşturma"
-              ],
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.8",
-                "ratingCount": "1250",
-                "bestRating": "5",
-                "worstRating": "1"
-              },
-              "author": {
-                "@type": "Organization",
-                "name": "LuxQr Team",
-                "url": "https://www.luxqrpro.site"
-              }
-            })
-          }}
-        />
+        >
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "LuxQr - Ücretsiz QR Kod Oluşturucu",
+            "description": "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+            "url": "https://www.luxqrpro.site",
+            "applicationCategory": "UtilityApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "TRY"
+            },
+            "featureList": [
+              "Metin QR kod oluşturma",
+              "WiFi QR kod oluşturma",
+              "Kartvizit QR kod oluşturma",
+              "Sosyal medya QR kod oluşturma",
+              "Dosya QR kod oluşturma",
+              "Ses dosyası QR kod oluşturma"
+            ],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "ratingCount": "1250",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "author": {
+              "@type": "Organization",
+              "name": "LuxQr Team",
+              "url": "https://www.luxqrpro.site"
+            }
+          })}
+        </Script>
         <Script
           id="structured-data-organization"
           type="application/ld+json"
           strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "LuxQr",
-              "url": "https://www.luxqrpro.site",
-              "logo": "https://www.luxqrpro.site/logo.svg",
-              "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
-              "sameAs": [
-                "https://www.facebook.com/luxqr",
-                "https://www.twitter.com/luxqr",
-                "https://www.instagram.com/luxqr"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "customer service",
-                "email": "info@luxqrpro.site"
-              }
-            })
-          }}
-        />
+        >
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "LuxQr",
+            "url": "https://www.luxqrpro.site",
+            "logo": "https://www.luxqrpro.site/logo.svg",
+            "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
+            "sameAs": [
+              "https://www.facebook.com/luxqr",
+              "https://www.twitter.com/luxqr",
+              "https://www.instagram.com/luxqr"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "customer service",
+              "email": "info@luxqrpro.site"
+            }
+          })}
+        </Script>
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6964506660604767"
