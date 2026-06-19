@@ -98,9 +98,16 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const handleShareQR = async () => {
     try {
       if (navigator.share) {
+        // Convert data URL to blob
+        const response = await fetch(qrDataUrl);
+        const blob = await response.blob();
+        // @ts-ignore - File constructor type issue
+        const file = new File([blob], 'qr-code.png', { type: blob.type });
+        
         await navigator.share({
-          title: 'QR Kod',
-          url: qrCodeUrl,
+          title: 'LuxQr - QR Kod',
+          text: 'Bu oluşturduğumuz QR koda bir göz at! 🎯\n\nDaha fazlası için: https://luxqrpro.site',
+          files: [file],
         });
       }
     } catch (err) {
