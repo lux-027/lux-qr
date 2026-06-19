@@ -1,10 +1,27 @@
-'use client';
-
+import type { Metadata } from "next";
 import { motion } from 'framer-motion';
 import { Wifi, Clock, Shield, Zap, HelpCircle, FileText, Eye, EyeOff, Lock as LockIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+
+export const metadata: Metadata = {
+  title: "WiFi QR Kod Oluşturucu | WiFi Ağ Paylaşımı | LuxQr",
+  description: "WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın. Şifreli ve şifresiz WiFi ağları için QR kod oluşturun. Misafirlerinize WiFi şifresini söylemeden paylaşın.",
+  keywords: ["wifi qr kod", "wifi ağ qr", "wifi şifre qr", "wifi paylaşım qr", "wpa qr kod", "wifi qr oluşturucu"],
+  openGraph: {
+    title: "WiFi QR Kod Oluşturucu | WiFi Ağ Paylaşımı | LuxQr",
+    description: "WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın. Şifreli ve şifresiz WiFi ağları için QR kod oluşturun.",
+    url: "https://www.luxqrpro.site/qr/wifi",
+    type: "website",
+  },
+  twitter: {
+    title: "WiFi QR Kod Oluşturucu | WiFi Ağ Paylaşımı",
+    description: "WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın. Şifreli ve şifresiz WiFi ağları için QR kod oluşturun.",
+  },
+};
+
+'use client';
 
 export default function WifiPage() {
   const router = useRouter();
@@ -85,7 +102,7 @@ export default function WifiPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8"
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div
@@ -114,19 +131,19 @@ export default function WifiPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="card-premium p-8 mb-8"
+          className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
-              <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <Wifi className="w-5 h-5 text-blue-400" />
+              <label className="flex items-center gap-2 text-white font-semibold mb-1 md:mb-2">
+                <Wifi className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                 Ağ Adı (SSID) *
               </label>
               <input
                 type="text"
                 value={formData.ssid}
                 onChange={(e) => setFormData({ ...formData, ssid: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="WiFi ağ adı"
               />
             </div>
@@ -204,26 +221,26 @@ export default function WifiPage() {
           </div>
 
           {/* Note/Description Field */}
-          <div className="mt-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-3">
-              <FileText className="w-5 h-5 text-blue-400" />
+          <div className="mt-4 md:mt-6">
+            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+              <FileText className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               Not / Açıklama
             </label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="WiFi QR kodu hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-24 bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none resize-none"
+              className="w-full h-20 md:h-24 bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
             />
           </div>
 
           {/* Expiration Selection */}
-          <div className="mt-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-3">
-              <Clock className="w-5 h-5 text-blue-400" />
+          <div className="mt-4 md:mt-6">
+            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+              <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               Geçerlilik Süresi
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {[
                 { value: '1day', label: '1 Gün', icon: Clock },
                 { value: '1week', label: '1 Hafta', icon: Clock },
@@ -233,25 +250,25 @@ export default function WifiPage() {
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
                     expiration === option.value
                       ? 'border-blue-500/50 bg-blue-500/10 text-blue-400'
                       : 'border-white/10 text-gray-400 hover:border-blue-500/50'
                   }`}
                 >
-                  <option.icon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{option.label}</span>
+                  <option.icon className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="text-xs md:text-sm font-medium">{option.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Action Button */}
-          <div className="mt-6">
+          <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className="btn-primary w-full py-4 rounded-2xl text-white font-semibold disabled:opacity-50"
+              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
             </button>
@@ -263,34 +280,34 @@ export default function WifiPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8"
         >
-          <div className="card-premium p-6">
-            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4 shadow-lg">
-              <Zap className="w-6 h-6 text-white" />
+          <div className="card-premium p-3 md:p-6">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Hızlı Bağlantı</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı Bağlantı</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
               Şifre yazma derdine son. Tek tıkla WiFi'a bağlanın.
             </p>
           </div>
 
-          <div className="card-premium p-6">
-            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-4 shadow-lg">
-              <Shield className="w-6 h-6 text-white" />
+          <div className="card-premium p-3 md:p-6">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
+              <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Güvenli</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
               Şifreleriniz güvende. Sadece yetkili kişiler erişebilir.
             </p>
           </div>
 
-          <div className="card-premium p-6">
-            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-4 shadow-lg">
-              <Wifi className="w-6 h-6 text-white" />
+          <div className="card-premium p-3 md:p-6 col-span-2 md:col-span-1">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-lg">
+              <Wifi className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Kolay Kullanım</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Kolay Kullanım</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
               Müşterileriniz için WiFi erişimini kolaylaştırın.
             </p>
           </div>
@@ -301,19 +318,19 @@ export default function WifiPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
         >
-          <div className="card-premium p-6">
-            <h3 className="text-lg font-semibold text-white mb-3 text-gradient">Güvenlik Türleri</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+          <div className="card-premium p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Güvenlik Türleri</h3>
+            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
               WPA/WPA2 en güvenli seçenektir ve modern router'lar için önerilir. 
               WEP eski bir teknolojidir ve daha az güvenlidir. Şifresiz ağlar herkese açıktır.
             </p>
           </div>
 
-          <div className="card-premium p-6">
-            <h3 className="text-lg font-semibold text-white mb-3 text-gradient">Gizli Ağ Nedir?</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+          <div className="card-premium p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Gizli Ağ Nedir?</h3>
+            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
               Gizli ağ, WiFi ağının normal taramada görünmez olmasını sağlar. 
               Kullanıcıların ağ adını manuel olarak girmesi gerekir, bu da ekstra güvenlik sağlar.
             </p>
@@ -325,10 +342,10 @@ export default function WifiPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="card-premium p-8"
+          className="card-premium p-4 md:p-8 md:p-12"
         >
-          <h2 className="text-2xl font-bold text-white mb-4 text-gradient">İşletmeler ve Restoranlar İçin Güvenli QR Kodlu Ağ Paylaşım Rehberi</h2>
-          <p className="text-gray-400 mb-6">
+          <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 text-gradient">İşletmeler ve Restoranlar İçin Güvenli QR Kodlu Ağ Paylaşım Rehberi</h2>
+          <p className="text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
             Geleneksel WiFi şifre paylaşımı hem zaman alıcı hem de güvenlik açısından riskli olabilir. QR kod tabanlı WiFi paylaşımı ile:
           </p>
           <ul className="text-gray-400 space-y-2 mb-6">
@@ -350,8 +367,8 @@ export default function WifiPage() {
             </li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-white mb-3">Nasıl Kullanılır?</h3>
-          <ul className="text-gray-400 space-y-2 mb-6">
+          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Nasıl Kullanılır?</h3>
+          <ul className="text-gray-400 space-y-2 md:space-y-2 mb-4 md:mb-6 text-sm md:text-base">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>WiFi ağ adı (SSID) ve şifrenizi girin</span>
@@ -370,8 +387,8 @@ export default function WifiPage() {
             </li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-white mb-3">Avantajları</h3>
-          <ul className="text-gray-400 space-y-2">
+          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Avantajları</h3>
+          <ul className="text-gray-400 space-y-2 md:space-y-2 text-sm md:text-base">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>Otomatik bağlantı</span>

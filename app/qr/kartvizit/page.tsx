@@ -1,10 +1,27 @@
-'use client';
-
+import type { Metadata } from "next";
 import { motion } from 'framer-motion';
 import { CreditCard, Clock, Shield, Zap, Search, ChevronDown, User, Phone, Mail, Building2, Globe, MapPin, FileText } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+
+export const metadata: Metadata = {
+  title: "Kartvizit QR Kod Oluşturucu | vCard Dijital Kartvizit | LuxQr",
+  description: "Profesyonel dijital kartvizit QR kodu oluşturun. vCard formatında isim, telefon, e-posta, şirket ve adres bilgilerinizi QR koda dönüştürün. Ücretsiz ve hızlı.",
+  keywords: ["kartvizit qr kod", "vcard qr", "dijital kartvizit", "iş kartı qr", "kartvizit oluşturucu", "vcf qr kod"],
+  openGraph: {
+    title: "Kartvizit QR Kod Oluşturucu | vCard Dijital Kartvizit | LuxQr",
+    description: "Profesyonel dijital kartvizit QR kodu oluşturun. vCard formatında kartvizit bilgilerinizi QR koda dönüştürün.",
+    url: "https://www.luxqrpro.site/qr/kartvizit",
+    type: "website",
+  },
+  twitter: {
+    title: "Kartvizit QR Kod Oluşturucu | vCard Dijital Kartvizit",
+    description: "Profesyonel dijital kartvizit QR kodu oluşturun. vCard formatında kartvizit bilgilerinizi QR koda dönüştürün.",
+  },
+};
+
+'use client';
 
 export default function KartvizitPage() {
   const router = useRouter();
@@ -127,7 +144,7 @@ END:VCARD`;
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8"
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div
@@ -156,9 +173,9 @@ END:VCARD`;
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="card-premium p-8 mb-8"
+          className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
                 <User className="w-5 h-5 text-blue-400" />
@@ -168,7 +185,7 @@ END:VCARD`;
                 type="text"
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="Adınız"
               />
             </div>
@@ -182,7 +199,7 @@ END:VCARD`;
                 type="text"
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="Soyadınız"
               />
             </div>
@@ -196,7 +213,7 @@ END:VCARD`;
                 type="tel"
                 value={formData.phone}
                 onChange={handlePhoneChange}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="0516 XXX XX XX"
               />
             </div>
@@ -210,7 +227,7 @@ END:VCARD`;
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="email@example.com"
               />
             </div>
@@ -224,7 +241,7 @@ END:VCARD`;
                 type="text"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="Şirket adı"
               />
             </div>
@@ -295,7 +312,7 @@ END:VCARD`;
                 type="url"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="https://example.com"
               />
             </div>
@@ -309,7 +326,7 @@ END:VCARD`;
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
                 placeholder="Şehir, Ülke"
               />
             </div>
@@ -330,12 +347,12 @@ END:VCARD`;
           </div>
 
           {/* Expiration Selection */}
-          <div className="mt-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-3">
-              <Clock className="w-5 h-5 text-blue-400" />
+          <div className="mt-4 md:mt-6">
+            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+              <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               Geçerlilik Süresi
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {[
                 { value: '1day', label: '1 Gün', icon: Clock },
                 { value: '1week', label: '1 Hafta', icon: Clock },
@@ -345,25 +362,25 @@ END:VCARD`;
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
                     expiration === option.value
                       ? 'border-blue-500/50 bg-blue-500/10 text-blue-400'
                       : 'border-white/10 text-gray-400 hover:border-blue-500/50'
                   }`}
                 >
-                  <option.icon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{option.label}</span>
+                  <option.icon className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="text-xs md:text-sm font-medium">{option.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Action Button */}
-          <div className="mt-6">
+          <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className="btn-primary w-full py-4 rounded-2xl text-white font-semibold disabled:opacity-50"
+              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
             </button>
@@ -375,34 +392,34 @@ END:VCARD`;
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8"
         >
-          <div className="card-premium p-6">
-            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4 shadow-lg">
-              <Zap className="w-6 h-6 text-white" />
+          <div className="card-premium p-3 md:p-6">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Hızlı Paylaşım</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı Paylaşım</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
               Tek tıkla iletişim bilgilerinizi paylaşın. Kağıt kartvizitlerinizi dijitalleştirin.
             </p>
           </div>
 
-          <div className="card-premium p-6">
-            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-4 shadow-lg">
-              <Shield className="w-6 h-6 text-white" />
+          <div className="card-premium p-3 md:p-6">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
+              <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Güvenli</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
               vCard formatında standart ve güvenli iletişim bilgisi paylaşımı.
             </p>
           </div>
 
-          <div className="card-premium p-6">
-            <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 mb-4 shadow-lg">
-              <CreditCard className="w-6 h-6 text-white" />
+          <div className="card-premium p-3 md:p-6 col-span-2 md:col-span-1">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 mb-2 md:mb-4 shadow-lg">
+              <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Çevre Dostu</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Çevre Dostu</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
               Kağıt israfını önleyin. Dijital kartvizitler ile sürdürülebilir çözümler.
             </p>
           </div>
@@ -413,19 +430,19 @@ END:VCARD`;
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
         >
-          <div className="card-premium p-6">
-            <h3 className="text-lg font-semibold text-white mb-3 text-gradient">vCard Formatı Nedir?</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+          <div className="card-premium p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">vCard Formatı Nedir?</h3>
+            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
               vCard (Virtual Card), elektronik kartvizit formatıdır. İletişim bilgilerinizi standart bir formatta saklar ve paylaşmanızı sağlar. 
               QR kod ile birleştirildiğinde, potansiyel müşterileriniz ve iş ortaklarınız tek tıkla tüm iletişim bilgilerinize ulaşabilir.
             </p>
           </div>
 
-          <div className="card-premium p-6">
-            <h3 className="text-lg font-semibold text-white mb-3 text-gradient">Uyumlu Platformlar</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+          <div className="card-premium p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Uyumlu Platformlar</h3>
+            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
               Dijital kartvizitler iOS, Android ve Windows cihazlarla tam uyumludur. 
               iPhone, Samsung, Huawei ve diğer tüm akıllı telefonlarda sorunsuz çalışır.
             </p>
@@ -437,19 +454,19 @@ END:VCARD`;
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="card-premium p-8"
+          className="card-premium p-4 md:p-8 md:p-12"
         >
-          <h2 className="text-2xl font-bold text-white mb-4 text-gradient">Dijital vCard Nedir?</h2>
-          <p className="text-gray-400 mb-6">
+          <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 text-gradient">Dijital vCard Nedir?</h2>
+          <p className="text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
             vCard (Virtual Card), elektronik kartvizit formatıdır. İletişim bilgilerinizi standart bir formatta saklar ve paylaşmanızı sağlar.
             QR kod ile birleştirildiğinde, potansiyel müşterileriniz ve iş ortaklarınız tek tıkla tüm iletişim bilgilerinize ulaşabilir.
           </p>
 
-          <h3 className="text-xl font-semibold text-white mb-3">Kağıt Kartvizitleri Bırakmanın Şirketlere Çevre ve Prestij Katkıları</h3>
-          <p className="text-gray-400 mb-6">
+          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Kağıt Kartvizitleri Bırakmanın Şirketlere Çevre ve Prestij Katkıları</h3>
+          <p className="text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
             Geleneksel kağıt kartvizitlerin yılda milyonlarca ağaç kesilmesine neden oluyor. Dijital kartvizit QR kodları ile:
           </p>
-          <ul className="text-gray-400 space-y-2 mb-6">
+          <ul className="text-gray-400 space-y-2 md:space-y-2 mb-4 md:mb-6 text-sm md:text-base">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>Yılda ortalama 1000 kağıt kartvizit tasarrufu sağlayın</span>
@@ -468,8 +485,8 @@ END:VCARD`;
             </li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-white mb-3">Avantajları</h3>
-          <ul className="text-gray-400 space-y-2">
+          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Avantajları</h3>
+          <ul className="text-gray-400 space-y-2 md:space-y-2 text-sm md:text-base">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>Anında iletişim bilgisi aktarımı</span>

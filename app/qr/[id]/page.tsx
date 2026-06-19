@@ -89,7 +89,9 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         url: qrCodeUrl,
       });
     } else {
-      handleCopy();
+      navigator.clipboard.writeText(qrCodeUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -124,8 +126,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       if (line.startsWith('URL:')) data.website = line.substring(4);
       if (line.startsWith('ADR:')) {
         const parts = line.substring(4).split(';');
-        data.address = parts[6] || parts[5] || parts[4] || '';
+        const street = parts[2] || '';
+        const city = parts[3] || '';
+        const state = parts[4] || '';
+        const postal = parts[5] || '';
+        const country = parts[6] || '';
+        const addressParts = [street, city, state, postal, country].filter(Boolean);
+        data.address = addressParts.join(', ');
       }
+      if (line.startsWith('LABEL:')) data.address = line.substring(6);
     });
     
     return data;
@@ -337,7 +346,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 </div>
               </div>
               <div className="bg-white/10 rounded-lg p-6">
-                <div className="flex flex-col md:flex-row gap-12">
+                <div className="flex flex-row gap-6 md:gap-12">
                   {/* Left side - Name and title */}
                   <div className="flex-1 text-center md:text-left">
                     <h4 className="text-xl font-bold text-white mb-1">{vcardData.fullName || vcardData.firstName + ' ' + vcardData.lastName}</h4>
@@ -479,9 +488,46 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex gap-8 mb-8"
+          className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8"
         >
-          <div className="bg-white rounded-2xl p-8 shadow-2xl flex-1">
+          {/* QR Modes Card - Mobile First */}
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 md:p-6 w-full md:w-80 order-1 md:order-2">
+            <div className="flex items-center gap-2 mb-2 md:mb-4">
+              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400/50" />
+              <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
+            </div>
+            <div className="grid grid-cols-2 md:flex flex-col gap-2 md:gap-3">
+              <Link href="/qr/wifi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Wifi className="w-3 h-3 md:w-5 md:h-5 text-cyan-400" />
+                <span>WiFi</span>
+              </Link>
+              <Link href="/qr/metin-belge" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <FileText className="w-3 h-3 md:w-5 md:h-5 text-blue-400" />
+                <span>Metin/Resim/Video</span>
+              </Link>
+              <Link href="/qr/kartvizit" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Building2 className="w-3 h-3 md:w-5 md:h-5 text-purple-400" />
+                <span>Kartvizit</span>
+              </Link>
+              <Link href="/qr/sosyal-medya" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Share2 className="w-3 h-3 md:w-5 md:h-5 text-pink-400" />
+                <span>Sosyal</span>
+              </Link>
+              <Link href="/qr/ses-dosyasi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
+                <Video className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
+                <span>Ses Dosyası</span>
+              </Link>
+            </div>
+            <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-white/10 flex flex-col items-center hidden md:flex">
+              <QrCode className="w-16 h-16 text-white/10 mb-2" />
+              <p className="text-xs text-gray-400 text-center">
+                Farklı QR kod türleri oluşturun ve paylaşın
+              </p>
+            </div>
+          </div>
+
+          {/* QR Code Card - Mobile Second */}
+          <div className="bg-gray-100 rounded-2xl p-4 md:p-8 shadow-2xl flex-1 order-2 md:order-1">
             <div className="flex flex-col items-center">
               <h3 className="text-xl font-bold text-gray-800 mb-4">QR Kod</h3>
               <div className="bg-white p-4 rounded-xl border-2 border-gray-200 mb-6">
@@ -489,88 +535,55 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Button Group */}
-              <div className="flex flex-wrap gap-4 justify-center w-full">
+              <div className="flex flex-wrap gap-3 md:gap-4 justify-center w-full">
                 <button
                   onClick={handleDownload}
-                  className="flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
+                  className="flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 text-sm md:text-base"
                 >
-                  <Download className="w-5 h-5" />
+                  <Download className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">İndir</span>
                 </button>
 
                 <button
                   onClick={handlePrint}
-                  className="flex items-center gap-2 bg-purple-500/80 hover:bg-purple-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
+                  className="flex items-center gap-2 bg-purple-500/80 hover:bg-purple-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 text-sm md:text-base"
                 >
-                  <Printer className="w-5 h-5" />
+                  <Printer className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Yazdır</span>
                 </button>
 
                 <button
                   onClick={() => window.open(qrData?.viewUrl || qrCodeUrl, '_blank')}
-                  className="flex items-center gap-2 bg-green-500/80 hover:bg-green-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-green-500/30"
+                  className="flex items-center gap-2 bg-green-500/80 hover:bg-green-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-green-500/30 text-sm md:text-base"
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Linke Git</span>
                 </button>
 
                 <button
                   onClick={handleShareLink}
-                  className="flex items-center gap-2 bg-orange-500/80 hover:bg-orange-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30"
+                  className="flex items-center gap-2 bg-orange-500/80 hover:bg-orange-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30 text-sm md:text-base"
                 >
-                  <Share2 className="w-5 h-5" />
+                  <Share2 className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Linki Paylaş</span>
                 </button>
 
                 <button
                   onClick={handleShareQR}
-                  className="flex items-center gap-2 bg-pink-500/80 hover:bg-pink-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/30"
+                  className="flex items-center gap-2 bg-pink-500/80 hover:bg-pink-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/30 text-sm md:text-base"
                 >
-                  <QrCode className="w-5 h-5" />
+                  <QrCode className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">QR Paylaş</span>
                 </button>
 
                 <button
                   onClick={() => router.push('/qr/metin-belge')}
-                  className="flex items-center gap-2 bg-gray-700/80 hover:bg-gray-600 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-gray-500/30"
+                  className="flex items-center gap-2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-gray-500/30 text-sm md:text-base"
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Yeni QR Kod</span>
                 </button>
               </div>
-            </div>
-          </div>
-
-          {/* QR Modes Card */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 w-80">
-            <p className="text-sm text-gray-400 mb-4 font-medium">QR Modları</p>
-            <div className="flex flex-col gap-3">
-              <Link href="/qr/wifi" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors">
-                <Wifi className="w-5 h-5 text-cyan-400" />
-                WiFi
-              </Link>
-              <Link href="/qr/metin-belge" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors">
-                <FileText className="w-5 h-5 text-blue-400" />
-                Metin Görsel Video Belge
-              </Link>
-              <Link href="/qr/kartvizit" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors">
-                <Building2 className="w-5 h-5 text-purple-400" />
-                Kartvizit
-              </Link>
-              <Link href="/qr/sosyal-medya" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors">
-                <Share2 className="w-5 h-5 text-pink-400" />
-                Sosyal Medya
-              </Link>
-              <Link href="/qr/ses-dosyasi" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors">
-                <Video className="w-5 h-5 text-orange-400" />
-                Ses Dosyası
-              </Link>
-            </div>
-            <div className="mt-6 pt-4 border-t border-white/10 flex flex-col items-center">
-              <QrCode className="w-16 h-16 text-white/10 mb-2" />
-              <p className="text-xs text-gray-400 text-center">
-                Farklı QR kod türleri oluşturun ve paylaşın
-              </p>
             </div>
           </div>
         </motion.div>
@@ -580,7 +593,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="card-premium p-8 mb-8"
+          className="card-premium p-4 md:p-8 mb-6 md:mb-8"
         >
           <div className="flex flex-col items-center">
             {/* Check Icon */}
@@ -588,14 +601,14 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}
-              className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-6 shadow-lg"
+              className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-3 md:mb-6 shadow-lg"
             >
-              <Check className="w-8 h-8 text-white" />
+              <Check className="w-6 h-6 md:w-8 md:h-8 text-white" />
             </motion.div>
 
             {/* Success Text */}
-            <h2 className="text-2xl font-bold text-white mb-2">QR Kod İçeriği</h2>
-            <p className="text-gray-400 mb-8">QR kodunuz başarıyla oluşturuldu</p>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">QR Kod İçeriği</h2>
+            <p className="text-gray-400 mb-4 md:mb-8 text-sm md:text-base">QR kodunuz başarıyla oluşturuldu</p>
 
             {/* Content */}
             {renderContent()}

@@ -81,66 +81,68 @@ export default function RootLayout({
           id="structured-data-webapp"
           type="application/ld+json"
           strategy="beforeInteractive"
-        >
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "LuxQr - Ücretsiz QR Kod Oluşturucu",
-            "description": "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-            "url": "https://www.luxqrpro.site",
-            "applicationCategory": "UtilityApplication",
-            "operatingSystem": "Web",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "TRY"
-            },
-            "featureList": [
-              "Metin QR kod oluşturma",
-              "WiFi QR kod oluşturma",
-              "Kartvizit QR kod oluşturma",
-              "Sosyal medya QR kod oluşturma",
-              "Dosya QR kod oluşturma",
-              "Ses dosyası QR kod oluşturma"
-            ],
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "ratingCount": "1250",
-              "bestRating": "5",
-              "worstRating": "1"
-            },
-            "author": {
-              "@type": "Organization",
-              "name": "LuxQr Team",
-              "url": "https://www.luxqrpro.site"
-            }
-          })}
-        </Script>
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "LuxQr - Ücretsiz QR Kod Oluşturucu",
+              "description": "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+              "url": "https://www.luxqrpro.site",
+              "applicationCategory": "UtilityApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "TRY"
+              },
+              "featureList": [
+                "Metin QR kod oluşturma",
+                "WiFi QR kod oluşturma",
+                "Kartvizit QR kod oluşturma",
+                "Sosyal medya QR kod oluşturma",
+                "Dosya QR kod oluşturma",
+                "Ses dosyası QR kod oluşturma"
+              ],
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "ratingCount": "1250",
+                "bestRating": "5",
+                "worstRating": "1"
+              },
+              "author": {
+                "@type": "Organization",
+                "name": "LuxQr Team",
+                "url": "https://www.luxqrpro.site"
+              }
+            })
+          }}
+        />
         <Script
           id="structured-data-organization"
           type="application/ld+json"
           strategy="beforeInteractive"
-        >
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "LuxQr",
-            "url": "https://www.luxqrpro.site",
-            "logo": "https://www.luxqrpro.site/logo.svg",
-            "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
-            "sameAs": [
-              "https://www.facebook.com/luxqr",
-              "https://www.twitter.com/luxqr",
-              "https://www.instagram.com/luxqr"
-            ],
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "contactType": "customer service",
-              "email": "info@luxqrpro.site"
-            }
-          })}
-        </Script>
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "LuxQr",
+              "url": "https://www.luxqrpro.site",
+              "logo": "https://www.luxqrpro.site/logo.svg",
+              "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
+              "sameAs": [
+                "https://www.facebook.com/luxqr",
+                "https://www.twitter.com/luxqr",
+                "https://www.instagram.com/luxqr"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "email": "info@luxqrpro.site"
+              }
+            })
+          }}
+        />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6964506660604767"

@@ -1,5 +1,4 @@
-'use client';
-
+import type { Metadata } from "next";
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { 
@@ -12,6 +11,22 @@ import {
   Home
 } from 'lucide-react';
 import BackButton from '@/components/BackButton';
+
+export const metadata: Metadata = {
+  title: "Hakkımızda - LuxQr Hakkında | Ücretsiz QR Kod Oluşturucu",
+  description: "LuxQr hakkında bilgi edinin. Türkiye'nin en gelişmiş ücretsiz QR kod oluşturucu platformu. Misyonumuz, özelliklerimiz ve kullanılan teknolojiler hakkında detaylı bilgi.",
+  keywords: ["luxqr hakkında", "qr kod oluşturucu hakkında", "luxqr misyonu", "luxqr teknolojileri", "türkiye qr kod"],
+  openGraph: {
+    title: "Hakkımızda - LuxQr Hakkında | Ücretsiz QR Kod Oluşturucu",
+    description: "LuxQr hakkında bilgi edinin. Türkiye'nin en gelişmiş ücretsiz QR kod oluşturucu platformu.",
+    url: "https://www.luxqrpro.site/about",
+    type: "website",
+  },
+  twitter: {
+    title: "Hakkımızda - LuxQr Hakkında",
+    description: "LuxQr hakkında bilgi edinin. Türkiye'nin en gelişmiş ücretsiz QR kod oluşturucu platformu.",
+  },
+};
 
 export default function AboutPage() {
   return (
