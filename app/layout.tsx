@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "LuxQR",
     images: [
       {
-        url: "https://www.luxqrpro.site/logo.svg",
+        url: "https://www.luxqrpro.site/favicon.svg",
         width: 1200,
         height: 630,
         alt: "LuxQR - QR Kod Oluşturucu",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-    images: ["https://www.luxqrpro.site/logo.svg"],
+    images: ["https://www.luxqrpro.site/favicon.svg"],
   },
   other: {
     "google-adsense-account": "ca-pub-6964506660604767",
