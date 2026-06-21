@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mic, Clock, Shield, Zap, Upload, FileText } from 'lucide-react';
+import { Mic, Clock, Shield, Zap, Upload, FileText, Square, Play } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
@@ -9,22 +9,103 @@ import { showNotification } from '@/components/Notification';
 export default function SesDosyasiContent() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [expiration, setExpiration] = useState<'1day' | '1week' | '1month' | '3months'>('1day');
   const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      
       setUploading(true);
-      setTimeout(() => setUploading(false), 2000);
+      setUploadStatus('Dosya yükleniyor...');
+      
+      // Simulate upload delay
+      setTimeout(() => {
+        setFile(selectedFile);
+        setShowError(false);
+        setUploading(false);
+        setUploadStatus('');
+        
+        // Create preview URL for audio
+        const url = URL.createObjectURL(selectedFile);
+        setPreviewUrl(url);
+      }, 1000);
     }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioFile = new File([audioBlob], 'kayit-ses.webm', { type: 'audio/webm' });
+        
+        setFile(audioFile);
+        setShowError(false);
+        
+        const url = URL.createObjectURL(audioBlob);
+        setPreviewUrl(url);
+        
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+      
+      showNotification('Kayıt başladı', 'info');
+    } catch (error) {
+      console.error('Kayıt hatası:', error);
+      showNotification('Mikrofon erişimi reddedildi', 'error');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+      
+      showNotification('Kayıt tamamlandı', 'success');
+    }
+  };
+
+  const formatRecordingTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleGenerate = async () => {
     if (!file) {
+      setShowError(true);
       showNotification('Lütfen ses dosyası seçin', 'error');
       return;
     }
@@ -92,7 +173,7 @@ export default function SesDosyasiContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
@@ -121,23 +202,83 @@ export default function SesDosyasiContent() {
               <Upload className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               Ses Dosyası Yükle
             </label>
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-white/20 rounded-xl p-4 md:p-8 text-center cursor-pointer hover:border-blue-500/50 transition-colors"
-            >
-              <Upload className="w-8 h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 md:mb-4" />
-              <p className="text-gray-400 mb-1 md:mb-2 text-sm md:text-base">
-                {file ? file.name : 'Dosya seçmek için tıklayın veya sürükleyin'}
-              </p>
-              <p className="text-gray-500 text-xs md:text-sm">
-                MP3, WAV, M4A (max 50MB)
-              </p>
+            <div className="relative">
+              {file && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFile(null);
+                    setPreviewUrl(null);
+                    setShowError(false);
+                  }}
+                  className="absolute top-2 right-2 z-10 bg-gray-500/60 hover:bg-gray-500/80 text-white rounded-full p-1 md:p-2 transition-colors backdrop-blur-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              )}
+              <div className="flex gap-3">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`flex-1 border-2 border-dashed rounded-xl p-4 md:p-8 text-center cursor-pointer transition-colors ${
+                    showError ? 'border-red-500' : 'border-white/20 hover:border-blue-500/50'
+                  }`}
+                >
+                  {previewUrl ? (
+                    <div className="mb-4">
+                      <audio src={previewUrl} controls className="w-full max-w-md mx-auto" />
+                    </div>
+                  ) : (
+                    <Upload className="w-8 h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 md:mb-4" />
+                  )}
+                  <p className="text-gray-400 mb-1 md:mb-2 text-sm md:text-base">
+                    {file ? file.name : 'Dosya seçmek için tıklayın veya ses kaydedin'}
+                  </p>
+                  <p className="text-gray-500 text-xs md:text-sm">
+                    MP3, WAV, M4A (max 50MB) veya ses kaydı
+                  </p>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <button
+                    onClick={isRecording ? stopRecording : startRecording}
+                    disabled={uploading || loading}
+                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${
+                      isRecording
+                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                        : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white'
+                    } disabled:opacity-50`}
+                  >
+                    {isRecording ? (
+                      <>
+                        <Square className="w-4 h-4 md:w-5 md:h-5" />
+                        <span className="text-sm md:text-base">Durdur</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="w-4 h-4 md:w-5 md:h-5" />
+                        <span className="text-sm md:text-base">Ses Kaydı</span>
+                      </>
+                    )}
+                  </button>
+                  {isRecording && (
+                    <div className="flex items-center justify-center gap-2 mt-2 text-red-400">
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      <span className="text-xs font-medium">{formatRecordingTime(recordingTime)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
+            {showError && (
+              <p className="text-red-400 text-xs mt-1">Lütfen ses dosyası seçin veya ses kaydedin</p>
+            )}
             <input
               ref={fileInputRef}
               type="file"
               onChange={handleFileSelect}
-              accept="audio/*"
+              accept=".mp3,.wav,.m4a,audio/mp3,audio/wav,audio/m4a,audio/x-m4a"
               className="hidden"
             />
           </div>
@@ -189,10 +330,10 @@ export default function SesDosyasiContent() {
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading || uploading}
+              disabled={loading || uploading || !file}
               className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
             >
-              {loading ? 'Oluşturuluyor...' : uploading ? 'Yükleniyor...' : 'QR Kod Oluştur'}
+              {loading ? uploadStatus || 'Oluşturuluyor...' : uploading ? uploadStatus || 'Yükleniyor...' : 'QR Kod Oluştur'}
             </button>
           </div>
         </motion.div>

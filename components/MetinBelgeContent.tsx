@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Type, ImageIcon, Video, FileText, Upload, QrCode, Clock, Shield, Zap } from 'lucide-react';
+import { Type, ImageIcon, Video, FileText, Upload, QrCode, Clock, Shield, Zap, Image as ImageIcon2, X } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
@@ -11,17 +11,28 @@ export default function MetinBelgeContent() {
   const [selectedType, setSelectedType] = useState<'text' | 'image' | 'video' | 'file'>('text');
   const [textContent, setTextContent] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [note, setNote] = useState('');
   const [expiration, setExpiration] = useState<'1day' | '1week' | '1month' | '3months'>('1day');
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
+  const [showError, setShowError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const multiFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleTypeChange = (type: 'text' | 'image' | 'video' | 'file') => {
     setSelectedType(type);
     setFile(null);
+    setFiles([]);
+    setPreviewUrl(null);
+    setPreviewUrls([]);
     setTextContent('');
     setUploadStatus('');
+    setShowError(false);
+    setUploading(false);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,16 +54,93 @@ export default function MetinBelgeContent() {
         showNotification(`Büyük dosya (${fileSizeMB}MB). Yükleme biraz zaman alabilir.`, 'info');
       }
       
-      setFile(selectedFile);
+      setUploading(true);
+      setUploadStatus('Dosya yükleniyor...');
+      
+      // Simulate upload delay
+      setTimeout(() => {
+        setFile(selectedFile);
+        setShowError(false);
+        setUploading(false);
+        setUploadStatus('');
+        
+        // Create preview URL
+        if (selectedType === 'image') {
+          const url = URL.createObjectURL(selectedFile);
+          setPreviewUrl(url);
+        } else if (selectedType === 'video') {
+          const url = URL.createObjectURL(selectedFile);
+          setPreviewUrl(url);
+        }
+      }, 1000);
+    }
+  };
+
+  const handleMultiFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files);
+      
+      // Limit to 5 images
+      if (selectedFiles.length > 5) {
+        showNotification('En fazla 5 resim seçebilirsiniz', 'error');
+        return;
+      }
+      
+      // Validate all files are images
+      const maxSize = 10 * 1024 * 1024; // 10MB for images
+      for (const file of selectedFiles) {
+        if (!file.type.startsWith('image/')) {
+          showNotification('Sadece resim dosyaları seçebilirsiniz', 'error');
+          return;
+        }
+        if (file.size > maxSize) {
+          const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+          showNotification(`Dosya boyutu çok büyük (${fileSizeMB}MB). Maksimum 10MB limiti var.`, 'error');
+          return;
+        }
+      }
+      
+      setUploading(true);
+      setUploadStatus('Resimler yükleniyor...');
+      
+      // Simulate upload delay
+      setTimeout(() => {
+        setFiles(selectedFiles);
+        setShowError(false);
+        setUploading(false);
+        setUploadStatus('');
+        
+        // Create preview URLs for all images
+        const urls = selectedFiles.map(file => URL.createObjectURL(file));
+        setPreviewUrls(urls);
+      }, 1000);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    const newUrls = previewUrls.filter((_, i) => i !== index);
+    setFiles(newFiles);
+    setPreviewUrls(newUrls);
+    
+    if (newFiles.length === 0) {
+      setShowError(true);
     }
   };
 
   const handleGenerate = async () => {
     if (selectedType === 'text' && !textContent.trim()) {
+      setShowError(true);
       showNotification('Lütfen metin girin', 'error');
       return;
     }
-    if ((selectedType === 'image' || selectedType === 'video' || selectedType === 'file') && !file) {
+    if (selectedType === 'image' && !file && files.length === 0) {
+      setShowError(true);
+      showNotification('Lütfen resim seçin', 'error');
+      return;
+    }
+    if ((selectedType === 'video' || selectedType === 'file') && !file) {
+      setShowError(true);
       showNotification('Lütfen dosya seçin', 'error');
       return;
     }
@@ -71,6 +159,59 @@ export default function MetinBelgeContent() {
 
       if (selectedType === 'text') {
         content = textContent;
+      } else if (files.length > 0 && selectedType === 'image') {
+        // Multiple images - upload all files
+        const uploadedFiles = [];
+        
+        for (const file of files) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+          setUploadStatus(`Resim yükleniyor... (${uploadedFiles.length + 1}/${files.length})`);
+
+          try {
+            const uploadResponse = await fetch('/api/upload', {
+              method: 'POST',
+              body: formData,
+              signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!uploadResponse.ok) {
+              const errorText = await uploadResponse.text();
+              console.error('Upload failed:', uploadResponse.status, errorText);
+              showNotification(`Dosya yüklenemedi: ${uploadResponse.status}`, 'error');
+              return;
+            }
+
+            const uploadData = await uploadResponse.json();
+
+            if (!uploadData.success) {
+              showNotification(uploadData.error || 'Dosya yüklenemedi', 'error');
+              return;
+            }
+
+            uploadedFiles.push({
+              name: file.name,
+              url: uploadData.url
+            });
+          } catch (error) {
+            clearTimeout(timeoutId);
+            console.error('Upload error:', error);
+            showNotification('Dosya yüklenirken bir hata oluştu', 'error');
+            return;
+          }
+        }
+
+        // Use the first file name as the main content
+        content = files[0].name;
+        fileName = files[0].name;
+        // Store all file URLs in a structured format
+        filePath = JSON.stringify(uploadedFiles);
       } else if (file) {
         // Dosyayı Supabase'a yükle
         const formData = new FormData();
@@ -169,7 +310,7 @@ export default function MetinBelgeContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
@@ -261,10 +402,18 @@ export default function MetinBelgeContent() {
               </label>
               <textarea
                 value={textContent}
-                onChange={(e) => setTextContent(e.target.value)}
+                onChange={(e) => {
+                  setTextContent(e.target.value);
+                  setShowError(false);
+                }}
                 placeholder="QR koda dönüştürmek istediğiniz metni girin..."
-                className="w-full h-32 md:h-40 bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+                className={`w-full h-32 md:h-40 bg-slate-800/50 border rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none resize-none text-sm md:text-base ${
+                  showError ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                }`}
               />
+              {showError && (
+                <p className="text-red-400 text-xs mt-1">Lütfen metin girin</p>
+              )}
             </div>
           ) : (
             <div>
@@ -272,20 +421,101 @@ export default function MetinBelgeContent() {
                 <Upload className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                 Dosya Yükle
               </label>
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-white/20 rounded-2xl p-4 md:p-8 text-center cursor-pointer hover:border-blue-500/50 transition-colors"
-              >
-                <Upload className="w-8 h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 md:mb-4" />
-                <p className="text-gray-400 mb-1 md:mb-2 text-sm md:text-base">
-                  {file ? file.name : 'Dosya seçmek için tıklayın veya sürükleyin'}
-                </p>
-                <p className="text-gray-500 text-xs md:text-sm">
-                  {selectedType === 'image' && 'PNG, JPG, GIF (max 10MB)'}
-                  {selectedType === 'video' && 'MP4, MOV, AVI (max 100MB)'}
-                  {selectedType === 'file' && 'PDF, DOCX, TXT (max 10MB)'}
-                </p>
+              <div className="relative">
+                {file && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFile(null);
+                      setPreviewUrl(null);
+                      setShowError(false);
+                    }}
+                    className="absolute top-2 right-2 z-10 bg-gray-500/60 hover:bg-gray-500/80 text-white rounded-full p-1 md:p-2 transition-colors backdrop-blur-sm"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                )}
+                <div className="flex gap-3">
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`flex-1 border-2 border-dashed rounded-2xl p-4 md:p-8 text-center cursor-pointer transition-colors ${
+                      showError ? 'border-red-500' : 'border-white/20 hover:border-blue-500/50'
+                    }`}
+                  >
+                    {previewUrls.length > 0 && selectedType === 'image' ? (
+                      <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+                        {previewUrls.map((url, index) => (
+                          <div key={index} className="relative flex-shrink-0">
+                            <img src={url} alt={`Preview ${index + 1}`} className="w-32 h-24 object-cover rounded-lg" />
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeFile(index);
+                              }}
+                              className="absolute top-1 right-1 bg-red-500/80 hover:bg-red-500 text-white rounded-full p-1 transition-colors"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : previewUrl && (selectedType === 'image' || selectedType === 'video') ? (
+                      <div className="mb-4">
+                        {selectedType === 'image' ? (
+                          <img src={previewUrl} alt="Preview" className="max-w-full max-h-48 mx-auto rounded-lg" />
+                        ) : (
+                          <video src={previewUrl} controls className="max-w-full max-h-48 mx-auto rounded-lg" />
+                        )}
+                      </div>
+                    ) : file && selectedType === 'file' ? (
+                      <div className="mb-4">
+                        {file.type === 'application/pdf' && previewUrl ? (
+                          <iframe
+                            src={previewUrl || ''}
+                            className="w-full h-48 rounded-lg"
+                            title="PDF Preview"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                            <FileText className="w-8 h-8 md:w-10 md:h-10 text-blue-400" />
+                          </div>
+                        )}
+                        <p className="text-white font-medium text-sm md:text-base truncate max-w-xs mx-auto">{file.name}</p>
+                        <p className="text-gray-500 text-xs mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                      </div>
+                    ) : (
+                      <Upload className="w-8 h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 md:mb-4" />
+                    )}
+                    <p className="text-gray-400 mb-1 md:mb-2 text-sm md:text-base">
+                      {files.length > 0 ? `${files.length} resim seçildi` : file ? file.name : 'Dosya seçmek için tıklayın veya sürükleyin'}
+                    </p>
+                    <p className="text-gray-500 text-xs md:text-sm">
+                      {selectedType === 'image' && 'PNG, JPG, GIF (max 10MB)'}
+                      {selectedType === 'video' && 'MP4, MOV, AVI (max 100MB)'}
+                      {selectedType === 'file' && 'PDF, DOCX, TXT (max 10MB)'}
+                    </p>
+                  </div>
+                  {selectedType === 'image' && (
+                    <div className="flex flex-col justify-center">
+                      <button
+                        onClick={() => multiFileInputRef.current?.click()}
+                        disabled={uploading || loading}
+                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white transition-all disabled:opacity-50"
+                      >
+                        <ImageIcon2 className="w-4 h-4 md:w-5 md:h-5" />
+                        <span className="text-sm md:text-base">Çoklu Resim</span>
+                      </button>
+                      <p className="text-gray-500 text-xs mt-2 text-center">En fazla 5 resim</p>
+                    </div>
+                  )}
+                </div>
               </div>
+              {showError && (
+                <p className="text-red-400 text-xs mt-1">Lütfen dosya seçin</p>
+              )}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -297,6 +527,14 @@ export default function MetinBelgeContent() {
                     ? 'video/*,.mp4,.mov,.avi,.mkv,.webm'
                     : '.pdf,.doc,.docx,.txt'
                 }
+                className="hidden"
+              />
+              <input
+                ref={multiFileInputRef}
+                type="file"
+                onChange={handleMultiFileSelect}
+                accept="image/*"
+                multiple
                 className="hidden"
               />
             </div>
@@ -349,10 +587,10 @@ export default function MetinBelgeContent() {
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || uploading || (selectedType === 'text' ? !textContent.trim() : selectedType === 'image' ? !file && files.length === 0 : !file)}
               className="btn-primary w-full text-white font-semibold py-3 md:py-4 rounded-2xl disabled:opacity-50 text-sm md:text-base"
             >
-              {loading ? uploadStatus || 'Oluşturuluyor...' : 'QR Kod Oluştur'}
+              {loading ? uploadStatus || 'Oluşturuluyor...' : uploading ? uploadStatus : 'QR Kod Oluştur'}
             </button>
           </div>
         </motion.div>

@@ -209,7 +209,7 @@ export default function BlogSlider() {
         {/* Horizontal Scroll Container */}
         <div
           ref={sliderRef}
-          className="flex gap-4 overflow-x-auto py-8 px-16 scrollbar-hide cursor-grab active:cursor-grabbing select-none"
+          className="flex gap-4 overflow-x-auto py-8 px-4 md:px-16 scrollbar-hide cursor-grab active:cursor-grabbing select-none justify-start md:justify-center"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           onMouseDown={handleMouseDown}
           onMouseLeave={handleMouseLeave}
@@ -223,7 +223,7 @@ export default function BlogSlider() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-              className="flex-shrink-0 w-full md:w-[calc(33.333%-16px)]"
+              className="flex-shrink-0 w-[90%] md:w-[calc(33.333%-16px)]"
             >
               <Link href={`/blog/${blog.slug}`}>
                 <motion.div
@@ -232,7 +232,7 @@ export default function BlogSlider() {
                   className="card-premium overflow-hidden h-full hover:border-blue-500/50 transition-all duration-300"
                 >
                   {blog.mainImage && (
-                    <div className="relative h-40 overflow-hidden">
+                    <div className="relative h-32 md:h-40 overflow-hidden">
                       <motion.img
                         src={blog.mainImage}
                         alt={blog.title}
@@ -247,11 +247,11 @@ export default function BlogSlider() {
                     </div>
                   )}
                   
-                  <div className="p-3">
-                    <h3 className="text-base font-bold text-white mb-2 line-clamp-2 leading-tight">
+                  <div className="p-2 md:p-3">
+                    <h3 className="text-sm md:text-base font-bold text-white mb-1 md:mb-2 line-clamp-2 leading-tight">
                       {blog.title}
                     </h3>
-                    <p className="text-gray-400 text-xs mb-2 line-clamp-2 leading-relaxed">
+                    <p className="text-gray-400 text-xs mb-1 md:mb-2 line-clamp-2 leading-relaxed">
                       {blog.description}
                     </p>
                     <div className="flex items-center justify-between">

@@ -121,24 +121,6 @@ export default function FAQPage() {
       />
 
       <div className="container mx-auto px-4 py-16">
-        {/* Header with Hamburger Menu and Back Button */}
-        <div className="mb-8 max-md:flex max-md:justify-end max-md:items-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm max-md:px-3 max-md:py-1.5 z-10"
-          >
-            <div className="flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-blue-400" />
-              <span className="font-bold">LuxQr</span>
-            </div>
-            <div className="w-px h-4 bg-white/20"></div>
-            <div className="flex items-center gap-2">
-              <Home className="w-4 h-4" />
-              Ana Sayfaya Dön
-            </div>
-          </Link>
-        </div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -160,8 +142,8 @@ export default function FAQPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 mb-16"
+          transition={{ delay: 0.1, duration: 0.2 }}
+          className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-8 md:mb-16"
         >
           {faqData.map((item, index) => (
             <div
@@ -170,17 +152,17 @@ export default function FAQPage() {
             >
               <button
                 onClick={() => toggleAccordion(index)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/10 transition-colors"
+                className="w-full px-4 md:px-6 py-3 md:py-5 flex items-center justify-between text-left hover:bg-white/10 transition-colors"
               >
-                <h2 className="text-lg font-semibold text-white flex-1">
+                <h2 className="text-sm md:text-lg font-semibold text-white flex-1">
                   {item.question}
                 </h2>
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
-                  className="flex-shrink-0 ml-4"
+                  className="flex-shrink-0 ml-2 md:ml-4"
                 >
-                  <ChevronDown className="w-5 h-5 text-blue-400" />
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                 </motion.div>
               </button>
               
@@ -193,8 +175,8 @@ export default function FAQPage() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-5">
-                      <p className="text-gray-400 leading-relaxed text-sm">
+                    <div className="px-4 md:px-6 pb-3 md:pb-5">
+                      <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                         {item.answer}
                       </p>
                     </div>
@@ -206,11 +188,11 @@ export default function FAQPage() {
         </motion.div>
 
         {/* QR Code Types Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center text-gradient">
+        <div className="mb-8 md:mb-16">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-8 text-center text-gradient">
             QR Kod Türleri
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             {[
               { icon: FileText, title: 'Metin & Belge', desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge' },
               { icon: Users, title: 'Kartvizit', desc: 'Dijital vCard', link: '/qr/kartvizit' },
@@ -218,12 +200,12 @@ export default function FAQPage() {
               { icon: Shield, title: 'Sosyal Medya', desc: 'Link-in-bio', link: '/qr/sosyal-medya' },
             ].map((item, index) => (
               <Link key={index} href={item.link}>
-                <div className="card-premium p-6 hover:border-blue-500/50 transition-all group">
-                  <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4 shadow-lg group-hover:scale-110 transition-transform">
-                    <item.icon className="w-8 h-8 text-white" />
+                <div className="card-premium p-3 md:p-6 hover:border-blue-500/50 transition-all group">
+                  <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg group-hover:scale-110 transition-transform">
+                    <item.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.desc}</p>
+                  <h3 className="text-sm md:text-lg font-semibold text-white mb-1 md:mb-2">{item.title}</h3>
+                  <p className="text-gray-400 text-xs md:text-sm">{item.desc}</p>
                 </div>
               </Link>
             ))}
@@ -231,48 +213,48 @@ export default function FAQPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="card-premium p-8 md:p-12 mb-16 relative overflow-hidden">
+        <div className="card-premium p-4 md:p-8 md:p-12 mb-8 md:mb-16 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
           <div className="relative z-10 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-gradient">
+            <h2 className="text-xl md:text-3xl md:text-4xl font-bold text-white mb-2 md:mb-4 text-gradient">
               Hala Sorularınız mı Var?
             </h2>
-            <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-300 text-sm md:text-lg mb-4 md:mb-8 max-w-2xl mx-auto">
               Bizimle iletişime geçin, size yardımcı olalım.
             </p>
             <Link
               href="/contact"
-              className="btn-primary inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-2xl"
+              className="btn-primary inline-flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 text-white font-semibold rounded-xl md:rounded-2xl text-sm md:text-base"
             >
               İletişime Geç
-              <ChevronDown className="w-5 h-5 rotate-[-90deg]" />
+              <ChevronDown className="w-4 h-4 md:w-5 md:h-5 rotate-[-90deg]" />
             </Link>
           </div>
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-16">
           {[
             { icon: QrCode, value: faqData.length.toString(), label: 'SSS Cevabı' },
             { icon: Users, value: '5+', label: 'QR Kod Türü' },
             { icon: Shield, value: '24/7', label: 'Destek' },
           ].map((stat, index) => (
-            <div key={index} className="card-premium p-6 text-center">
-              <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4 shadow-lg">
-                <stat.icon className="w-6 h-6 text-white" />
+            <div key={index} className="card-premium p-3 md:p-6 text-center">
+              <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
+                <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
-              <p className="text-3xl font-bold text-white mb-2">{stat.value}</p>
-              <p className="text-gray-400 text-sm">{stat.label}</p>
+              <p className="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2">{stat.value}</p>
+              <p className="text-gray-400 text-xs md:text-sm">{stat.label}</p>
             </div>
           ))}
         </div>
 
         {/* Quick Links Section */}
-        <div className="card-premium p-8 mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center text-gradient">
+        <div className="card-premium p-4 md:p-8 mb-8 md:mb-16">
+          <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center text-gradient">
             Hızlı Linkler
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {[
               { label: 'Ana Sayfa', link: '/' },
               { label: 'Blog', link: '/blog' },
@@ -282,11 +264,11 @@ export default function FAQPage() {
               { label: 'Hakkımızda', link: '/about' },
             ].map((item, index) => (
               <Link key={index} href={item.link}>
-                <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-800/50 hover:bg-slate-800 transition-colors border border-white/10 hover:border-blue-500/30">
-                  <div className="flex-shrink-0 p-2 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
-                    <CheckCircle className="w-4 h-4 text-white" />
+                <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-2xl bg-slate-800/50 hover:bg-slate-800 transition-colors border border-white/10 hover:border-blue-500/30">
+                  <div className="flex-shrink-0 p-1.5 md:p-2 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
+                    <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-white" />
                   </div>
-                  <span className="text-white font-medium">{item.label}</span>
+                  <span className="text-white font-medium text-sm md:text-base">{item.label}</span>
                 </div>
               </Link>
             ))}

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic } from 'lucide-react';
+import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark } from 'lucide-react';
 import ShareButton from './ShareButton';
 
 export default function Sidebar() {
@@ -20,6 +20,7 @@ export default function Sidebar() {
     { href: '/qr/wifi', label: 'WiFi', icon: Wifi },
     { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2 },
     { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic },
+    { href: '/qr/iban', label: 'IBAN', icon: Landmark },
   ];
 
   const otherItems = [

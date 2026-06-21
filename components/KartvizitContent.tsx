@@ -23,6 +23,7 @@ export default function KartvizitContent() {
   const [loading, setLoading] = useState(false);
   const [titleDropdownOpen, setTitleDropdownOpen] = useState(false);
   const [titleSearch, setTitleSearch] = useState('');
+  const [showError, setShowError] = useState(false);
   const titleDropdownRef = useRef<HTMLDivElement>(null);
 
   const titleOptions = [
@@ -75,11 +76,13 @@ export default function KartvizitContent() {
 
   const handleGenerate = async () => {
     if (!formData.firstName || !formData.lastName || !formData.phone || !formData.email) {
+      setShowError(true);
       showNotification('Lütfen zorunlu alanları doldurun (İsim, Soyisim, Telefon, E-posta)', 'error');
       return;
     }
 
     if (!validateEmail(formData.email)) {
+      setShowError(true);
       showNotification('Lütfen geçerli bir e-posta adresi girin', 'error');
       return;
     }
@@ -134,7 +137,7 @@ END:VCARD`;
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
@@ -167,8 +170,13 @@ END:VCARD`;
               <input
                 type="text"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                onChange={(e) => {
+                  setFormData({ ...formData, firstName: e.target.value });
+                  setShowError(false);
+                }}
+                className={`w-full bg-slate-800/50 border rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base ${
+                  showError && !formData.firstName ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                }`}
                 placeholder="Adınız"
               />
             </div>
@@ -181,8 +189,13 @@ END:VCARD`;
               <input
                 type="text"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                onChange={(e) => {
+                  setFormData({ ...formData, lastName: e.target.value });
+                  setShowError(false);
+                }}
+                className={`w-full bg-slate-800/50 border rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base ${
+                  showError && !formData.lastName ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                }`}
                 placeholder="Soyadınız"
               />
             </div>
@@ -195,8 +208,13 @@ END:VCARD`;
               <input
                 type="tel"
                 value={formData.phone}
-                onChange={handlePhoneChange}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                onChange={(e) => {
+                  handlePhoneChange(e);
+                  setShowError(false);
+                }}
+                className={`w-full bg-slate-800/50 border rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base ${
+                  showError && !formData.phone ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                }`}
                 placeholder="0516 XXX XX XX"
               />
             </div>
@@ -209,8 +227,13 @@ END:VCARD`;
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value });
+                  setShowError(false);
+                }}
+                className={`w-full bg-slate-800/50 border rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base ${
+                  showError && !formData.email ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                }`}
                 placeholder="email@example.com"
               />
             </div>
@@ -362,7 +385,7 @@ END:VCARD`;
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || !formData.firstName || !formData.lastName || !formData.phone || !formData.email}
               className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}

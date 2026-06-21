@@ -100,7 +100,7 @@ export default function SosyalMedyaContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
@@ -208,8 +208,13 @@ export default function SosyalMedyaContent() {
                   ? 'https://facebook.com/kullaniciadi'
                   : 'https://youtube.com/@kanaladi'
               }
-              className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+              className={`w-full bg-slate-800/50 border rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base ${
+                validationError ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+              }`}
             />
+            {validationError && (
+              <p className="text-red-400 text-xs mt-1">Lütfen geçerli bir URL girin</p>
+            )}
           </div>
 
           {/* Note/Description Field */}
@@ -259,7 +264,7 @@ export default function SosyalMedyaContent() {
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading || validationError}
+              disabled={loading || !url.trim()}
               className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}

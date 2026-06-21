@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown } from 'lucide-react';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark } from 'lucide-react';
 import BlogSlider from '@/components/BlogSlider';
 import { useState } from 'react';
 
@@ -42,6 +42,13 @@ const qrCategories = [
     href: '/qr/ses-dosyasi',
     color: 'from-orange-500 to-red-500',
   },
+  {
+    title: 'IBAN',
+    description: 'IBAN bilgilerinizi QR kod ile kolayca paylaşın',
+    icon: Landmark,
+    href: '/qr/iban',
+    color: 'from-green-500 to-emerald-500',
+  },
 ];
 
 export default function HomeContent() {
@@ -74,7 +81,7 @@ export default function HomeContent() {
     <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
       <div className="px-4 py-8 md:py-12 max-w-7xl mx-auto">
@@ -82,8 +89,8 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.2 }}
+          className="text-center mb-24"
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
@@ -112,7 +119,7 @@ export default function HomeContent() {
               key={category.href}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index, duration: 0.5 }}
+              transition={{ delay: 0.03 * index, duration: 0.2 }}
             >
               <Link href={category.href}>
                 <div className="card-premium group relative overflow-hidden h-full p-4 md:p-6 min-h-[140px] md:min-h-auto">
@@ -146,7 +153,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.15, duration: 0.2 }}
           className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-16"
         >
           <div className="card-premium p-3 md:p-6 text-center">
@@ -178,7 +185,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.2, duration: 0.2 }}
           className="text-center card-premium p-4 md:p-8 md:p-12 mb-16 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
@@ -227,7 +234,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.25, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
         >
           <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6 text-gradient">
@@ -250,7 +257,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.3, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
         >
           <h3 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
@@ -299,7 +306,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.35, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
         >
           <h3 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
@@ -348,7 +355,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
+          transition={{ delay: 0.4, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
@@ -399,7 +406,7 @@ export default function HomeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
+          transition={{ delay: 0.45, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
         >
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-8">

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -15,6 +15,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [qrData, setQrData] = useState<any>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchQRData = async () => {
@@ -28,6 +29,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         
         if (data.success && data.data) {
           setQrData(data.data);
+          setCurrentImageIndex(0);
           setQrCodeUrl(`${window.location.origin}/qr/${params.id}`);
           const qrData = await QRCode.toDataURL(data.data.viewUrl || data.data.content);
           setQrDataUrl(qrData);
@@ -63,17 +65,81 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const handlePrint = () => {
     const printWindow = window.open('', '_blank');
     if (printWindow) {
+      const description = qrData?.note || qrData?.content || 'QR Kod';
       printWindow.document.write(`
         <html>
           <head>
             <title>QR Kod Yazdır</title>
             <style>
-              body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-              img { max-width: 100%; }
+              body { 
+                margin: 0; 
+                padding: 40px;
+                display: flex; 
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                font-family: Arial, sans-serif;
+                background: white;
+              }
+              .logo {
+                font-size: 32px;
+                font-weight: bold;
+                color: #3b82f6;
+                margin-bottom: 30px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              }
+              .logo svg {
+                width: 40px;
+                height: 40px;
+              }
+              .qr-container {
+                margin: 20px 0;
+              }
+              .qr-container img {
+                width: 300px;
+                height: 300px;
+              }
+              .description {
+                font-size: 16px;
+                color: #666;
+                text-align: center;
+                max-width: 400px;
+                margin-top: 20px;
+                word-wrap: break-word;
+              }
+              .footer {
+                margin-top: 40px;
+                font-size: 14px;
+                color: #999;
+              }
             </style>
           </head>
           <body>
-            <img src="${qrDataUrl}" alt="QR Code" />
+            <div class="logo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="5" height="5" x="3" y="3" rx="1"></rect>
+                <rect width="5" height="5" x="16" y="3" rx="1"></rect>
+                <rect width="5" height="5" x="3" y="16" rx="1"></rect>
+                <path d="M21 16h-3a2 2 0 0 0-2 2v3"></path>
+                <path d="M21 21v.01"></path>
+                <path d="M12 7v3a2 2 0 0 1-2 2H7"></path>
+                <path d="M3 12h.01"></path>
+                <path d="M12 3h.01"></path>
+                <path d="M12 16v.01"></path>
+                <path d="M16 12h1"></path>
+                <path d="M21 12v.01"></path>
+                <path d="M12 21v-1"></path>
+              </svg>
+              LuxQr
+            </div>
+            <div class="qr-container">
+              <img src="${qrDataUrl}" alt="QR Code" />
+            </div>
+            <div class="description">${description}</div>
+            <div class="footer">luxqrpro.site</div>
           </body>
         </html>
       `);
@@ -97,21 +163,51 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
   const handleShareQR = async () => {
     try {
-      if (navigator.share) {
-        // Convert data URL to blob
-        const response = await fetch(qrDataUrl);
-        const blob = await response.blob();
-        // @ts-ignore - File constructor type issue
-        const file = new File([blob], 'qr-code.png', { type: blob.type });
-        
+      // Convert data URL to blob
+      const response = await fetch(qrDataUrl);
+      const blob = await response.blob();
+      // @ts-ignore - File constructor type issue
+      const file = new File([blob], 'qr-code.png', { type: blob.type });
+      
+      const shareData = {
+        title: 'LuxQr - QR Kod',
+        text: 'QR kodunuz burada, hemen okut! 🎯\n\nDaha fazlası için: https://luxqrpro.site',
+        files: [file],
+      };
+      
+      // Try to share both text and file together
+      if (navigator.share && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else if (navigator.share && navigator.canShare({ files: [file] })) {
+        // Fallback: share only file with title
         await navigator.share({
-          title: 'LuxQr - QR Kod',
-          text: 'Bu oluşturduğumuz QR koda bir göz at! 🎯\n\nDaha fazlası için: https://luxqrpro.site',
+          title: 'QR kodunuz burada, hemen okut! 🎯\n\nDaha fazlası için: https://luxqrpro.site',
           files: [file],
         });
+      } else if (navigator.share && navigator.canShare({ text: shareData.text, url: qrCodeUrl })) {
+        // Fallback: share text with URL
+        await navigator.share({
+          title: 'LuxQr - QR Kod',
+          text: shareData.text,
+          url: qrCodeUrl,
+        });
+      } else {
+        // Fallback: copy QR image to clipboard
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]);
+        alert('QR kod panoya kopyalandı!');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Paylaşım hatası:', err);
+      // Fallback: try to copy the URL
+      try {
+        navigator.clipboard.writeText(qrCodeUrl);
+        alert('QR kod linki panoya kopyalandı!');
+      } catch (clipboardErr) {
+        console.error('Panoya kopyalama hatası:', clipboardErr);
+        alert('Paylaşım başarısız oldu. Lütfen manuel olarak paylaşın.');
+      }
     }
   };
 
@@ -167,20 +263,46 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     
     if (urlLower.includes('instagram.com')) {
       data.platform = 'Instagram';
-      const match = url.match(/instagram\.com\/([^\/]+)/);
-      if (match) data.username = match[1].replace('@', '');
+      const match = url.match(/instagram\.com\/([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     } else if (urlLower.includes('tiktok.com')) {
       data.platform = 'TikTok';
-      const match = url.match(/tiktok\.com\/@?([^\/]+)/);
-      if (match) data.username = match[1];
+      const match = url.match(/tiktok\.com\/@?([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     } else if (urlLower.includes('facebook.com')) {
       data.platform = 'Facebook';
-      const match = url.match(/facebook\.com\/([^\/]+)/);
-      if (match) data.username = match[1];
+      const match = url.match(/facebook\.com\/([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     } else if (urlLower.includes('youtube.com')) {
       data.platform = 'YouTube';
-      const match = url.match(/youtube\.com\/@?([^\/]+)/);
-      if (match) data.username = match[1];
+      const match = url.match(/youtube\.com\/@?([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
+    } else if (urlLower.includes('twitter.com') || urlLower.includes('x.com')) {
+      data.platform = 'Twitter';
+      const match = url.match(/(?:twitter\.com|x\.com)\/@?([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
+    } else if (urlLower.includes('linkedin.com')) {
+      data.platform = 'LinkedIn';
+      const match = url.match(/linkedin\.com\/in\/([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
+    } else if (urlLower.includes('threads.net')) {
+      data.platform = 'Threads';
+      const match = url.match(/threads\.net\/@?([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     }
     
     return data;
@@ -202,7 +324,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     // Check if content is WiFi
     const isWifi = qrData.content.startsWith('WIFI:');
     // Check if content is social media
-    const isSocialMedia = isUrl && (qrData.content.includes('instagram.com') || qrData.content.includes('tiktok.com') || qrData.content.includes('facebook.com') || qrData.content.includes('youtube.com'));
+    const isSocialMedia = isUrl && (qrData.content.includes('instagram.com') || qrData.content.includes('tiktok.com') || qrData.content.includes('facebook.com') || qrData.content.includes('youtube.com') || qrData.content.includes('twitter.com') || qrData.content.includes('x.com') || qrData.content.includes('linkedin.com') || qrData.content.includes('threads.net'));
     
     if (isSocialMedia) {
       const socialData = parseSocialMedia(qrData.content);
@@ -239,47 +361,50 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             TikTok: <Video className="w-8 h-8 text-white" />,
             Facebook: <Facebook className="w-8 h-8 text-blue-600" />,
             YouTube: <Youtube className="w-8 h-8 text-red-600" />,
+            Twitter: <Share2 className="w-8 h-8 text-blue-400" />,
+            LinkedIn: <Building2 className="w-8 h-8 text-blue-700" />,
+            Threads: <Share2 className="w-8 h-8 text-gray-300" />,
           };
           
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{contentTitle}</h3>
-                  <p className="text-sm text-gray-400">Sosyal Medya Hesabı</p>
+                  <h3 className="text-base md:text-lg font-semibold text-white">{contentTitle}</h3>
+                  <p className="text-xs md:text-sm text-gray-400">Sosyal Medya Hesabı</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-6">
-                <div className="flex items-center gap-6">
+              <div className="bg-white/10 rounded-lg p-4 md:p-6">
+                <div className="flex items-center gap-4 md:gap-6">
                   {profilePic ? (
                     <img 
                       src={profilePic} 
                       alt={`${socialData.username} profile`}
-                      className="w-20 h-20 rounded-full object-cover border-2 border-white/20"
+                      className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover border-2 border-white/20 flex-shrink-0"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                      <User className="w-10 h-10 text-white" />
+                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                      <User className="w-7 h-7 md:w-10 md:h-10 text-white" />
                     </div>
                   )}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      {platformIcons[socialData.platform as keyof typeof platformIcons] || <Share2 className="w-6 h-6 text-pink-400" />}
-                      <h4 className="text-xl font-bold text-white">{socialData.platform}</h4>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                      {platformIcons[socialData.platform as keyof typeof platformIcons] || <Share2 className="w-5 h-5 md:w-6 md:h-6 text-pink-400" />}
+                      <h4 className="text-lg md:text-xl font-bold text-white">{socialData.platform}</h4>
                     </div>
-                    <p className="text-2xl font-semibold text-white mb-1">@{socialData.username}</p>
+                    <p className="text-lg md:text-2xl font-semibold text-white mb-1 truncate">@{socialData.username}</p>
                     <a 
                       href={socialData.profileUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors text-sm"
+                      className="inline-flex items-center gap-1 md:gap-2 text-blue-400 hover:text-blue-300 transition-colors text-xs md:text-sm truncate"
                     >
-                      <LinkIcon className="w-4 h-4" />
-                      Profili Görüntüle
+                      <LinkIcon className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                      <span className="truncate">Profili Görüntüle</span>
                     </a>
                   </div>
                 </div>
@@ -290,49 +415,49 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         if (isWifi) {
           const wifiData = parseWifi(qrData.content);
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{wifiData.ssid || 'WiFi Ağı'}</h3>
-                  <p className="text-sm text-gray-400">WiFi Ağ Bilgisi</p>
+                  <h3 className="text-base md:text-lg font-semibold text-white">{wifiData.ssid || 'WiFi Ağı'}</h3>
+                  <p className="text-xs md:text-sm text-gray-400">WiFi Ağ Bilgisi</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-6">
-                <div className="flex flex-wrap gap-6">
+              <div className="bg-white/10 rounded-lg p-4 md:p-6">
+                <div className="flex flex-wrap gap-3 md:gap-6">
                   {wifiData.ssid && (
-                    <div className="flex items-center gap-3">
-                      <Wifi className="w-5 h-5 text-cyan-400" />
-                      <div>
-                        <p className="text-gray-400 text-sm">Ağ Adı (SSID)</p>
-                        <p className="text-white font-medium">{wifiData.ssid}</p>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Wifi className="w-4 h-4 md:w-5 md:h-5 text-cyan-400 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-gray-400 text-xs md:text-sm">Ağ Adı (SSID)</p>
+                        <p className="text-white font-medium text-sm md:text-base truncate">{wifiData.ssid}</p>
                       </div>
                     </div>
                   )}
                   {wifiData.security && (
-                    <div className="flex items-center gap-3">
-                      <Lock className="w-5 h-5 text-green-400" />
-                      <div>
-                        <p className="text-gray-400 text-sm">Güvenlik Türü</p>
-                        <p className="text-white font-medium">{wifiData.security}</p>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Lock className="w-4 h-4 md:w-5 md:h-5 text-green-400 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-gray-400 text-xs md:text-sm">Güvenlik Türü</p>
+                        <p className="text-white font-medium text-sm md:text-base truncate">{wifiData.security}</p>
                       </div>
                     </div>
                   )}
                   {wifiData.password && (
-                    <div className="flex items-center gap-3">
-                      <Key className="w-5 h-5 text-purple-400" />
-                      <div>
-                        <p className="text-gray-400 text-sm">Şifre</p>
-                        <p className="text-white font-medium">{wifiData.password}</p>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Key className="w-4 h-4 md:w-5 md:h-5 text-purple-400 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-gray-400 text-xs md:text-sm">Şifre</p>
+                        <p className="text-white font-medium text-sm md:text-base truncate">{wifiData.password}</p>
                       </div>
                     </div>
                   )}
                   {wifiData.hidden !== undefined && (
-                    <div className="flex items-center gap-3">
-                      <EyeOff className="w-5 h-5 text-orange-400" />
-                      <div>
-                        <p className="text-gray-400 text-sm">Gizli Ağ</p>
-                        <p className="text-white font-medium">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <EyeOff className="w-4 h-4 md:w-5 md:h-5 text-orange-400 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-gray-400 text-xs md:text-sm">Gizli Ağ</p>
+                        <p className="text-white font-medium text-sm md:text-base">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
                       </div>
                     </div>
                   )}
@@ -344,47 +469,47 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         if (isVCard) {
           const vcardData = parseVCard(qrData.content);
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{contentTitle}</h3>
-                  <p className="text-sm text-gray-400">Kartvizit Bilgisi</p>
+                  <h3 className="text-base md:text-lg font-semibold text-white">{contentTitle}</h3>
+                  <p className="text-xs md:text-sm text-gray-400">Kartvizit Bilgisi</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-6">
-                <div className="flex flex-row gap-6 md:gap-12">
+              <div className="bg-white/10 rounded-lg p-4 md:p-6">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-12">
                   {/* Left side - Name and title */}
                   <div className="flex-1 text-center md:text-left">
-                    <h4 className="text-xl font-bold text-white mb-1">{vcardData.fullName || vcardData.firstName + ' ' + vcardData.lastName}</h4>
-                    {vcardData.title && <p className="text-blue-400 font-medium">{vcardData.title}</p>}
-                    {vcardData.company && <p className="text-gray-400 text-sm mt-1">{vcardData.company}</p>}
+                    <h4 className="text-lg md:text-xl font-bold text-white mb-1">{vcardData.fullName || vcardData.firstName + ' ' + vcardData.lastName}</h4>
+                    {vcardData.title && <p className="text-blue-400 font-medium text-sm md:text-base">{vcardData.title}</p>}
+                    {vcardData.company && <p className="text-gray-400 text-xs md:text-sm mt-1">{vcardData.company}</p>}
                   </div>
                   
                   {/* Right side - Contact info */}
-                  <div className="flex-1 space-y-3">
+                  <div className="flex-1 space-y-2 md:space-y-3">
                     {vcardData.phone && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <Phone className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.phone}</span>
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
+                        <Phone className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                        <span className="truncate">{vcardData.phone}</span>
                       </div>
                     )}
                     {vcardData.email && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <Mail className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.email}</span>
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
+                        <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                        <span className="truncate">{vcardData.email}</span>
                       </div>
                     )}
                     {vcardData.website && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <Globe className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.website}</span>
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
+                        <Globe className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                        <span className="truncate">{vcardData.website}</span>
                       </div>
                     )}
                     {vcardData.address && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <MapPin className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.address}</span>
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
+                        <MapPin className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                        <span className="truncate">{vcardData.address}</span>
                       </div>
                     )}
                   </div>
@@ -394,39 +519,98 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           );
         }
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               {contentIcon}
               <div>
-                <h3 className="text-lg font-semibold text-white">{contentTitle}</h3>
-                {isVCard && <p className="text-sm text-gray-400">Kartvizit Bilgisi</p>}
+                <h3 className="text-base md:text-lg font-semibold text-white">{contentTitle}</h3>
+                {isVCard && <p className="text-xs md:text-sm text-gray-400">Kartvizit Bilgisi</p>}
               </div>
             </div>
-            <p className="text-gray-300 whitespace-pre-wrap break-words">{displayContent}</p>
+            <p className="text-gray-300 whitespace-pre-wrap break-words text-sm md:text-base">{displayContent}</p>
           </div>
         );
       
       case 'image':
+        // Check if filePath is a JSON string (multiple images)
+        let imageUrls: string[] = [];
+        try {
+          if (qrData.filePath) {
+            console.log('filePath:', qrData.filePath);
+            const parsed = JSON.parse(qrData.filePath);
+            console.log('parsed filePath:', parsed);
+            if (Array.isArray(parsed)) {
+              imageUrls = parsed.map((item: any) => item.url);
+              console.log('imageUrls from array:', imageUrls);
+            }
+          }
+        } catch (e) {
+          console.log('JSON parse error, using single image:', e);
+          // Not a JSON string, use single image
+          imageUrls = [qrData.filePath || qrData.content];
+        }
+        
+        if (imageUrls.length === 0) {
+          console.log('imageUrls empty, using content:', qrData.content);
+          imageUrls = [qrData.content];
+        }
+        
+        console.log('Final imageUrls:', imageUrls);
+        console.log('currentImageIndex:', currentImageIndex);
+        
+        const handlePreviousImage = () => {
+          setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : imageUrls.length - 1));
+        };
+        
+        const handleNextImage = () => {
+          setCurrentImageIndex((prev) => (prev < imageUrls.length - 1 ? prev + 1 : 0));
+        };
+        
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <ImageIcon className="w-6 h-6 text-purple-400" />
-              <h3 className="text-lg font-semibold text-white">Resim</h3>
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <ImageIcon className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
+              <h3 className="text-base md:text-lg font-semibold text-white">Resim</h3>
             </div>
-            <div className="bg-black rounded-lg p-4 flex items-center justify-center">
-              <img src={qrData.filePath || qrData.content} alt="QR content" className="w-64 h-64 object-contain rounded" />
+            <div className="bg-black rounded-lg p-3 md:p-4 flex items-center justify-center relative h-[150px] md:h-[200px] w-[300px] md:w-[400px]">
+              {imageUrls.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePreviousImage}
+                    className="absolute left-2 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-2 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+              <img
+                src={imageUrls[currentImageIndex]}
+                alt={`Image ${currentImageIndex + 1}`}
+                className="max-w-full max-h-full object-contain rounded"
+              />
+              {imageUrls.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full">
+                  {currentImageIndex + 1} / {imageUrls.length}
+                </div>
+              )}
             </div>
           </div>
         );
       
       case 'video':
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Video className="w-6 h-6 text-pink-400" />
-              <h3 className="text-lg font-semibold text-white">Video</h3>
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <Video className="w-5 h-5 md:w-6 md:h-6 text-pink-400" />
+              <h3 className="text-base md:text-lg font-semibold text-white">Video</h3>
             </div>
-            <div className="bg-black/20 rounded-lg p-4">
+            <div className="bg-black/20 rounded-lg p-3 md:p-4">
               <video src={qrData.content} controls className="max-w-full h-auto rounded" />
             </div>
           </div>
@@ -434,25 +618,61 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       
       case 'file':
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <File className="w-6 h-6 text-green-400" />
-              <h3 className="text-lg font-semibold text-white">Ses Dosyası</h3>
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <FileIcon className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
+              <h3 className="text-base md:text-lg font-semibold text-white">Ses Dosyası</h3>
             </div>
-            <div className="bg-black/20 rounded-lg p-4">
-              <p className="text-gray-300">Dosya Adı: {qrData.fileName || 'Bilinmiyor'}</p>
+            <div className="bg-black/20 rounded-lg p-3 md:p-4">
+              <p className="text-gray-300 text-sm md:text-base truncate">Dosya Adı: {qrData.fileName || 'Bilinmiyor'}</p>
+            </div>
+          </div>
+        );
+      
+      case 'iban':
+        // Parse IBAN content
+        let ibanNumber = '';
+        let accountHolder = 'Bilinmiyor';
+        try {
+          const parts = qrData.content.split('|');
+          parts.forEach((part: string) => {
+            if (part.startsWith('IBAN:')) {
+              ibanNumber = part.replace('IBAN:', '');
+            } else if (part.startsWith('HESAP:')) {
+              accountHolder = part.replace('HESAP:', '');
+            }
+          });
+        } catch (e) {
+          console.error('IBAN parse error:', e);
+        }
+        
+        return (
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <Landmark className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
+              <h3 className="text-base md:text-lg font-semibold text-white">IBAN</h3>
+            </div>
+            <div className="bg-black/20 rounded-lg p-3 md:p-4 space-y-2">
+              <div>
+                <p className="text-gray-400 text-xs mb-1">IBAN Numarası</p>
+                <p className="text-white text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">Hesap Sahibi</p>
+                <p className="text-white text-sm md:text-base">{accountHolder}</p>
+              </div>
             </div>
           </div>
         );
       
       default:
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <LinkIcon className="w-6 h-6 text-cyan-400" />
-              <h3 className="text-lg font-semibold text-white">İçerik</h3>
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <LinkIcon className="w-5 h-5 md:w-6 md:h-6 text-cyan-400" />
+              <h3 className="text-base md:text-lg font-semibold text-white">İçerik</h3>
             </div>
-            <p className="text-gray-300 whitespace-pre-wrap break-words">{displayContent}</p>
+            <p className="text-gray-300 whitespace-pre-wrap break-words text-sm md:text-base">{displayContent}</p>
           </div>
         );
     }
@@ -523,6 +743,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <Link href="/qr/ses-dosyasi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
                 <Video className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
                 <span>Ses Dosyası</span>
+              </Link>
+              <Link href="/qr/iban" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
+                <Landmark className="w-3 h-3 md:w-5 md:h-5 text-green-400" />
+                <span>IBAN</span>
               </Link>
             </div>
             <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-white/10 flex flex-col items-center hidden md:flex">

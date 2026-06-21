@@ -80,7 +80,7 @@ export default function RootLayout({
         <Script
           id="structured-data-webapp"
           type="application/ld+json"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -121,7 +121,7 @@ export default function RootLayout({
         <Script
           id="structured-data-organization"
           type="application/ld+json"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

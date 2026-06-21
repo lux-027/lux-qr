@@ -22,31 +22,6 @@ export default function PrivacyPage() {
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
       <div className="container mx-auto px-4 py-16">
-        {/* Mobile Back Button */}
-        <BackButton href="/" label="Ana Sayfaya Dön" />
-
-        {/* Desktop Back to Home Button */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="mb-8 hidden md:block"
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-blue-400" />
-              <span className="font-bold">LuxQr</span>
-            </div>
-            <div className="w-px h-4 bg-white/20"></div>
-            <div className="flex items-center gap-2">
-              <Home className="w-4 h-4" />
-              Ana Sayfaya Dön
-            </div>
-          </Link>
-        </motion.div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -72,14 +47,14 @@ export default function PrivacyPage() {
           className="max-w-4xl mx-auto space-y-8"
         >
           {/* Data Collection */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Database className="w-6 h-6 text-blue-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border flex-shrink-0">
+                <Database className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Veri Toplama</h2>
-                <p className="text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Veri Toplama</h2>
+                <p className="text-gray-400 text-sm md:text-base">
                   LuxQr, QR kod oluştururken paylaştığınız içerikleri (metin, resim, video veya dosya) 
                   güvenli bir şekilde saklar. Kişisel bilgilerinizi (isim, e-posta, telefon vb.) toplamayız.
                 </p>
@@ -88,14 +63,14 @@ export default function PrivacyPage() {
           </div>
 
           {/* Data Storage */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Lock className="w-6 h-6 text-blue-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border flex-shrink-0">
+                <Lock className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Veri Depolama</h2>
-                <div className="space-y-3 text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Veri Depolama</h2>
+                <div className="space-y-2 md:space-y-3 text-gray-400 text-sm md:text-base">
                   <p>
                     <strong className="text-white">Vercel KV:</strong> QR kod meta verileri ve içerik bilgileri, 
                     yüksek performanslı key-value depolama sisteminde saklanır.
@@ -113,18 +88,18 @@ export default function PrivacyPage() {
           </div>
 
           {/* Data Retention */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Clock className="w-6 h-6 text-blue-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border flex-shrink-0">
+                <Clock className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Veri Saklama Süresi</h2>
-                <div className="space-y-3 text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Veri Saklama Süresi</h2>
+                <div className="space-y-2 md:space-y-3 text-gray-400 text-sm md:text-base">
                   <p>
                     QR kod oluştururken seçtiğiniz geçerlilik süresine göre verileriniz saklanır:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 ml-2">
+                  <ul className="list-disc list-inside space-y-1 md:space-y-2 ml-2 text-sm md:text-base">
                     <li><strong className="text-white">1 Gün:</strong> 24 saat sonra otomatik silinir</li>
                     <li><strong className="text-white">1 Hafta:</strong> 7 gün sonra otomatik silinir</li>
                     <li><strong className="text-white">1 Ay:</strong> 30 gün sonra otomatik silinir</li>
@@ -142,14 +117,14 @@ export default function PrivacyPage() {
           </div>
 
           {/* Data Access */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Eye className="w-6 h-6 text-blue-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border flex-shrink-0">
+                <Eye className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Veri Erişimi</h2>
-                <div className="space-y-3 text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Veri Erişimi</h2>
+                <div className="space-y-2 md:space-y-3 text-gray-400 text-sm md:text-base">
                   <p>
                     QR kod içeriğine sadece QR kod URL'sini bilen kişiler erişebilir.
                   </p>

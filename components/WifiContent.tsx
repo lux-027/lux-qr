@@ -19,15 +19,18 @@ export default function WifiContent() {
   const [loading, setLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleGenerate = async () => {
     if (!formData.ssid) {
+      setShowError(true);
       showNotification('Lütfen ağ adı (SSID) girin', 'error');
       return;
     }
 
     // Validate SSID (1-32 characters, no special characters that might cause issues)
     if (formData.ssid.length < 1 || formData.ssid.length > 32) {
+      setShowError(true);
       showNotification('Ağ adı (SSID) 1-32 karakter arasında olmalıdır', 'error');
       return;
     }
@@ -35,17 +38,20 @@ export default function WifiContent() {
     // Validate password based on security type
     if (formData.security !== 'nopass') {
       if (!formData.password) {
+        setShowError(true);
         showNotification('Lütfen WiFi şifresi girin', 'error');
         return;
       }
 
       if (formData.security === 'WPA' || formData.security === 'WPA2') {
         if (formData.password.length < 8 || formData.password.length > 63) {
+          setShowError(true);
           showNotification('WPA/WPA2 şifresi 8-63 karakter arasında olmalıdır', 'error');
           return;
         }
       } else if (formData.security === 'WEP') {
         if (formData.password.length !== 5 && formData.password.length !== 13) {
+          setShowError(true);
           showNotification('WEP şifresi 5 veya 13 karakter olmalıdır', 'error');
           return;
         }
@@ -92,7 +98,7 @@ export default function WifiContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
@@ -125,8 +131,13 @@ export default function WifiContent() {
               <input
                 type="text"
                 value={formData.ssid}
-                onChange={(e) => setFormData({ ...formData, ssid: e.target.value })}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                onChange={(e) => {
+                  setFormData({ ...formData, ssid: e.target.value });
+                  setShowError(false);
+                }}
+                className={`w-full bg-slate-800/50 border rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base ${
+                  showError && !formData.ssid ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                }`}
                 placeholder="WiFi ağ adı"
               />
             </div>
@@ -140,9 +151,14 @@ export default function WifiContent() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                    setShowError(false);
+                  }}
                   disabled={formData.security === 'nopass'}
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed pr-12"
+                  className={`w-full bg-slate-800/50 border rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed pr-12 ${
+                    showError && formData.security !== 'nopass' && !formData.password ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
+                  }`}
                   placeholder={formData.security === 'nopass' ? 'Şifre gerekmez' : 'WiFi şifresi'}
                 />
                 {formData.security !== 'nopass' && (
@@ -250,7 +266,7 @@ export default function WifiContent() {
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || !formData.ssid || (formData.security !== 'nopass' && !formData.password)}
               className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}

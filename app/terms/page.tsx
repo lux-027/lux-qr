@@ -20,31 +20,6 @@ export default function TermsPage() {
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
       <div className="container mx-auto px-4 py-16">
-        {/* Mobile Back Button */}
-        <BackButton href="/" label="Ana Sayfaya Dön" />
-
-        {/* Desktop Back to Home Button */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="mb-8 hidden md:block"
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <FileText className="w-5 h-5 text-blue-400" />
-              <span className="font-bold">LuxQr</span>
-            </div>
-            <div className="w-px h-4 bg-white/20"></div>
-            <div className="flex items-center gap-2">
-              <Home className="w-4 h-4" />
-              Ana Sayfaya Dön
-            </div>
-          </Link>
-        </motion.div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -70,21 +45,21 @@ export default function TermsPage() {
           className="max-w-4xl mx-auto space-y-8"
         >
           {/* Abuse Policy */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-red-500/20 glow-border">
-                <AlertTriangle className="w-6 h-6 text-red-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-red-500/20 glow-border flex-shrink-0">
+                <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-red-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Kötüye Kullanım Yasak</h2>
-                <div className="space-y-3 text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Kötüye Kullanım Yasak</h2>
+                <div className="space-y-2 md:space-y-3 text-gray-400 text-sm md:text-base">
                   <p>
                     LuxQr hizmetleri, yasa dışı, zararlı veya kötü amaçlı içeriklerin oluşturulması ve paylaşılması için kullanılamaz.
                   </p>
                   <p>
                     Aşağıdaki içeriklerin oluşturulması ve paylaşılması kesinlikle yasaktır:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 ml-2">
+                  <ul className="list-disc list-inside space-y-1 md:space-y-2 ml-2 text-sm md:text-base">
                     <li>Yasa dışı materyaller ve suç teşkil eden içerikler</li>
                     <li>Telif hakkı ihlali oluşturan materyaller</li>
                     <li>Spam, dolandırıcılık veya phishing içerikleri</li>
@@ -101,21 +76,21 @@ export default function TermsPage() {
           </div>
 
           {/* User Responsibility */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Shield className="w-6 h-6 text-blue-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border flex-shrink-0">
+                <Shield className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Kullanıcı Sorumluluğu</h2>
-                <div className="space-y-3 text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Kullanıcı Sorumluluğu</h2>
+                <div className="space-y-2 md:space-y-3 text-gray-400 text-sm md:text-base">
                   <p>
                     LuxQr üzerinden oluşturulan ve paylaşılan tüm içeriklerin sorumluluğu tamamen kullanıcıya aittir.
                   </p>
                   <p>
                     Kullanıcı, yüklediği veya oluşturduğu içeriklerin:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 ml-2">
+                  <ul className="list-disc list-inside space-y-1 md:space-y-2 ml-2 text-sm md:text-base">
                     <li>Kendi mülkiyetinde olduğunu veya kullanım hakkına sahip olduğunu</li>
                     <li>Yerel ve uluslararası yasalara uygun olduğunu</li>
                     <li>Üçüncü şahısların haklarını ihlal etmediğini</li>
@@ -132,18 +107,18 @@ export default function TermsPage() {
           </div>
 
           {/* Data Retention */}
-          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20 glow-border">
-                <Clock className="w-6 h-6 text-blue-400" />
+          <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
+            <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border flex-shrink-0">
+                <Clock className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Veri Saklama ve Silme</h2>
-                <div className="space-y-3 text-gray-400">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Veri Saklama ve Silme</h2>
+                <div className="space-y-2 md:space-y-3 text-gray-400 text-sm md:text-base">
                   <p>
                     Kullanıcıların yüklediği içerikler, seçtikleri geçerlilik süresine göre saklanır:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 ml-2">
+                  <ul className="list-disc list-inside space-y-1 md:space-y-2 ml-2 text-sm md:text-base">
                     <li><strong className="text-white">1 Gün:</strong> 24 saat sonra otomatik olarak silinir</li>
                     <li><strong className="text-white">1 Hafta:</strong> 7 gün sonra otomatik olarak silinir</li>
                     <li><strong className="text-white">1 Ay:</strong> 30 gün sonra otomatik olarak silinir</li>
