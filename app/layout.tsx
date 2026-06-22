@@ -8,7 +8,7 @@ import { CounterProvider } from "@/context/CounterContext";
 import { NotificationProvider } from "@/components/Notification";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.luxqrpro.site'),

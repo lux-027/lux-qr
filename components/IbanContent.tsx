@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CreditCard, Clock, Shield, Zap, FileText } from 'lucide-react';
+import { CreditCard, Clock, Shield, Zap, FileText, Building2 } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
@@ -9,6 +9,7 @@ import { showNotification } from '@/components/Notification';
 export default function IbanContent() {
   const router = useRouter();
   const [iban, setIban] = useState('');
+  const [bankName, setBankName] = useState('');
   const [accountHolder, setAccountHolder] = useState('');
   const [note, setNote] = useState('');
   const [expiration, setExpiration] = useState<'1day' | '1week' | '1month' | '3months'>('1day');
@@ -22,9 +23,9 @@ export default function IbanContent() {
       return;
     }
 
-    // Basic IBAN validation (format: TR followed by 24 alphanumeric characters)
+    // Basic IBAN validation (format: TR followed by 24 digits)
     const ibanClean = iban.replace(/\s/g, '').toUpperCase();
-    if (!/^TR\d{2}[A-Z0-9]{24}$/.test(ibanClean)) {
+    if (!/^TR\d{24}$/.test(ibanClean)) {
       setShowError(true);
       showNotification('Geçersiz IBAN formatı. TR ile başlamalı ve 26 karakter olmalıdır', 'error');
       return;
@@ -60,7 +61,7 @@ export default function IbanContent() {
   const formatIban = (value: string) => {
     // Remove all non-numeric characters
     const cleaned = value.replace(/[^0-9]/g, '');
-    // Limit to 24 digits (TR + 24 = 26 total characters)
+    // Limit to 24 digits (TR + 24 = 26 total characters - Turkish IBAN standard)
     const limited = cleaned.substring(0, 24);
     // Add TR prefix and spaces every 4 characters
     const withPrefix = 'TR' + limited;
@@ -109,6 +110,21 @@ export default function IbanContent() {
           transition={{ delay: 0.3 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
+          {/* Bank Name Input */}
+          <div className="mb-4 md:mb-6">
+            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+              <Building2 className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+              Banka Adı (Opsiyonel)
+            </label>
+            <input
+              type="text"
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+              placeholder="Banka adı girin"
+              className="w-full bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+            />
+          </div>
+
           {/* IBAN Input */}
           <div className="mb-4 md:mb-6">
             <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
@@ -208,25 +224,33 @@ export default function IbanContent() {
           className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8"
         >
           <div className="card-premium p-3 md:p-6">
-            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 mb-2 md:mb-4 shadow-lg">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            </div>
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı Paylaşım</h3>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+              IBAN bilgilerinizi saniyeler içinde paylaşın.
+            </p>
+          </div>
+
+          <div className="card-premium p-3 md:p-6">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
               <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">Verileriniz şifreli ve güvende</p>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+              Banka bilgileriniz güvende. Şifreli ve güvenli paylaşım.
+            </p>
           </div>
-          <div className="card-premium p-3 md:p-6">
-            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-500 mb-2 md:mb-4 shadow-lg">
-              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">Anında QR kod oluşturun</p>
-          </div>
+
           <div className="card-premium p-3 md:p-6 col-span-2 md:col-span-1">
-            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-lg">
               <Clock className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Geçerlilik</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">Belirli süre geçerli QR kod</p>
+            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+              Belirli süre geçerli QR kod oluşturun.
+            </p>
           </div>
         </motion.div>
 

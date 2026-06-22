@@ -91,11 +91,12 @@ export default function HomeContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
           className="text-center mb-24"
+          style={{ minHeight: '200px' }}
         >
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+            <div className="absolute inset-0 bg-blue-500/20 blur-2xl md:blur-3xl rounded-full"></div>
             <div className="relative flex items-center justify-center gap-3 mb-4">
-              <QrCode className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+              <QrCode className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)] md:drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">
                 LuxQr
               </h1>
@@ -103,7 +104,7 @@ export default function HomeContent() {
           </div>
           <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-300 mb-4">
             Modern{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(59,130,246,0.3)] md:drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
               QR Kod Oluşturma
             </span>
           </p>
@@ -122,11 +123,11 @@ export default function HomeContent() {
               transition={{ delay: 0.03 * index, duration: 0.2 }}
             >
               <Link href={category.href}>
-                <div className="card-premium group relative overflow-hidden h-full p-4 md:p-6 min-h-[140px] md:min-h-auto">
+                <div className="card-premium group relative overflow-hidden h-full p-4 md:p-6 min-h-[140px] md:min-h-auto" style={{ minHeight: '140px' }}>
                   <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                   
                   <div className="relative">
-                    <div className={`inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br ${category.color} mb-2 md:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                    <div className={`inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br ${category.color} mb-2 md:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md md:shadow-lg`}>
                       <category.icon className="w-5 h-5 md:w-7 md:h-7 text-white" />
                     </div>
                     
@@ -157,7 +158,7 @@ export default function HomeContent() {
           className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-16"
         >
           <div className="card-premium p-3 md:p-6 text-center">
-            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı ve Kolay</h3>
@@ -165,7 +166,7 @@ export default function HomeContent() {
           </div>
           
           <div className="card-premium p-3 md:p-6 text-center">
-            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli Depolama</h3>
@@ -173,7 +174,7 @@ export default function HomeContent() {
           </div>
           
           <div className="card-premium p-3 md:p-6 text-center col-span-2 md:col-span-1">
-            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-lg">
+            <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Modern Tasarım</h3>
@@ -265,7 +266,7 @@ export default function HomeContent() {
           </h3>
           <div className="space-y-4 md:space-y-8">
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md md:shadow-lg">
                 <span className="text-white font-bold text-sm md:text-base">1</span>
               </div>
               <div>
@@ -277,7 +278,7 @@ export default function HomeContent() {
             </div>
             
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-md md:shadow-lg">
                 <span className="text-white font-bold text-sm md:text-base">2</span>
               </div>
               <div>
@@ -289,7 +290,7 @@ export default function HomeContent() {
             </div>
             
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
+              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-md md:shadow-lg">
                 <span className="text-white font-bold text-sm md:text-base">3</span>
               </div>
               <div>
@@ -314,7 +315,7 @@ export default function HomeContent() {
           </h3>
           <div className="space-y-4 md:space-y-8">
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg">
+              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-md md:shadow-lg">
                 <span className="text-white font-bold text-base md:text-xl">1</span>
               </div>
               <div>
@@ -326,7 +327,7 @@ export default function HomeContent() {
             </div>
             
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-md md:shadow-lg">
                 <span className="text-white font-bold text-base md:text-xl">2</span>
               </div>
               <div>
@@ -338,7 +339,7 @@ export default function HomeContent() {
             </div>
             
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shadow-lg">
+              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shadow-md md:shadow-lg">
                 <span className="text-white font-bold text-base md:text-xl">3</span>
               </div>
               <div>
@@ -361,7 +362,7 @@ export default function HomeContent() {
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
           <div className="relative z-10">
             <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-8">
-              <div className="flex-shrink-0 p-2 md:p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
+              <div className="flex-shrink-0 p-2 md:p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-md md:shadow-lg">
                 <Shield className="w-5 h-5 md:w-8 md:h-8 text-white" />
               </div>
               <div>
@@ -374,25 +375,25 @@ export default function HomeContent() {
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-3 md:gap-6">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 md:p-6 hover:border-blue-500/30 transition-colors">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-blue-500/30 transition-colors">
                 <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Şifreli Veri Saklama</h4>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Tüm QR kod verileriniz AES-256 şifreleme ile korunur. Dosyalarınız ve içerikleriniz güvenli bulut depolama sistemlerinde saklanır ve sadece QR kod URL'sini bilen kişiler tarafından erişilebilir.
                 </p>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 md:p-6 hover:border-purple-500/30 transition-colors">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-purple-500/30 transition-colors">
                 <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Otomatik Veri Temizleme</h4>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Belirlediğiniz geçerlilik süresi dolduğunda verileriniz otomatik olarak sistemden güvenli bir şekilde silinir. Bu sayede verilerinizin kontrolü sizde kalır ve gizliliğiniz korunur.
                 </p>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 md:p-6 hover:border-cyan-500/30 transition-colors">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-cyan-500/30 transition-colors">
                 <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">GDPR Uyumluluğu</h4>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Platformumuz Avrupa Birliği Genel Veri Koruma Tüzüğü (GDPR) ile tam uyumludur. Veri işleme politikalarımız şeffaftır ve kullanıcı haklarına saygı duyarız.
                 </p>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 md:p-6 hover:border-pink-500/30 transition-colors">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-pink-500/30 transition-colors">
                 <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Güvenli Altyapı</h4>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Vercel'in güçlü altyapısı ve modern güvenlik protokolleri ile platformumuz sürekli olarak güvenlik testlerinden geçer. DDoS koruması, SSL sertifikası ve düzenli güvenlik güncellemeleri ile verileriniz güvende.
@@ -408,9 +409,10 @@ export default function HomeContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
+          style={{ minHeight: '300px' }}
         >
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-8">
-            <div className="p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
+            <div className="p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-md md:shadow-lg">
               <HelpCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <h2 className="text-lg md:text-3xl lg:text-4xl font-bold text-white text-gradient">
