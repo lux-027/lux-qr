@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -632,12 +632,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       case 'iban':
         // Parse IBAN content
         let ibanNumber = '';
+        let bankName = 'Bilinmiyor';
         let accountHolder = 'Bilinmiyor';
         try {
           const parts = qrData.content.split('|');
           parts.forEach((part: string) => {
             if (part.startsWith('IBAN:')) {
               ibanNumber = part.replace('IBAN:', '');
+            } else if (part.startsWith('BANKA:')) {
+              bankName = part.replace('BANKA:', '');
             } else if (part.startsWith('HESAP:')) {
               accountHolder = part.replace('HESAP:', '');
             }
@@ -653,6 +656,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <h3 className="text-base md:text-lg font-semibold text-white">IBAN</h3>
             </div>
             <div className="bg-black/20 rounded-lg p-3 md:p-4 space-y-2">
+              <div>
+                <p className="text-gray-400 text-xs mb-1">Banka Adı</p>
+                <p className="text-white text-sm md:text-base">{bankName}</p>
+              </div>
               <div>
                 <p className="text-gray-400 text-xs mb-1">IBAN Numarası</p>
                 <p className="text-white text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
@@ -741,7 +748,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 <span>Sosyal</span>
               </Link>
               <Link href="/qr/ses-dosyasi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
-                <Video className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
+                <Mic className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
                 <span>Ses Dosyası</span>
               </Link>
               <Link href="/qr/iban" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">

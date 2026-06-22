@@ -33,7 +33,7 @@ export default function IbanContent() {
 
     setLoading(true);
     try {
-      const content = `IBAN:${ibanClean}|HESAP:${accountHolder || 'Bilinmiyor'}`;
+      const content = `IBAN:${ibanClean}|BANKA:${bankName || 'Bilinmiyor'}|HESAP:${accountHolder || 'Bilinmiyor'}`;
       
       const response = await fetch('/api/generate', {
         method: 'POST',

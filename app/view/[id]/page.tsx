@@ -25,7 +25,8 @@ import {
   Instagram,
   Facebook,
   Youtube,
-  Music
+  Music,
+  Landmark
 } from 'lucide-react';
 import Link from 'next/link';
 import { showNotification } from '@/components/Notification';
@@ -528,6 +529,52 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 >
                   Dosyayı Görüntüle
                 </a>
+              )}
+            </div>
+          </div>
+        );
+      case 'iban':
+        // Parse IBAN content
+        let ibanNumber = '';
+        let bankName = 'Bilinmiyor';
+        let accountHolder = 'Bilinmiyor';
+        try {
+          const parts = data.content.split('|');
+          parts.forEach((part: string) => {
+            if (part.startsWith('IBAN:')) {
+              ibanNumber = part.replace('IBAN:', '');
+            } else if (part.startsWith('BANKA:')) {
+              bankName = part.replace('BANKA:', '');
+            } else if (part.startsWith('HESAP:')) {
+              accountHolder = part.replace('HESAP:', '');
+            }
+          });
+        } catch (e) {
+          console.error('IBAN parse error:', e);
+        }
+        
+        return (
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <Landmark className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
+              <h3 className="text-base md:text-lg font-semibold text-white">IBAN</h3>
+            </div>
+            <div className="bg-black/20 rounded-lg p-3 md:p-4 space-y-2">
+              {bankName !== 'Bilinmiyor' && (
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Banka Adı</p>
+                  <p className="text-white text-sm md:text-base">{bankName}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-gray-400 text-xs mb-1">IBAN Numarası</p>
+                <p className="text-white text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
+              </div>
+              {accountHolder !== 'Bilinmiyor' && (
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Hesap Sahibi</p>
+                  <p className="text-white text-sm md:text-base">{accountHolder}</p>
+                </div>
               )}
             </div>
           </div>
