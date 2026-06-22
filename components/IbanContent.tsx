@@ -33,16 +33,30 @@ export default function IbanContent() {
 
     setLoading(true);
     try {
-      const content = `IBAN:${ibanClean}|BANKA:${bankName || 'Bilinmiyor'}|HESAP:${accountHolder || 'Bilinmiyor'}`;
-      
+      // EPC QR Code format for SEPA Credit Transfer
+      // Format: SCT\n<BENM>+<NAME>\n<ADDD>+\n<IBAN>\n<BIC>+\n<CCY>+<AMT>\n<PURP>+<CODE>\n<REMI>+<REF>
+      const epcContent = [
+        'SCT',
+        `<BENM>+${accountHolder || 'Bilinmiyor'}`,
+        '<ADDD>+',
+        `<IBAN>+${ibanClean}`,
+        '<BIC>+',
+        '<CCY>+',
+        '<PURP>+',
+        `<REMI>+${note || 'IBAN Transferi'}`
+      ].join('\n');
+
+      // Also store original format for display purposes
+      const originalContent = `IBAN:${ibanClean}|BANKA:${bankName || 'Bilinmiyor'}|HESAP:${accountHolder || 'Bilinmiyor'}`;
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content,
+          content: epcContent,
           contentType: 'iban',
           expiration,
-          note,
+          note: originalContent, // Store original format in note for parsing
         }),
       });
 
