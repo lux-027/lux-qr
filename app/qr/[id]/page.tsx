@@ -396,6 +396,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     <img 
                       src={profilePic} 
                       alt={`${socialData.username} profile`}
+                      width={80}
+                      height={80}
                       className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover border-2 border-white/20 flex-shrink-0"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
@@ -607,6 +609,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <img
                 src={imageUrls[currentImageIndex]}
                 alt={`Image ${currentImageIndex + 1}`}
+                width={400}
+                height={200}
                 className="max-w-full max-h-full object-contain rounded"
               />
               {imageUrls.length > 1 && (
@@ -849,7 +853,13 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 <div className="mb-6">
                   <p className="text-sm font-medium text-gray-600 mb-2 text-center">Normal QR (Görüntüleme)</p>
                   <div className="bg-white p-4 rounded-xl border-2 border-gray-200">
-                    <img src={qrDataUrl} alt="QR Code" className="w-64 h-64" />
+                  <img
+                src={qrDataUrl}
+                alt="QR Code"
+                width={256}
+                height={256}
+                className="w-64 h-64"
+              />
                   </div>
                 </div>
               )}
@@ -859,7 +869,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 <div className="mb-6">
                   <p className="text-sm font-medium text-gray-600 mb-2 text-center">Banka QR (Banka Uygulaması)</p>
                   <div className="bg-white p-4 rounded-xl border-2 border-green-200">
-                    <img src={bankQrDataUrl} alt="Bank QR Code" className="w-64 h-64" />
+                    <img src={bankQrDataUrl} alt="Bank QR Code" width={256} height={256} className="w-64 h-64" />
                   </div>
                 </div>
               )}
