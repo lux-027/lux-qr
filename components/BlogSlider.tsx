@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Clock, FileText, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
@@ -235,13 +236,19 @@ export default function BlogSlider() {
                 >
                   {blog.mainImage && (
                     <div className="relative h-32 md:h-40 overflow-hidden">
-                      <motion.img
-                        src={blog.mainImage}
-                        alt={blog.title}
-                        className="w-full h-full object-cover"
+                      <motion.div
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.5 }}
-                      />
+                        className="w-full h-full"
+                      >
+                        <Image
+                          src={blog.mainImage}
+                          alt={blog.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover"
+                        />
+                      </motion.div>
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent"></div>
                       <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                         Blog
@@ -282,8 +289,8 @@ export default function BlogSlider() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            aria-label={`Slayt Görünümü ${index + 1}`}
-            className={`w-2 h-2 rounded-full transition-all duration-300 p-3 ${
+            aria-label={`Slayt ${index + 1}`}
+            className={`w-2 h-2 rounded-full transition-all duration-300 p-6 ${
               activeDot === index
                 ? 'bg-gradient-to-r from-blue-500 to-cyan-500 w-6'
                 : 'bg-gray-600 hover:bg-gray-500'

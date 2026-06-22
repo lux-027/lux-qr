@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FileText, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
@@ -72,11 +73,13 @@ export default function RandomBlogs() {
             className="block bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-4 hover:bg-white/10 transition-all duration-300"
           >
             {blog.mainImage && (
-              <div className="mb-3 rounded-xl overflow-hidden">
-                <img
+              <div className="mb-3 rounded-xl overflow-hidden relative h-32">
+                <Image
                   src={blog.mainImage}
                   alt={blog.title}
-                  className="w-full h-32 object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover"
                 />
               </div>
             )}

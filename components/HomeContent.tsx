@@ -3,8 +3,13 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark } from 'lucide-react';
-import BlogSlider from '@/components/BlogSlider';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
+
+const BlogSlider = dynamic(() => import('@/components/BlogSlider'), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+});
 
 const qrCategories = [
   {
@@ -161,7 +166,7 @@ export default function HomeContent() {
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h4 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı ve Kolay</h4>
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı ve Kolay</h3>
             <p className="text-gray-400 text-xs md:text-sm">Saniyeler içinde QR kod oluşturun</p>
           </div>
           
@@ -169,7 +174,7 @@ export default function HomeContent() {
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h4 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli Depolama</h4>
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli Depolama</h3>
             <p className="text-gray-400 text-xs md:text-sm">Verileriniz şifreli olarak saklanır</p>
           </div>
           
@@ -177,7 +182,7 @@ export default function HomeContent() {
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h4 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Modern Tasarım</h4>
+            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Modern Tasarım</h3>
             <p className="text-gray-400 text-xs md:text-sm">Şık ve kullanıcı dostu arayüz</p>
           </div>
         </motion.div>
@@ -282,7 +287,7 @@ export default function HomeContent() {
                 <span className="text-white font-bold text-sm md:text-base">2</span>
               </div>
               <div>
-                <h4 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Gelişmiş Veri Analitiği</h4>
+                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Gelişmiş Veri Analitiği</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   LuxQR dinamik QR kodları ile tarama istatistiklerini takip edebilir, coğrafi konum verilerini analiz edebilir ve kullanıcı etkileşimini ölçebilirsiniz. Hangi saatlerde daha fazla tarama yapıldığını, hangi bölgelerden ilgi gördüğünüzü ve kampanyalarınızın performansını detaylı raporlarla inceleyebilirsiniz.
                 </p>
@@ -294,7 +299,7 @@ export default function HomeContent() {
                 <span className="text-white font-bold text-sm md:text-base">3</span>
               </div>
               <div>
-                <h4 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Tıklama Takibi ve Optimizasyon</h4>
+                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Tıklama Takibi ve Optimizasyon</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Her QR kod taraması kaydedilir ve analiz edilir. Bu veriler sayesinde pazarlama stratejilerinizi optimize edebilir, hedef kitlenizin davranışlarını daha iyi anlayabilir ve dönüşüm oranlarınızı artırabilirsiniz. A/B testleri yaparak farklı QR kod versiyonlarının performansını karşılaştırabilirsiniz.
                 </p>
@@ -331,7 +336,7 @@ export default function HomeContent() {
                 <span className="text-white font-bold text-base md:text-xl">2</span>
               </div>
               <div>
-                <h4 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Bilgilerinizi Girin veya Dosyanızı Yükleyin</h4>
+                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Bilgilerinizi Girin veya Dosyanızı Yükleyin</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Seçtiğiniz kategoriye göre gerekli bilgileri girin. WiFi için ağ adı ve şifre, kartvizit için iletişim bilgileri, sosyal medya için profil linkleri veya metin/resim/video için içeriklerinizi sağlayın. Dosya yüklemeleri için maksimum 100MB boyutunda dosyalarınızı güvenli bir şekilde yükleyebilirsiniz. Tüm veriler şifreli olarak işlenir.
                 </p>
@@ -343,7 +348,7 @@ export default function HomeContent() {
                 <span className="text-white font-bold text-base md:text-xl">3</span>
               </div>
               <div>
-                <h4 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Özelleştirin ve Yüksek Çözünürlüklü Olarak İndirin</h4>
+                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Özelleştirin ve Yüksek Çözünürlüklü Olarak İndirin</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   QR kodunuzu oluşturduktan sonra yüksek çözünürlüklü PNG formatında indirebilir, doğrudan sosyal medyada paylaşabilir veya link olarak kopyalayabilirsiniz. QR kodunuz mobil uyumlu, baskı kalitesinde ve tarama hızı optimize edilmiştir. İsterseniz geçerlilik süresi belirleyerek verilerinizin güvenli bir şekilde saklanmasını sağlayabilirsiniz.
                 </p>

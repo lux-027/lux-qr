@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Calendar, ArrowRight, QrCode, Home, FileText, Zap, Shield, Users, CheckCircle, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
-import NewsletterForm from '@/components/NewsletterForm';
+import dynamic from 'next/dynamic';
+
+const NewsletterForm = dynamic(() => import('@/components/NewsletterForm'), {
+  ssr: false,
+  loading: () => <div className="h-32 bg-white/5 rounded-2xl animate-pulse" />
+});
 
 interface BlogPageContentProps {
   posts: any[];
@@ -56,10 +62,12 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                     {/* Image */}
                     {post.mainImage && (
                       <div className="relative h-32 md:h-48 overflow-hidden">
-                        <img
+                        <Image
                           src={post.mainImage}
                           alt={post.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
                       </div>
