@@ -538,10 +538,23 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         let ibanNumber = '';
         let bankName = 'Bilinmiyor';
         let accountHolder = 'Bilinmiyor';
+        let userNote = '';
         try {
-          // Check if note contains original format (for EPC QR codes)
-          if (data.note && data.note.includes('IBAN:')) {
-            const parts = data.note.split('|');
+          // Parse EPC format for IBAN and account holder
+          const lines = data.content.split('\n');
+          lines.forEach((line: string) => {
+            if (line.startsWith('<IBAN>+')) {
+              ibanNumber = line.replace('<IBAN>+', '');
+            } else if (line.startsWith('<BENM>+')) {
+              accountHolder = line.replace('<BENM>+', '');
+            }
+          });
+
+          // Parse original data and user note from note field
+          if (data.note && data.note.includes('|||')) {
+            const [originalData, note] = data.note.split('|||');
+            userNote = note;
+            const parts = originalData.split('|');
             parts.forEach((part: string) => {
               if (part.startsWith('IBAN:')) {
                 ibanNumber = part.replace('IBAN:', '');
@@ -549,16 +562,6 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 bankName = part.replace('BANKA:', '');
               } else if (part.startsWith('HESAP:')) {
                 accountHolder = part.replace('HESAP:', '');
-              }
-            });
-          } else {
-            // Parse EPC format
-            const lines = data.content.split('\n');
-            lines.forEach((line: string) => {
-              if (line.startsWith('<IBAN>+')) {
-                ibanNumber = line.replace('<IBAN>+', '');
-              } else if (line.startsWith('<BENM>+')) {
-                accountHolder = line.replace('<BENM>+', '');
               }
             });
           }

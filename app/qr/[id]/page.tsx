@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -11,11 +11,13 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
+  const [bankQrDataUrl, setBankQrDataUrl] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [qrData, setQrData] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedQrType, setSelectedQrType] = useState<'normal' | 'bank'>('normal');
 
   useEffect(() => {
     const fetchQRData = async () => {
@@ -33,6 +35,12 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           setQrCodeUrl(`${window.location.origin}/qr/${params.id}`);
           const qrData = await QRCode.toDataURL(data.data.viewUrl || data.data.content);
           setQrDataUrl(qrData);
+          
+          // Generate bank QR code from EPC content
+          if (data.data.contentType === 'iban') {
+            const bankQrData = await QRCode.toDataURL(data.data.content);
+            setBankQrDataUrl(bankQrData);
+          }
         } else {
           console.error('QR code not found or invalid response:', data);
           setError(data.error || 'QR kod bulunamadı');
@@ -59,6 +67,13 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     const link = document.createElement('a');
     link.href = qrDataUrl;
     link.download = 'qr-code.png';
+    link.click();
+  };
+
+  const handleBankQrDownload = () => {
+    const link = document.createElement('a');
+    link.href = bankQrDataUrl;
+    link.download = 'bank-qr-code.png';
     link.click();
   };
 
@@ -634,10 +649,23 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         let ibanNumber = '';
         let bankName = 'Bilinmiyor';
         let accountHolder = 'Bilinmiyor';
+        let userNote = '';
         try {
-          // Check if note contains original format (for EPC QR codes)
-          if (qrData.note && qrData.note.includes('IBAN:')) {
-            const parts = qrData.note.split('|');
+          // Parse EPC format for IBAN and account holder
+          const lines = qrData.content.split('\n');
+          lines.forEach((line: string) => {
+            if (line.startsWith('<IBAN>+')) {
+              ibanNumber = line.replace('<IBAN>+', '');
+            } else if (line.startsWith('<BENM>+')) {
+              accountHolder = line.replace('<BENM>+', '');
+            }
+          });
+
+          // Parse original data and user note from note field
+          if (qrData.note && qrData.note.includes('|||')) {
+            const [originalData, note] = qrData.note.split('|||');
+            userNote = note;
+            const parts = originalData.split('|');
             parts.forEach((part: string) => {
               if (part.startsWith('IBAN:')) {
                 ibanNumber = part.replace('IBAN:', '');
@@ -645,16 +673,6 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 bankName = part.replace('BANKA:', '');
               } else if (part.startsWith('HESAP:')) {
                 accountHolder = part.replace('HESAP:', '');
-              }
-            });
-          } else {
-            // Parse EPC format
-            const lines = qrData.content.split('\n');
-            lines.forEach((line: string) => {
-              if (line.startsWith('<IBAN>+')) {
-                ibanNumber = line.replace('<IBAN>+', '');
-              } else if (line.startsWith('<BENM>+')) {
-                accountHolder = line.replace('<BENM>+', '');
               }
             });
           }
@@ -783,14 +801,73 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           <div className="bg-gray-100 rounded-2xl p-4 md:p-8 shadow-2xl flex-1 order-2 md:order-1">
             <div className="flex flex-col items-center">
               <h3 className="text-xl font-bold text-gray-800 mb-4">QR Kod</h3>
-              <div className="bg-white p-4 rounded-xl border-2 border-gray-200 mb-6">
-                <img src={qrDataUrl} alt="QR Code" className="w-64 h-64" />
-              </div>
+              
+              {/* Toggle Buttons - Only for IBAN */}
+              {qrData?.contentType === 'iban' && bankQrDataUrl && (
+                <div className="flex gap-2 mb-6 w-full">
+                  <button
+                    onClick={() => setSelectedQrType('normal')}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all ${
+                      selectedQrType === 'normal' 
+                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' 
+                        : 'bg-white text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    <QrCode className="w-5 h-5" />
+                    <span className="text-sm font-medium">Normal QR</span>
+                    <div className="relative group">
+                      <Info className="w-4 h-4 cursor-help" />
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        <p className="font-semibold mb-1">Normal QR</p>
+                        <p>Bu QR kodu normal tarayıcılarla okutunca view sayfasına açılır. Tüm bilgileri görüntüleyebilirsiniz.</p>
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setSelectedQrType('bank')}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all ${
+                      selectedQrType === 'bank' 
+                        ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' 
+                        : 'bg-white text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Landmark className="w-5 h-5" />
+                    <span className="text-sm font-medium">Banka QR</span>
+                    <div className="relative group">
+                      <Info className="w-4 h-4 cursor-help" />
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        <p className="font-semibold mb-1">Banka QR</p>
+                        <p>Bu QR kodu banka uygulamalarıyla okutunca otomatik olarak IBAN numarasını doldurur. Sadece banka uygulamaları tarafından tanınır.</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              )}
+              
+              {/* Normal QR Code */}
+              {selectedQrType === 'normal' && (
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-gray-600 mb-2 text-center">Normal QR (Görüntüleme)</p>
+                  <div className="bg-white p-4 rounded-xl border-2 border-gray-200">
+                    <img src={qrDataUrl} alt="QR Code" className="w-64 h-64" />
+                  </div>
+                </div>
+              )}
+
+              {/* Bank QR Code - Only for IBAN */}
+              {selectedQrType === 'bank' && qrData?.contentType === 'iban' && bankQrDataUrl && (
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-gray-600 mb-2 text-center">Banka QR (Banka Uygulaması)</p>
+                  <div className="bg-white p-4 rounded-xl border-2 border-green-200">
+                    <img src={bankQrDataUrl} alt="Bank QR Code" className="w-64 h-64" />
+                  </div>
+                </div>
+              )}
 
               {/* Button Group */}
               <div className="flex flex-wrap gap-3 md:gap-4 justify-center w-full">
                 <button
-                  onClick={handleDownload}
+                  onClick={selectedQrType === 'bank' ? handleBankQrDownload : handleDownload}
                   className="flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 text-sm md:text-base"
                 >
                   <Download className="w-4 h-4 md:w-5 md:h-5" />
