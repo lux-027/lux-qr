@@ -131,9 +131,9 @@ export default function HomeContent() {
                       <category.icon className="w-5 h-5 md:w-7 md:h-7 text-white" />
                     </div>
                     
-                    <h3 className="text-sm md:text-xl font-bold text-white mb-1 md:mb-2 group-hover:text-gradient transition-colors">
+                    <h2 className="text-sm md:text-xl font-bold text-white mb-1 md:mb-2 group-hover:text-gradient transition-colors">
                       {category.title}
-                    </h3>
+                    </h2>
                     
                     <p className="text-gray-400 mb-2 md:mb-4 leading-relaxed text-xs md:text-sm">
                       {category.description}
@@ -161,7 +161,7 @@ export default function HomeContent() {
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı ve Kolay</h3>
+            <h4 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı ve Kolay</h4>
             <p className="text-gray-400 text-xs md:text-sm">Saniyeler içinde QR kod oluşturun</p>
           </div>
           
@@ -169,7 +169,7 @@ export default function HomeContent() {
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli Depolama</h3>
+            <h4 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli Depolama</h4>
             <p className="text-gray-400 text-xs md:text-sm">Verileriniz şifreli olarak saklanır</p>
           </div>
           
@@ -177,7 +177,7 @@ export default function HomeContent() {
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-md md:shadow-lg">
               <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Modern Tasarım</h3>
+            <h4 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Modern Tasarım</h4>
             <p className="text-gray-400 text-xs md:text-sm">Şık ve kullanıcı dostu arayüz</p>
           </div>
         </motion.div>
@@ -261,9 +261,9 @@ export default function HomeContent() {
           transition={{ delay: 0.3, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
         >
-          <h3 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
+          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
             Neden Dinamik QR Kod Tercih Etmelisiniz?
-          </h3>
+          </h2>
           <div className="space-y-4 md:space-y-8">
             <div className="flex items-start gap-3 md:gap-4">
               <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md md:shadow-lg">
@@ -310,9 +310,9 @@ export default function HomeContent() {
           transition={{ delay: 0.35, duration: 0.2 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-16"
         >
-          <h3 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
+          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
             3 Kolay Adımda QR Kod Oluşturun
-          </h3>
+          </h2>
           <div className="space-y-4 md:space-y-8">
             <div className="flex items-start gap-3 md:gap-4">
               <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-md md:shadow-lg">
@@ -366,9 +366,9 @@ export default function HomeContent() {
                 <Shield className="w-5 h-5 md:w-8 md:h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2 text-gradient">
+                <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2 text-gradient">
                   Güvenlik ve Gizlilik Önceliğimiz
-                </h3>
+                </h2>
                 <p className="text-gray-400 text-sm md:text-lg leading-relaxed">
                   LuxQR platformu, kullanıcı verilerinin güvenliğini ve gizliliğini en üst düzeyde korumayı taahhüt eder. Tüm verileriniz endüstri standardı şifreleme protokolleri ile korunur ve güvenli bulut sistemlerinde saklanır. Kişisel bilgilerinizi asla üçüncü taraflarla paylaşmıyoruz ve veri toplama politikamız şeffaftır.
                 </p>

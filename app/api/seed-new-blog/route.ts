@@ -10,7 +10,7 @@ export async function POST() {
         slug: 'kucuk-isletmeler-icin-dijital-donusum-qr-kodlar-ile-musteri-etkilesimini-artirin',
         description: 'Geleneksel reklamların yerini dijitalin aldığı bu dönemde, QR kodlar küçük işletmeler için müşteri etkileşimini artıran güçlü bir araçtır. Dinamik QR kodlarla takip edilebilir pazarlama stratejileri oluşturun.',
         category: 'İşletme',
-        mainImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&q=80',
+        mainImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&q=70&fm=webp',
         content: `Geleneksel pazarlama yöntemleri artık yetersiz kalıyor. Kartvizitler, broşürler ve fiziksel reklamlar yerini dijital çözümlere bırakıyor. Küçük işletmeler için bu dijital dönüşüm kaçınılmaz, ancak doğru araçlarla kullanıldığında büyük fırsatlar sunuyor. QR kod teknolojisi, bu dönüşümün en etkili ve erişilebilir araçlarından biridir.
 
 ### <span class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Geleneksel Reklamların Sınırları</span>
@@ -170,7 +170,7 @@ Dijital dönüşüm yarını beklemiyor. Küçük işletmeniz için QR kod strat
         slug: 'qr-kod-guvenligi-musterilerinize-guvenli-bir-deneyim-sunmanin-yollari',
         description: 'Dijital dünyada güvenlik birinci öncelik. QR kod güvenliği riskleri, korunma yöntemleri ve LuxQr\'un sunduğu şeffaf çözümler hakkında her şeyi öğrenin.',
         category: 'Güvenlik',
-        mainImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80',
+        mainImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=500&q=70&fm=webp',
         content: `Dijital dünyada güvenlik, hiç olmadığı kadar önemli hale geldi. QR kodlar hayatımızın her alanında olsa da, güvenlik riskleri de beraberinde getirebilir. Müşterilerinize güvenli bir deneyim sunmak, markanızın itibarı için kritik önem taşıyor.
 
 ### <span class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Güvenlik Neden Birinci Öncelik?</span>

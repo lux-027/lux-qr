@@ -40,6 +40,7 @@ export default function Sidebar() {
       {/* Hamburger Button - Only show on mobile */}
       <button
         onClick={() => setIsOpen(true)}
+        aria-label="Menüyü Aç"
         className="md:hidden fixed top-6 left-4 z-50 p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300 shadow-lg"
       >
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -76,6 +77,7 @@ export default function Sidebar() {
             {/* Close Button - Only show on mobile */}
             <button
               onClick={() => setIsOpen(false)}
+              aria-label="Menüyü Kapat"
               className="md:hidden p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 text-white transition-all duration-200 border border-white/10 hover:border-white/20 -ml-5"
             >
               <X className="w-5 h-5" />

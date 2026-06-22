@@ -65,6 +65,7 @@ export default function RootLayout({
   return (
     <html lang="tr" className="overflow-x-hidden" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" sizes="48x48" />
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />

@@ -10,7 +10,7 @@ export async function POST() {
         slug: 'restoranlar-icin-qr-menu-kullanmanin-5-avantaji',
         description: 'QR menüler maliyetleri düşürür, güncellemeyi kolaylaştırır ve hijyeniktir. Dinamik QR kod ile menüyü anında değiştirin.',
         category: 'İşletme',
-        mainImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80',
+        mainImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=70&fm=webp',
         content: `Restoran işletmecileri olarak sürekli maliyetleri düşürmek ve operasyonel verimliliği artırmak arayışındayız. QR menü teknolojisi, bu hedeflere ulaşmak için mükemmel bir çözüm sunuyor. Geleneksel menü sistemlerinin yerini alan dijital QR menüler, sadece bir trend değil, restoran yönetiminde devrim yaratan bir araçtır.
 
 ### 1. Maliyet Tasarrufu
@@ -97,7 +97,7 @@ LuxQr ile restoranınız için profesyonel QR menü oluşturmak hemen başlayabi
         slug: 'kisisel-kartvizitlerde-qr-kod-devrimi',
         description: 'İletişim bilgilerinizi tek bir kodla paylaşın. Kartvizitinizde artık karmaşık bilgiler yerine profesyonel bir QR kod olsun.',
         category: 'Kişisel',
-        mainImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&q=80',
+        mainImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&q=70&fm=webp',
         content: `Geleneksel kartvizitler artık geçmişte kaldı. Modern profesyoneller, QR kod teknolojisi ile iletişim bilgilerini daha verimli bir şekilde paylaşıyor.
 
 ### Neden QR Kodlu Kartvizit?
@@ -131,7 +131,7 @@ Tek tarama ile tüm iletişim bilgilerinizi paylaşmanın kolaylığını deneyi
         slug: 'qr-kod-guvenligi-sahte-kodlardan-nasil-korunuruz',
         description: 'QR kodları tararken nelere dikkat etmeli? Güvenli olmayan sitelere yönlendirilmemek için LuxQr sunduğu güvenlik ipuçları.',
         category: 'Güvenlik',
-        mainImage: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1200&q=80',
+        mainImage: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=500&q=70&fm=webp',
         content: `QR kodlar hayatımızın her alanında olsa da, güvenlik riskleri de beraberinde getirebilir. Sahte QR kodlarından korunmak için bilmeniz gerekenler.
 
 ### QR Kod Güvenliği Nedir?
@@ -170,7 +170,7 @@ Güvenli QR kod oluşturmak için LuxQr'ı tercih edin!`,
         slug: 'etkinlik-ve-biletleme-sistemlerinde-qr-kod',
         description: 'Girişleri hızlandırın, sahteciliği önleyin. Etkinlik yönetimi artık sadece bir tarama uzağınızda.',
         category: 'Etkinlik',
-        mainImage: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&q=80',
+        mainImage: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&q=70&fm=webp',
         content: `Etkinlik organizasyonu, karmaşık bir süreç olabilir. QR kod teknolojisi, bu süreci basitleştirir ve güvenliği artırır.
 
 ### QR Kodlu Bilet Sisteminin Avantajları

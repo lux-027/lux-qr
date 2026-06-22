@@ -194,6 +194,7 @@ export default function BlogSlider() {
         {/* Navigation Buttons */}
         <button
           onClick={() => scroll('left')}
+          aria-label="Önceki Slayt"
           className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -201,6 +202,7 @@ export default function BlogSlider() {
         
         <button
           onClick={() => scroll('right')}
+          aria-label="Sonraki Slayt"
           className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all hover:scale-110"
         >
           <ChevronRight className="w-5 h-5" />

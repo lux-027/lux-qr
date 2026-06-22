@@ -76,12 +76,14 @@ export default function RelatedPostsCarousel({ posts }: RelatedPostsCarouselProp
           <div className="flex justify-center gap-4 mt-6">
             <button
               onClick={prevSlide}
+              aria-label="Önceki Yazı"
               className="p-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={nextSlide}
+              aria-label="Sonraki Yazı"
               className="p-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
             >
               <ChevronRight className="w-5 h-5" />
@@ -96,7 +98,8 @@ export default function RelatedPostsCarousel({ posts }: RelatedPostsCarouselProp
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                aria-label={`Slayt ${index + 1}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 p-3 ${
                   index === currentIndex
                     ? 'bg-blue-400 w-6'
                     : 'bg-gray-600 hover:bg-gray-500'

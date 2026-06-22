@@ -594,12 +594,14 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 <>
                   <button
                     onClick={handlePreviousImage}
+                    aria-label="Önceki Resim"
                     className="absolute left-2 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={handleNextImage}
+                    aria-label="Sonraki Resim"
                     className="absolute right-2 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
                   >
                     <ChevronRight className="w-5 h-5" />
