@@ -282,7 +282,8 @@ export default function BlogSlider() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            aria-label={`Slayt Görünümü ${index + 1}`}
+            className={`w-2 h-2 rounded-full transition-all duration-300 p-3 ${
               activeDot === index
                 ? 'bg-gradient-to-r from-blue-500 to-cyan-500 w-6'
                 : 'bg-gray-600 hover:bg-gray-500'

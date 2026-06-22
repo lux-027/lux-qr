@@ -270,7 +270,7 @@ export default function HomeContent() {
                 <span className="text-white font-bold text-sm md:text-base">1</span>
               </div>
               <div>
-                <h4 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">İçerik Güncelleme Esnekliği</h4>
+                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">İçerik Güncelleme Esnekliği</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Dinamik QR kodlar, basılı materyalleri değiştirmeden arkasındaki yönlendirme linkini güncellemenize olanak tanır. Bu sayede promosyon kampanyalarınızı, ürün bilgilerinizi veya iletişim detaylarınızı anında güncelleyebilirsiniz. Statik QR kodlarda ise bir kez basıldıktan sonra içeriği değiştirilemez.
                 </p>
@@ -319,7 +319,7 @@ export default function HomeContent() {
                 <span className="text-white font-bold text-base md:text-xl">1</span>
               </div>
               <div>
-                <h4 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Kategori Seçin</h4>
+                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Kategori Seçin</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   İhtiyacınıza uygun QR kod türünü seçin. WiFi ağ bilgileri için WiFi QR, dijital kartvizit için vCard QR, sosyal medya hesaplarınız için Sosyal Medya QR, ses dosyaları için Ses Dosyası QR veya metin, resim, video ve belgeler için Metin/Resim/Video QR kategorisini tercih edin. Her kategori özel olarak tasarlanmıştır ve maksimum kullanıcı deneyimi sunar.
                 </p>
@@ -376,25 +376,25 @@ export default function HomeContent() {
             </div>
             <div className="grid md:grid-cols-2 gap-3 md:gap-6">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-blue-500/30 transition-colors">
-                <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Şifreli Veri Saklama</h4>
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Şifreli Veri Saklama</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Tüm QR kod verileriniz AES-256 şifreleme ile korunur. Dosyalarınız ve içerikleriniz güvenli bulut depolama sistemlerinde saklanır ve sadece QR kod URL'sini bilen kişiler tarafından erişilebilir.
                 </p>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-purple-500/30 transition-colors">
-                <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Otomatik Veri Temizleme</h4>
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Otomatik Veri Temizleme</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Belirlediğiniz geçerlilik süresi dolduğunda verileriniz otomatik olarak sistemden güvenli bir şekilde silinir. Bu sayede verilerinizin kontrolü sizde kalır ve gizliliğiniz korunur.
                 </p>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-cyan-500/30 transition-colors">
-                <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">GDPR Uyumluluğu</h4>
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">GDPR Uyumluluğu</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Platformumuz Avrupa Birliği Genel Veri Koruma Tüzüğü (GDPR) ile tam uyumludur. Veri işleme politikalarımız şeffaftır ve kullanıcı haklarına saygı duyarız.
                 </p>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-6 hover:border-pink-500/30 transition-colors">
-                <h4 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Güvenli Altyapı</h4>
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-3">Güvenli Altyapı</h3>
                 <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
                   Vercel'in güçlü altyapısı ve modern güvenlik protokolleri ile platformumuz sürekli olarak güvenlik testlerinden geçer. DDoS koruması, SSL sertifikası ve düzenli güvenlik güncellemeleri ile verileriniz güvende.
                 </p>
