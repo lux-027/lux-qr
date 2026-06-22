@@ -135,11 +135,11 @@ export default function IbanContent() {
               type="text"
               value={iban}
               onChange={handleIbanChange}
-              placeholder="TRXX XXXX XXXX XXXX XXXX XXXX XXXX"
+              placeholder="TRXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX"
               className={`w-full bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base font-mono tracking-wider ${
                 showError ? 'border-red-500' : ''
               }`}
-              maxLength={29}
+              maxLength={33}
             />
             {showError && (
               <p className="text-red-400 text-xs mt-1">Lütfen geçerli bir IBAN girin</p>
