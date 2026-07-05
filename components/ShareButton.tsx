@@ -29,7 +29,7 @@ export default function ShareButton() {
   return (
     <button
       onClick={handleShare}
-      className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 text-white transition-all duration-200 border border-white/10 hover:border-white/20 -ml-2"
+      className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 text-white transition-all duration-200 border border-white/10 hover:border-white/20 ml-2"
       title="Siteyi Paylaş"
     >
       <Share2 className="w-5 h-5" />

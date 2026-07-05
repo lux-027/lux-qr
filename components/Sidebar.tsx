@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark } from 'lucide-react';
 import ShareButton from './ShareButton';
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
 
   const mainItems = [
@@ -37,19 +40,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Hamburger Button - Only show on mobile */}
-      <button
-        onClick={() => setIsOpen(true)}
-        aria-label="Menüyü Aç"
-        className="md:hidden fixed top-6 left-4 z-50 p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300 shadow-lg"
-      >
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-          <line x1="4" y1="5" x2="20" y2="5" />
-          <line x1="4" y1="12" x2="16" y2="12" />
-          <line x1="4" y1="19" x2="12" y2="19" />
-        </svg>
-      </button>
-
       {/* Overlay - Only on mobile */}
       {isOpen && (
         <div
@@ -74,14 +64,6 @@ export default function Sidebar() {
               <span className="text-2xl font-bold text-white text-gradient">LuxQr</span>
             </div>
             <ShareButton />
-            {/* Close Button - Only show on mobile */}
-            <button
-              onClick={() => setIsOpen(false)}
-              aria-label="Menüyü Kapat"
-              className="md:hidden p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 text-white transition-all duration-200 border border-white/10 hover:border-white/20 -ml-5"
-            >
-              <X className="w-5 h-5" />
-            </button>
           </div>
         </div>
 

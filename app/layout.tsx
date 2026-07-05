@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
-import Sidebar from "@/components/Sidebar";
+import LayoutWrapper from "@/components/LayoutWrapper";
 import PageWrapper from "@/components/PageWrapper";
 import Script from "next/script";
 import { CounterProvider } from "@/context/CounterContext";
@@ -164,17 +164,16 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${inter.className} overflow-x-hidden`}>
-        <Sidebar />
-        <div className="md:ml-64">
-          <CounterProvider>
-            <NotificationProvider>
+        <CounterProvider>
+          <NotificationProvider>
+            <LayoutWrapper>
               <PageWrapper>
                 {children}
               </PageWrapper>
               <Footer />
-            </NotificationProvider>
-          </CounterProvider>
-        </div>
+            </LayoutWrapper>
+          </NotificationProvider>
+        </CounterProvider>
       </body>
     </html>
   );

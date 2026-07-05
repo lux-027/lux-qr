@@ -147,25 +147,33 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   const parseSocialMedia = (url: string) => {
     const data: any = { platform: '', username: '', profileUrl: url };
     const urlLower = url.toLowerCase();
-    
+
     if (urlLower.includes('instagram.com')) {
       data.platform = 'Instagram';
-      const match = url.match(/instagram\.com\/([^\/]+)/);
-      if (match) data.username = match[1].replace('@', '');
+      const match = url.match(/instagram\.com\/([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     } else if (urlLower.includes('tiktok.com')) {
       data.platform = 'TikTok';
-      const match = url.match(/tiktok\.com\/@?([^\/]+)/);
-      if (match) data.username = match[1];
+      const match = url.match(/tiktok\.com\/@?([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     } else if (urlLower.includes('facebook.com')) {
       data.platform = 'Facebook';
-      const match = url.match(/facebook\.com\/([^\/]+)/);
-      if (match) data.username = match[1];
+      const match = url.match(/facebook\.com\/([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     } else if (urlLower.includes('youtube.com')) {
       data.platform = 'YouTube';
-      const match = url.match(/youtube\.com\/@?([^\/]+)/);
-      if (match) data.username = match[1];
+      const match = url.match(/youtube\.com\/@?([^\/\?]+)/);
+      if (match) {
+        data.username = match[1].replace('@', '').split('?')[0];
+      }
     }
-    
+
     return data;
   };
 

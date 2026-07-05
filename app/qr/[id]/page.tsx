@@ -57,7 +57,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   }, [params.id]);
 
   const handleCopy = () => {
-    const urlToCopy = qrData?.viewUrl || qrCodeUrl;
+    // Always copy the full original URL for social media
+    const urlToCopy = qrData?.content || qrData?.viewUrl || qrCodeUrl;
     navigator.clipboard.writeText(urlToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -413,10 +414,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                       {platformIcons[socialData.platform as keyof typeof platformIcons] || <Share2 className="w-5 h-5 md:w-6 md:h-6 text-pink-400" />}
                       <h4 className="text-lg md:text-xl font-bold text-white">{socialData.platform}</h4>
                     </div>
-                    <p className="text-lg md:text-2xl font-semibold text-white mb-1 truncate">@{socialData.username}</p>
-                    <a 
-                      href={socialData.profileUrl} 
-                      target="_blank" 
+                    <p className="text-lg md:text-2xl font-semibold text-white mb-1">@{socialData.username}</p>
+                    <a
+                      href={socialData.profileUrl}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 md:gap-2 text-blue-400 hover:text-blue-300 transition-colors text-xs md:text-sm truncate"
                     >
