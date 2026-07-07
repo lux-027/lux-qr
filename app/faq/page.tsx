@@ -127,7 +127,7 @@ export default function FAQPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="flex flex-col items-center justify-center gap-3 mb-6">
             <HelpCircle className="w-12 h-12 text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
             <h1 className="text-5xl font-bold text-white text-gradient">
               Sıkça Sorulan Sorular
@@ -194,10 +194,10 @@ export default function FAQPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             {[
-              { icon: FileText, title: 'Metin & Belge', desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge' },
+              { icon: FileText, title: 'Metin', desc: 'Metin içeriği', link: '/qr/metin' },
+              { icon: FileText, title: 'Resim/Video/Belge', desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge' },
               { icon: Users, title: 'Kartvizit', desc: 'Dijital vCard', link: '/qr/kartvizit' },
               { icon: Zap, title: 'WiFi', desc: 'Ağ paylaşımı', link: '/qr/wifi' },
-              { icon: Shield, title: 'Sosyal Medya', desc: 'Link-in-bio', link: '/qr/sosyal-medya' },
             ].map((item, index) => (
               <Link key={index} href={item.link}>
                 <div className="card-premium p-3 md:p-6 hover:border-blue-500/50 transition-all group">

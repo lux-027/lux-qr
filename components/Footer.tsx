@@ -44,8 +44,14 @@ export default function Footer() {
             </h3>
             <ul className="grid grid-cols-2 gap-2 md:gap-3">
               <li>
+                <Link href="/qr/metin" className="text-gray-400 hover:text-white text-xs md:text-sm transition-colors flex items-center gap-1 group whitespace-nowrap">
+                  Metin
+                  <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </li>
+              <li>
                 <Link href="/qr/metin-belge" className="text-gray-400 hover:text-white text-xs md:text-sm transition-colors flex items-center gap-1 group whitespace-nowrap">
-                  Metin, Resim, Video ve Belge
+                  Resim/Video/Belge
                   <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </li>

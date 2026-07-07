@@ -50,8 +50,10 @@ export default function BlogSlider() {
     const updateItemsPerScreen = () => {
       if (window.innerWidth >= 1024) {
         setItemsPerScreen(3); // lg: 3 items
+      } else if (window.innerWidth >= 768) {
+        setItemsPerScreen(2); // md: 2 items
       } else {
-        setItemsPerScreen(2); // mobile and md: 2 items
+        setItemsPerScreen(1); // mobile: 1 item
       }
     };
 
@@ -225,7 +227,7 @@ export default function BlogSlider() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05, duration: 0.4 }}
-              className="flex-shrink-0 w-[calc(50%-8px)] md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] xl:w-[calc(33.333%-11px)] snap-center"
+              className="flex-shrink-0 w-[calc(100%-16px)] md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] xl:w-[calc(33.333%-11px)] snap-center"
             >
               <Link href={`/blog/${blog.slug}`}>
                 <div className="group/card bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 h-full flex flex-col">
@@ -235,7 +237,7 @@ export default function BlogSlider() {
                         src={blog.mainImage}
                         alt={blog.title}
                         fill
-                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 33vw"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-500 group-hover/card:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />

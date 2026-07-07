@@ -79,21 +79,36 @@ export async function POST(request: Request) {
     });
 
     console.log('Starting Supabase upload...');
-    const { data, error: storageError } = await supabase.storage
-      .from('luxqr-files')
-      .upload(safeFileName, buffer, {
-        contentType: file.type,
-        upsert: true,
-        cacheControl: '3600'
-      });
-    console.log('Supabase upload completed');
+    let storageError: any = null;
+    let data: any = null;
+    
+    try {
+      const result = await supabase.storage
+        .from('luxqr-files')
+        .upload(safeFileName, buffer, {
+          contentType: file.type,
+          upsert: true,
+          cacheControl: '3600'
+        });
+      data = result.data;
+      storageError = result.error;
+      console.log('Supabase upload completed');
+    } catch (uploadError) {
+      console.error('Supabase upload exception:', uploadError);
+      storageError = uploadError;
+    }
 
     if (storageError) {
-      console.error('Supabase Detaylı Storage Hatası:', storageError.message, storageError);
+      console.error('Supabase Detaylı Storage Hatası:', {
+        message: storageError.message,
+        name: storageError.name,
+        statusCode: storageError.statusCode,
+        fullError: storageError
+      });
       return NextResponse.json({ 
-        error: storageError.message,
+        error: storageError.message || 'Dosya yükleme hatası',
         details: storageError.message,
-        code: storageError.statusCode
+        code: storageError.statusCode || 'UPLOAD_ERROR'
       }, { status: 400 });
     }
 

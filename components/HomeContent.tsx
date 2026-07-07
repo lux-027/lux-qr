@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark } from 'lucide-react';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
@@ -13,46 +13,53 @@ const BlogSlider = dynamic(() => import('@/components/BlogSlider'), {
 
 const qrCategories = [
   {
-    title: 'Metin, Resim, Video, Belge',
-    description: 'Metin, resim, video ve belge yükleyerek QR kod oluşturun',
+    title: 'Metin',
+    description: 'Metin içeriğinizi QR koda dönüştürün',
     icon: Type,
-    href: '/qr/metin-belge',
+    href: '/qr/metin',
     color: 'from-blue-500 to-purple-500',
+  },
+  {
+    title: 'Resim/Video/Belge',
+    description: 'Resim, video ve belge yükleyerek QR kod oluşturun',
+    icon: ImageIcon,
+    href: '/qr/metin-belge',
+    color: 'from-purple-500 to-pink-500',
   },
   {
     title: 'Kartvizit',
     description: 'vCard formatında dijital kartvizit oluşturun ve paylaşın',
     icon: CreditCard,
     href: '/qr/kartvizit',
-    color: 'from-purple-500 to-pink-500',
+    color: 'from-cyan-500 to-blue-500',
   },
   {
     title: 'WiFi',
     description: 'WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın',
     icon: Wifi,
     href: '/qr/wifi',
-    color: 'from-cyan-500 to-blue-500',
+    color: 'from-pink-500 to-rose-500',
   },
   {
     title: 'Sosyal Medya',
     description: 'Instagram, TikTok ve Link-in-bio sayfalarınız için QR kod',
     icon: Share2,
     href: '/qr/sosyal-medya',
-    color: 'from-pink-500 to-rose-500',
+    color: 'from-orange-500 to-red-500',
   },
   {
     title: 'Ses Dosyası',
     description: 'Ses dosyalarınız yükleyerek QR kod oluşturun',
     icon: Mic,
     href: '/qr/ses-dosyasi',
-    color: 'from-orange-500 to-red-500',
+    color: 'from-green-500 to-emerald-500',
   },
   {
     title: 'IBAN',
     description: 'IBAN bilgilerinizi QR kod ile kolayca paylaşın',
     icon: Landmark,
     href: '/qr/iban',
-    color: 'from-green-500 to-emerald-500',
+    color: 'from-blue-500 to-cyan-500',
   },
 ];
 

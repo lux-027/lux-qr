@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -771,13 +771,17 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
             </div>
             <div className="grid grid-cols-2 md:flex flex-col gap-2 md:gap-3">
-              <Link href="/qr/wifi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Wifi className="w-3 h-3 md:w-5 md:h-5 text-cyan-400" />
-                <span>WiFi</span>
+              <Link href="/qr/metin" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Type className="w-3 h-3 md:w-5 md:h-5 text-blue-400" />
+                <span>Metin</span>
               </Link>
               <Link href="/qr/metin-belge" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <FileText className="w-3 h-3 md:w-5 md:h-5 text-blue-400" />
-                <span>Metin/Resim/Video</span>
+                <span>Resim/Video/Belge</span>
+              </Link>
+              <Link href="/qr/wifi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Wifi className="w-3 h-3 md:w-5 md:h-5 text-cyan-400" />
+                <span>WiFi</span>
               </Link>
               <Link href="/qr/kartvizit" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <Building2 className="w-3 h-3 md:w-5 md:h-5 text-purple-400" />

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark } from 'lucide-react';
+import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon } from 'lucide-react';
 import ShareButton from './ShareButton';
 
 interface SidebarProps {
@@ -18,7 +18,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   ];
 
   const qrItems = [
-    { href: '/qr/metin-belge', label: 'Metin/Resim/Video/Belge', icon: Type },
+    { href: '/qr/metin', label: 'Metin', icon: Type },
+    { href: '/qr/metin-belge', label: 'Resim/Video/Belge', icon: ImageIcon },
     { href: '/qr/kartvizit', label: 'Kartvizit', icon: CreditCard },
     { href: '/qr/wifi', label: 'WiFi', icon: Wifi },
     { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2 },

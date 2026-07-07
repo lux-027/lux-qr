@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Calendar, ArrowLeft, QrCode, Clock, User, ChevronLeft, ChevronRight, Home } from 'lucide-react';
 import { getPostBySlug, getAllPosts } from '@/lib/db';
 import ShareButton from './ShareButton';
-import RelatedPostsCarousel from './RelatedPostsCarousel';
 import BlogContent from '@/components/BlogContent';
 
 interface PageProps {
@@ -129,24 +128,6 @@ export default async function BlogPostPage({ params }: PageProps) {
       />
       
       <div className="container mx-auto px-4 py-12">
-        {/* Header with Hamburger Menu and Back Button */}
-        <div className="mb-8 max-md:flex max-md:justify-end max-md:items-center">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 glow-border border-white/10 text-white hover:bg-white/10 transition-colors max-md:text-sm max-md:px-3 max-md:py-1.5 z-10"
-          >
-            <div className="flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-blue-400" />
-              <span className="font-bold">LuxQr</span>
-            </div>
-            <div className="w-px h-4 bg-white/20"></div>
-            <div className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Blog'a Dön
-            </div>
-          </Link>
-        </div>
-
         {/* Article */}
         <article className="max-w-4xl mx-auto">
           {/* Header */}
@@ -215,11 +196,6 @@ export default async function BlogPostPage({ params }: PageProps) {
               slug={post.slug}
             />
           </div>
-
-          {/* Related Posts */}
-          {relatedPosts.length > 0 && (
-            <RelatedPostsCarousel posts={relatedPosts} />
-          )}
         </article>
       </div>
     </main>

@@ -8,8 +8,7 @@ import { showNotification } from '@/components/Notification';
 
 export default function MetinBelgeContent() {
   const router = useRouter();
-  const [selectedType, setSelectedType] = useState<'text' | 'image' | 'video' | 'file'>('text');
-  const [textContent, setTextContent] = useState('');
+  const [selectedType, setSelectedType] = useState<'image' | 'video' | 'file'>('image');
   const [file, setFile] = useState<File | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -23,13 +22,12 @@ export default function MetinBelgeContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const multiFileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleTypeChange = (type: 'text' | 'image' | 'video' | 'file') => {
+  const handleTypeChange = (type: 'image' | 'video' | 'file') => {
     setSelectedType(type);
     setFile(null);
     setFiles([]);
     setPreviewUrl(null);
     setPreviewUrls([]);
-    setTextContent('');
     setUploadStatus('');
     setShowError(false);
     setUploading(false);
@@ -129,11 +127,6 @@ export default function MetinBelgeContent() {
   };
 
   const handleGenerate = async () => {
-    if (selectedType === 'text' && !textContent.trim()) {
-      setShowError(true);
-      showNotification('Lütfen metin girin', 'error');
-      return;
-    }
     if (selectedType === 'image' && !file && files.length === 0) {
       setShowError(true);
       showNotification('Lütfen resim seçin', 'error');
@@ -153,13 +146,11 @@ export default function MetinBelgeContent() {
     setUploadStatus(selectedType === 'video' ? 'Video yükleniyor... (bu biraz zaman alabilir)' : 'QR kod oluşturuluyor...');
     try {
       let content = '';
-      let contentType: 'text' | 'image' | 'video' | 'file' = selectedType;
+      let contentType: 'text' | 'image' | 'video' | 'file' = selectedType as 'text' | 'image' | 'video' | 'file';
       let fileName = null;
       let filePath = null;
 
-      if (selectedType === 'text') {
-        content = textContent;
-      } else if (files.length > 0 && selectedType === 'image') {
+      if (files.length > 0 && selectedType === 'image') {
         // Multiple images - upload all files
         const uploadedFiles = [];
         
@@ -207,8 +198,8 @@ export default function MetinBelgeContent() {
           }
         }
 
-        // Use the first file name as the main content
-        content = files[0].name;
+        // Use the first file URL as the main content
+        content = uploadedFiles[0].url;
         fileName = files[0].name;
         // Store all file URLs in a structured format
         filePath = JSON.stringify(uploadedFiles);
@@ -247,7 +238,7 @@ export default function MetinBelgeContent() {
             return;
           }
 
-          content = file.name;
+          content = uploadData.url;
           fileName = file.name;
           filePath = uploadData.url;
         } catch (error: any) {
@@ -332,21 +323,8 @@ export default function MetinBelgeContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8"
         >
-          <div
-            onClick={() => handleTypeChange('text')}
-            className={`card-premium p-6 cursor-pointer transition-all ${
-              selectedType === 'text'
-                ? 'border-2 border-blue-500 bg-gradient-to-br from-blue-600/40 to-purple-600/40 shadow-2xl shadow-blue-500/50 scale-105 ring-2 ring-blue-500/30'
-                : 'hover:border-blue-500/50 opacity-70 hover:opacity-100'
-            }`}
-          >
-            <Type className={`w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-4 ${selectedType === 'text' ? 'text-blue-300' : 'text-blue-400'}`} />
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Metin</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">Not veya metin içeriği için QR kod</p>
-          </div>
-
           <div
             onClick={() => handleTypeChange('image')}
             className={`card-premium p-6 cursor-pointer transition-all ${
@@ -394,33 +372,11 @@ export default function MetinBelgeContent() {
           transition={{ delay: 0.4 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
-          {selectedType === 'text' ? (
-            <div>
-              <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
-                <Type className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
-                Metin İçeriği
-              </label>
-              <textarea
-                value={textContent}
-                onChange={(e) => {
-                  setTextContent(e.target.value);
-                  setShowError(false);
-                }}
-                placeholder="QR koda dönüştürmek istediğiniz metni girin..."
-                className={`w-full h-32 md:h-40 bg-slate-800/50 border rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:outline-none resize-none text-sm md:text-base ${
-                  showError ? 'border-red-500' : 'border-white/10 focus:border-blue-500/50'
-                }`}
-              />
-              {showError && (
-                <p className="text-red-400 text-xs mt-1">Lütfen metin girin</p>
-              )}
-            </div>
-          ) : (
-            <div>
-              <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
-                <Upload className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
-                Dosya Yükle
-              </label>
+          <div>
+            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+              <Upload className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+              Dosya Yükle
+            </label>
               <div className="relative">
                 {file && (
                   <button
@@ -537,8 +493,7 @@ export default function MetinBelgeContent() {
                 multiple
                 className="hidden"
               />
-            </div>
-          )}
+           </div>
 
           {/* Note/Description Field */}
           <div className="mt-4 md:mt-6">
@@ -587,7 +542,7 @@ export default function MetinBelgeContent() {
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading || uploading || (selectedType === 'text' ? !textContent.trim() : selectedType === 'image' ? !file && files.length === 0 : !file)}
+              disabled={loading || uploading || (selectedType === 'image' ? !file && files.length === 0 : !file)}
               className="btn-primary w-full text-white font-semibold py-3 md:py-4 rounded-2xl disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? uploadStatus || 'Oluşturuluyor...' : uploading ? uploadStatus : 'QR Kod Oluştur'}
@@ -640,24 +595,6 @@ export default function MetinBelgeContent() {
           transition={{ delay: 0.55 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
         >
-          {selectedType === 'text' && (
-            <>
-              <div className="card-premium p-4 md:p-6">
-                <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Metin QR Kodları</h3>
-                <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
-                  Notlar, açıklamalar, iletişim bilgileri ve kısa mesajlar için idealdir. 
-                  Restoran menüleri, etkinlik programları ve bilgi panolarında kullanılabilir.
-                </p>
-              </div>
-              <div className="card-premium p-4 md:p-6">
-                <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Hızlı Paylaşım</h3>
-                <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
-                  Metin içeriğinizi saniyeler içinde QR koda dönüştürün. 
-                  Sosyal medya, broşürler ve dijital ekranlarda kolayca paylaşın.
-                </p>
-              </div>
-            </>
-          )}
           {selectedType === 'image' && (
             <>
               <div className="card-premium p-4 md:p-6">
@@ -764,7 +701,7 @@ export default function MetinBelgeContent() {
               <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xs md:text-sm">1</span>
               </div>
-              <span>İçeriğinizi seçin (metin, resim, video veya belge)</span>
+              <span>İçeriğinizi seçin (resim, video veya belge)</span>
             </li>
             <li className="flex items-start gap-3">
               <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
