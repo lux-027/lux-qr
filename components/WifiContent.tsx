@@ -21,6 +21,16 @@ export default function WifiContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  const fillDemo = () => {
+    setFormData({
+      ssid: 'Cafe Lux Misafir',
+      password: 'cafelux2025',
+      security: 'WPA',
+      hidden: false,
+    });
+    setShowError(false);
+  };
+
   const handleGenerate = async () => {
     if (!formData.ssid) {
       setShowError(true);
@@ -122,6 +132,15 @@ export default function WifiContent() {
           transition={{ delay: 0.3 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-semibold text-white">WiFi Bilgileri</h2>
+            <button
+              onClick={fillDemo}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-400 hover:text-gray-200 text-xs transition-all"
+            >
+              Demo Doldur
+            </button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-1 md:mb-2">

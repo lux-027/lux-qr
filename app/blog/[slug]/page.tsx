@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calendar, ArrowLeft, QrCode, Clock, User, ChevronLeft, ChevronRight, Home } from 'lucide-react';
-import { getPostBySlug, getAllPosts } from '@/lib/db';
+import { Calendar, QrCode, Clock } from 'lucide-react';
+import { getPostBySlug } from '@/lib/db';
 import ShareButton from './ShareButton';
+import RelatedPostsCarousel from './RelatedPostsCarousel';
 import BlogContent from '@/components/BlogContent';
 
 interface PageProps {
@@ -58,30 +59,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export async function generateStaticParams() {
-  try {
-    const posts = await getAllPosts();
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
-
 export default async function BlogPostPage({ params }: PageProps) {
   let post: any = null;
-  let relatedPosts: any[] = [];
   try {
     post = await getPostBySlug(params.slug);
-    if (post) {
-      const allPosts = await getAllPosts();
-      relatedPosts = allPosts
-        .filter((p: any) => p.slug !== post.slug)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
-    }
   } catch (error) {
     console.error('Error fetching post:', error);
   }
@@ -196,6 +177,9 @@ export default async function BlogPostPage({ params }: PageProps) {
               slug={post.slug}
             />
           </div>
+
+          {/* Related Posts */}
+          <RelatedPostsCarousel currentSlug={params.slug} />
         </article>
       </div>
     </main>

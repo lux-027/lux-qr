@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -165,13 +165,16 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   };
 
   const handleShareLink = () => {
+    const shareUrl = qrData?.viewUrl || qrCodeUrl;
     if (navigator.share) {
       navigator.share({
-        title: 'QR Kod',
-        url: qrCodeUrl,
+        title: qrData?.contentType === 'price-list'
+          ? `Fiyat Listesi - LuxQr`
+          : 'QR Kod - LuxQr',
+        url: shareUrl,
       });
     } else {
-      navigator.clipboard.writeText(qrCodeUrl);
+      navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -261,7 +264,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
   const parseWifi = (wifiContent: string) => {
     const data: any = {};
-    const parts = wifiContent.split(';');
+    const stripped = wifiContent.startsWith('WIFI:') ? wifiContent.substring(5) : wifiContent;
+    const parts = stripped.split(';');
     
     parts.forEach(part => {
       if (part.startsWith('S:')) data.ssid = part.substring(2);
@@ -712,6 +716,52 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           </div>
         );
       
+      case 'price-list': {
+        let pl: any = null;
+        try { pl = JSON.parse(qrData.content); } catch {}
+        if (!pl) return <div className="bg-white/5 border border-white/10 rounded-xl p-4"><p className="text-gray-400 text-sm">Fiyat listesi yüklenemedi.</p></div>;
+        const totalItems = pl.categories?.reduce((acc: number, c: any) => acc + (c.items?.length || 0), 0) || 0;
+        return (
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-orange-500/15 to-amber-500/10 border-b border-white/10 p-4 md:p-5">
+              <div className="flex items-center gap-4">
+                {pl.logoUrl ? (
+                  <img
+                    src={pl.logoUrl}
+                    alt={pl.brandName}
+                    className="w-14 h-14 rounded-xl object-cover border border-white/15 flex-shrink-0 shadow-lg"
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/30 to-amber-500/20 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
+                    <ShoppingBag className="w-7 h-7 text-orange-400" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <h3 className="text-white font-bold text-lg leading-tight truncate">{pl.brandName}</h3>
+                  {pl.brandDescription && (
+                    <p className="text-gray-400 text-sm mt-0.5 leading-snug line-clamp-2">{pl.brandDescription}</p>
+                  )}
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="text-xs text-orange-400/80 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
+                      {pl.categories?.length || 0} kategori
+                    </span>
+                    <span className="text-xs text-gray-500">{totalItems} ürün</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Category preview */}
+            <div className="px-4 py-3 flex flex-wrap gap-2">
+              {pl.categories?.map((c: any) => (
+                <span key={c.id} className="text-xs text-gray-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg">
+                  {c.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      }
       default:
         return (
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
@@ -798,6 +848,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <Link href="/qr/iban" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
                 <Landmark className="w-3 h-3 md:w-5 md:h-5 text-green-400" />
                 <span>IBAN</span>
+              </Link>
+              <Link href="/qr/fiyat-listesi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
+                <ShoppingBag className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
+                <span>Fiyat Listesi</span>
               </Link>
             </div>
             <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-white/10 flex flex-col items-center hidden md:flex">

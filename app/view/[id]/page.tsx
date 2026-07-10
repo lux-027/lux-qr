@@ -26,10 +26,14 @@ import {
   Facebook,
   Youtube,
   Music,
-  Landmark
+  Landmark,
+  ShoppingBag,
+  Tag,
+  Package
 } from 'lucide-react';
 import Link from 'next/link';
 import { showNotification } from '@/components/Notification';
+import PriceListPage from './PriceListPage';
 
 type QrCodeData = {
   id: string;
@@ -132,7 +136,9 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
   const parseWifi = (wifiContent: string) => {
     const data: any = {};
-    const parts = wifiContent.split(';');
+    // Strip leading WIFI: prefix before splitting
+    const stripped = wifiContent.startsWith('WIFI:') ? wifiContent.substring(5) : wifiContent;
+    const parts = stripped.split(';');
     
     parts.forEach(part => {
       if (part.startsWith('S:')) data.ssid = part.substring(2);
@@ -603,6 +609,9 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             </div>
           </div>
         );
+      case 'price-list': {
+        return <PriceListPage content={data.content} />;
+      }
       default:
         return (
           <div className="p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
@@ -611,6 +620,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         );
     }
   };
+
+  if (data?.contentType === 'price-list') {
+    return <PriceListPage content={data.content} />;
+  }
 
   return (
     <motion.main

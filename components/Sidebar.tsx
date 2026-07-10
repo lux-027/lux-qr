@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon } from 'lucide-react';
+import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag } from 'lucide-react';
 import ShareButton from './ShareButton';
 
 interface SidebarProps {
@@ -25,6 +25,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2 },
     { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic },
     { href: '/qr/iban', label: 'IBAN', icon: Landmark },
+    { href: '/qr/fiyat-listesi', label: 'Fiyat Listesi', icon: ShoppingBag },
   ];
 
   const otherItems = [

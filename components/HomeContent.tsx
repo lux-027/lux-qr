@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon } from 'lucide-react';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon, ShoppingBag } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
@@ -60,6 +60,13 @@ const qrCategories = [
     icon: Landmark,
     href: '/qr/iban',
     color: 'from-blue-500 to-cyan-500',
+  },
+  {
+    title: 'Fiyat Listesi',
+    description: 'Restoran menüsü, hizmet ve ürün fiyat listenizi QR koda dönüştürün',
+    icon: ShoppingBag,
+    href: '/qr/fiyat-listesi',
+    color: 'from-orange-500 to-amber-500',
   },
 ];
 

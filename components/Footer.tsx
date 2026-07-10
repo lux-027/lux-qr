@@ -85,6 +85,12 @@ export default function Footer() {
                   <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </li>
+              <li>
+                <Link href="/qr/fiyat-listesi" className="text-gray-400 hover:text-white text-xs md:text-sm transition-colors flex items-center gap-1 group whitespace-nowrap">
+                  Fiyat Listesi
+                  <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </li>
             </ul>
           </div>
 

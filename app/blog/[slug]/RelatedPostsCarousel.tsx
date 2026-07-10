@@ -1,114 +1,265 @@
 "use client";
 
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, Clock, ArrowRight } from 'lucide-react';
+import { format } from 'date-fns';
+import { tr } from 'date-fns/locale';
 
-interface Post {
+interface BlogPost {
   slug: string;
   title: string;
   description: string;
   mainImage?: string;
+  createdAt: string;
 }
 
 interface RelatedPostsCarouselProps {
-  posts: Post[];
+  currentSlug: string;
 }
 
-export default function RelatedPostsCarousel({ posts }: RelatedPostsCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarouselProps) {
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [activeDot, setActiveDot] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % posts.length);
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch('/api/blog');
+        const data = await response.json();
+        if (data.success && data.posts) {
+          // Filter out current post and show all other posts
+          const filtered = data.posts.filter((post: BlogPost) => post.slug !== currentSlug);
+          setBlogs(filtered);
+        }
+      } catch (error) {
+        console.error('Failed to fetch related posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, [currentSlug]);
+
+  useEffect(() => {
+    if (!loading && blogs.length > 0) {
+      startAutoSlide();
+    }
+    return () => stopAutoSlide();
+  }, [loading, blogs.length]);
+
+  const handleScroll = () => {
+    if (!sliderRef.current || blogs.length === 0) return;
+    const cardWidth = sliderRef.current.scrollWidth / blogs.length;
+    const scrollPosition = sliderRef.current.scrollLeft;
+    const dotIndex = Math.round(scrollPosition / cardWidth);
+    setActiveDot(Math.min(dotIndex, blogs.length - 1));
   };
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + posts.length) % posts.length);
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    stopAutoSlide();
+    setStartX(e.pageX - sliderRef.current!.offsetLeft);
+    setScrollLeft(sliderRef.current!.scrollLeft);
   };
 
-  if (posts.length === 0) return null;
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+    startAutoSlide();
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    startAutoSlide();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - sliderRef.current!.offsetLeft;
+    const walk = (x - startX) * 2;
+    sliderRef.current!.scrollLeft = scrollLeft - walk;
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (sliderRef.current) {
+      const scrollAmount = sliderRef.current.clientWidth;
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const goToSlide = (index: number) => {
+    if (sliderRef.current && blogs.length > 0) {
+      const cardWidth = sliderRef.current.scrollWidth / blogs.length;
+      const targetScroll = index * cardWidth;
+      sliderRef.current.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+      setActiveDot(index);
+    }
+  };
+
+  const startAutoSlide = () => {
+    stopAutoSlide();
+    if (blogs.length > 0) {
+      intervalRef.current = setInterval(() => {
+        if (sliderRef.current) {
+          const cardWidth = sliderRef.current.scrollWidth / blogs.length;
+          const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+
+          if (sliderRef.current.scrollLeft >= maxScroll - cardWidth) {
+            sliderRef.current.scrollLeft = 0;
+          } else {
+            sliderRef.current.scrollBy({
+              left: cardWidth,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 5000);
+    }
+  };
+
+  const stopAutoSlide = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          Diğer Yazılar
+        </h2>
+        <div className="h-64 bg-white/10 rounded-2xl animate-pulse" />
+      </div>
+    );
+  }
+
+  if (blogs.length === 0) {
+    return null;
+  }
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-        Diğer Yazılar
-      </h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-white bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          Diğer Yazılar
+        </h2>
+        <Link
+          href="/blog"
+          className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/30 rounded-xl text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm font-medium"
+        >
+          Tümünü Gör
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
       <div className="relative">
-        {/* Carousel Container */}
-        <div className="overflow-hidden rounded-2xl">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
-            {posts.map((post) => (
-              <div key={post.slug} className="w-full flex-shrink-0">
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="block bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-6 hover:bg-white/10 transition-all duration-300"
-                >
-                  {post.mainImage && (
-                    <div className="mb-4 rounded-xl overflow-hidden">
-                      <img
-                        src={post.mainImage}
-                        alt={post.title}
-                        className="w-full h-48 object-cover"
+        <div
+          ref={sliderRef}
+          className="flex gap-4 overflow-x-auto py-4 scrollbar-hide cursor-grab active:cursor-grabbing select-none snap-x snap-mandatory"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onScroll={handleScroll}
+        >
+          {blogs.map((blog, index) => (
+            <motion.div
+              key={blog.slug}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.4 }}
+              className="flex-shrink-0 w-full snap-center"
+            >
+              <Link href={`/blog/${blog.slug}`}>
+                <div className="group/card bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 h-full flex flex-col">
+                  {blog.mainImage && (
+                    <div className="relative h-56 overflow-hidden flex-shrink-0">
+                      <Image
+                        src={blog.mainImage}
+                        alt={blog.title}
+                        fill
+                        sizes="100vw"
+                        className="object-cover transition-transform duration-500 group-hover/card:scale-105"
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+                      <div className="absolute top-3 right-3">
+                        <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-semibold rounded-full shadow-lg">
+                          Blog
+                        </span>
+                      </div>
                     </div>
                   )}
-                  <h3 className="text-xl font-bold text-white mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-3">
-                    {post.description}
-                  </p>
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white font-semibold hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300">
-                    Oku
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </Link>
-              </div>
-            ))}
-          </div>
+
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-snug group-hover/card:text-blue-400 transition-colors">
+                      {blog.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed flex-1">
+                      {blog.description}
+                    </p>
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Clock className="w-3.5 h-3.5" />
+                        {format(new Date(blog.createdAt), 'dd MMM yyyy', { locale: tr })}
+                      </div>
+                      <div className="flex items-center gap-2 text-blue-400 text-sm font-medium group-hover/card:gap-3 transition-all">
+                        <span>Oku</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </div>
-
-        {/* Navigation Buttons */}
-        {posts.length > 1 && (
-          <div className="flex justify-center gap-4 mt-6">
-            <button
-              onClick={prevSlide}
-              aria-label="Önceki Yazı"
-              className="p-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={nextSlide}
-              aria-label="Sonraki Yazı"
-              className="p-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-xl text-white hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        )}
-
-        {/* Dots Indicator */}
-        {posts.length > 1 && (
-          <div className="flex justify-center gap-2 mt-4">
-            {posts.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                aria-label={`Slayt ${index + 1}`}
-                className={`w-2 h-2 rounded-full transition-all duration-300 p-6 ${
-                  index === currentIndex
-                    ? 'bg-blue-400 w-6'
-                    : 'bg-gray-600 hover:bg-gray-500'
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* Minimal Pagination */}
+      {blogs.length > 1 && (
+        <div className="flex items-center justify-center gap-4 mt-6">
+          <button
+            onClick={() => scroll('left')}
+            aria-label="Önceki"
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/30 flex items-center justify-center text-white transition-all"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          <div className="flex items-center gap-3">
+            <span className="text-white font-semibold">{activeDot + 1}</span>
+            <span className="text-gray-500">/</span>
+            <span className="text-gray-400">{blogs.length}</span>
+          </div>
+
+          <button
+            onClick={() => scroll('right')}
+            aria-label="Sonraki"
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/30 flex items-center justify-center text-white transition-all"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
