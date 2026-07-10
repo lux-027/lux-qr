@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, QrCode, X, Menu, ChevronRight, Sparkles, Search } from 'lucide-react';
-import Link from 'next/link';
+import { ShoppingBag, X, Menu, ChevronRight, Sparkles, ArrowLeft } from 'lucide-react';
 
 interface MenuItem {
   id: string;
@@ -28,14 +27,15 @@ interface PriceListData {
 
 const currencySymbols: Record<string, string> = { TL: '₺', USD: '$', EUR: '€', GBP: '£' };
 
+type View = 'home' | 'category';
+
 export default function MenuPage({ params }: { params: { id: string } }) {
   const [pl, setPl] = useState<PriceListData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeCat, setActiveCat] = useState<string>('');
-  const [search, setSearch] = useState('');
-  const catRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [view, setView] = useState<View>('home');
+  const [selectedCat, setSelectedCat] = useState<Category | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,9 +43,8 @@ export default function MenuPage({ params }: { params: { id: string } }) {
         const res = await fetch(`/api/qr/${params.id}`);
         const json = await res.json();
         if (json.success && json.data?.contentType === 'price-list') {
-          const parsed = JSON.parse(json.data.content);
+          const parsed: PriceListData = JSON.parse(json.data.content);
           setPl(parsed);
-          if (parsed.categories?.length > 0) setActiveCat(parsed.categories[0].id);
         } else {
           setError('Menü bulunamadı.');
         }
@@ -60,7 +59,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
       </div>
     );
@@ -68,41 +67,35 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   if (error || !pl) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <p className="text-gray-400">{error || 'Menü yüklenemedi.'}</p>
       </div>
     );
   }
 
   const symbol = currencySymbols[pl.currency] || pl.currency;
-  const totalItems = pl.categories.reduce((a, c) => a + c.items.length, 0);
 
-  const scrollToCategory = (catId: string) => {
-    setActiveCat(catId);
-    setSidebarOpen(false);
-    const el = catRefs.current[catId];
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  // Featured items: first item of each category
+  // Featured: her kategoriden ilk ürün, max 6
   const featured = pl.categories
     .filter(c => c.items.length > 0)
-    .slice(0, 3)
-    .map(c => ({ ...c.items[0], categoryName: c.name }));
+    .slice(0, 6)
+    .map(c => ({ ...c.items[0], categoryName: c.name, catId: c.id }));
 
-  // Filtered items based on search
-  const filtered = search.trim()
-    ? pl.categories.map(cat => ({
-        ...cat,
-        items: cat.items.filter(item =>
-          item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.description?.toLowerCase().includes(search.toLowerCase())
-        ),
-      })).filter(cat => cat.items.length > 0)
-    : pl.categories;
+  const openCategory = (cat: Category) => {
+    setSelectedCat(cat);
+    setView('category');
+    setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goHome = () => {
+    setView('home');
+    setSelectedCat(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+    <div className="min-h-screen bg-slate-950 text-white">
 
       {/* Sidebar Overlay */}
       <AnimatePresence>
@@ -113,7 +106,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/70 z-40 backdrop-blur-sm"
             />
             <motion.aside
               initial={{ x: '-100%' }}
@@ -126,37 +119,53 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
                   {pl.logoUrl ? (
-                    <img src={pl.logoUrl} alt={pl.brandName} className="w-9 h-9 rounded-xl object-cover" />
+                    <img src={pl.logoUrl} alt={pl.brandName} className="w-9 h-9 rounded-xl object-cover flex-shrink-0" />
                   ) : (
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center flex-shrink-0">
                       <ShoppingBag className="w-5 h-5 text-white" />
                     </div>
                   )}
-                  <div>
-                    <p className="text-white font-bold text-sm leading-tight">{pl.brandName}</p>
+                  <div className="min-w-0">
+                    <p className="text-white font-bold text-sm leading-tight truncate">{pl.brandName}</p>
                     <p className="text-gray-500 text-xs">{pl.categories.length} kategori</p>
                   </div>
                 </div>
-                <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-white transition-all">
+                <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-white transition-all flex-shrink-0 ml-2">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Categories List */}
-              <nav className="flex-1 overflow-y-auto py-3">
+              {/* Ana Sayfa linki */}
+              <button
+                onClick={goHome}
+                className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-all border-b border-white/5 ${
+                  view === 'home' ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Sparkles className="w-4 h-4 flex-shrink-0" />
+                <span className="font-medium text-sm">Ana Sayfa</span>
+              </button>
+
+              {/* Categories */}
+              <nav className="flex-1 overflow-y-auto py-2">
+                <p className="px-5 pt-2 pb-1 text-xs text-gray-600 uppercase tracking-wider">Kategoriler</p>
                 {pl.categories.map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => scrollToCategory(cat.id)}
+                    onClick={() => openCategory(cat)}
                     className={`w-full flex items-center justify-between px-5 py-3.5 text-left transition-all ${
-                      activeCat === cat.id
+                      view === 'category' && selectedCat?.id === cat.id
                         ? 'bg-orange-500/10 text-orange-400 border-r-2 border-orange-500'
                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <span className="font-medium text-sm">{cat.name}</span>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${activeCat === cat.id ? 'bg-orange-500/20 text-orange-400' : 'bg-white/5 text-gray-500'}`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        view === 'category' && selectedCat?.id === cat.id
+                          ? 'bg-orange-500/20 text-orange-400'
+                          : 'bg-white/5 text-gray-600'
+                      }`}>
                         {cat.items.length}
                       </span>
                       <ChevronRight className="w-3.5 h-3.5 opacity-40" />
@@ -164,34 +173,39 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                   </button>
                 ))}
               </nav>
-
-              {/* Sidebar Footer */}
-              <div className="px-5 py-4 border-t border-white/10">
-                <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-gray-400 transition-all text-xs">
-                  <div className="w-5 h-5 rounded-md bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                    <QrCode className="w-3 h-3 text-white" />
-                  </div>
-                  LuxQr ile oluşturuldu
-                </Link>
-              </div>
             </motion.aside>
           </>
         )}
       </AnimatePresence>
 
       {/* Top Bar */}
-      <div className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-white/[0.08]">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+          {/* Sol: geri butonu (sadece kategori görünümünde) veya logo */}
           <div className="flex items-center gap-3">
-            {pl.logoUrl ? (
-              <img src={pl.logoUrl} alt={pl.brandName} className="w-8 h-8 rounded-lg object-cover" />
-            ) : (
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
-                <ShoppingBag className="w-4 h-4 text-white" />
-              </div>
-            )}
-            <span className="text-white font-bold text-sm">{pl.brandName}</span>
+            {view === 'category' ? (
+              <button
+                onClick={goHome}
+                className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-all"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            ) : null}
+            <button onClick={() => setSidebarOpen(false)} onMouseDown={(e) => e.preventDefault()}>
+              {pl.logoUrl ? (
+                <img src={pl.logoUrl} alt={pl.brandName} className="w-8 h-8 rounded-lg object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                  <ShoppingBag className="w-4 h-4 text-white" />
+                </div>
+              )}
+            </button>
+            <span className="text-white font-bold text-sm">
+              {view === 'category' && selectedCat ? selectedCat.name : pl.brandName}
+            </span>
           </div>
+
+          {/* Sağ: 3 çizgi */}
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all"
@@ -201,151 +215,152 @@ export default function MenuPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 pb-20">
+      {/* Content */}
+      <AnimatePresence mode="wait">
 
-        {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="pt-8 pb-6 text-center"
-        >
-          {pl.logoUrl ? (
-            <div className="flex justify-center mb-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
-                <img src={pl.logoUrl} alt={pl.brandName} className="relative w-20 h-20 rounded-2xl object-cover border-2 border-white/10 shadow-2xl" />
-              </div>
-            </div>
-          ) : (
-            <div className="flex justify-center mb-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
-                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-2xl">
-                  <ShoppingBag className="w-8 h-8 text-white" />
-                </div>
-              </div>
-            </div>
-          )}
-          <h1 className="text-2xl font-bold text-white mb-1">{pl.brandName}</h1>
-          {pl.brandDescription && <p className="text-gray-400 text-sm max-w-xs mx-auto">{pl.brandDescription}</p>}
-          <div className="flex items-center justify-center gap-4 mt-4 text-sm">
-            <span className="text-gray-500">{pl.categories.length} kategori</span>
-            <span className="text-gray-700">·</span>
-            <span className="text-gray-500">{totalItems} ürün</span>
-          </div>
-        </motion.div>
-
-        {/* Search */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Ürün ara..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/40 text-sm transition-all"
-          />
-        </div>
-
-        {/* Featured Items */}
-        {!search && featured.length > 0 && (
+        {/* HOME VIEW */}
+        {view === 'home' && (
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            key="home"
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-8"
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25 }}
+            className="max-w-2xl mx-auto px-4 pb-20"
           >
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-4 h-4 text-orange-400" />
-              <h2 className="text-sm font-semibold text-gray-300">Öne Çıkanlar</h2>
+            {/* Brand Hero */}
+            <div className="py-10 text-center">
+              {pl.logoUrl ? (
+                <div className="flex justify-center mb-5">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
+                    <img
+                      src={pl.logoUrl}
+                      alt={pl.brandName}
+                      className="relative w-24 h-24 rounded-3xl object-cover border-2 border-white/10 shadow-2xl"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center mb-5">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
+                    <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-2xl">
+                      <ShoppingBag className="w-10 h-10 text-white" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <h1 className="text-3xl font-bold text-white mb-2">{pl.brandName}</h1>
+              {pl.brandDescription && (
+                <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">{pl.brandDescription}</p>
+              )}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {featured.map((item, i) => (
+
+            {/* Featured Section */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4 text-orange-400" />
+                <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Öne Çıkanlar</h2>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {featured.map((item, i) => (
+                  <motion.button
+                    key={item.id + i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    onClick={() => {
+                      const cat = pl.categories.find(c => c.id === item.catId);
+                      if (cat) openCategory(cat);
+                    }}
+                    className="text-left bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-2xl p-4 transition-all"
+                  >
+                    <p className="text-xs text-orange-400/80 mb-1.5">{item.categoryName}</p>
+                    <p className="text-white font-semibold text-sm mb-1 leading-tight">{item.name}</p>
+                    {item.description && (
+                      <p className="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">{item.description}</p>
+                    )}
+                    <p className="text-orange-400 font-bold">{symbol}{item.price}</p>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
+            {/* Category Cards */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Kategoriler</h2>
+              </div>
+              <div className="space-y-2">
+                {pl.categories.map((cat, i) => (
+                  <motion.button
+                    key={cat.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.05 }}
+                    onClick={() => openCategory(cat)}
+                    className="w-full flex items-center justify-between bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] rounded-2xl px-5 py-4 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center flex-shrink-0">
+                        <span className="text-orange-400 text-xs font-bold">{cat.items.length}</span>
+                      </div>
+                      <span className="text-white font-medium text-sm">{cat.name}</span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-all" />
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* CATEGORY VIEW */}
+        {view === 'category' && selectedCat && (
+          <motion.div
+            key={`cat-${selectedCat.id}`}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.25 }}
+            className="max-w-2xl mx-auto px-4 pb-20 pt-6"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center flex-shrink-0">
+                <span className="text-orange-400 text-sm font-bold">{selectedCat.items.length}</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">{selectedCat.name}</h2>
+                <p className="text-gray-500 text-xs">{selectedCat.items.length} ürün</p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {selectedCat.items.map((item, i) => (
                 <motion.div
                   key={item.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.07 }}
-                  className="bg-gradient-to-br from-orange-500/10 to-amber-500/5 border border-orange-500/15 rounded-2xl p-4"
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center justify-between gap-4 bg-white/[0.04] border border-white/[0.07] rounded-2xl px-5 py-4"
                 >
-                  <p className="text-xs text-orange-400/70 mb-1">{item.categoryName}</p>
-                  <p className="text-white font-semibold text-sm mb-1">{item.name}</p>
-                  {item.description && <p className="text-gray-500 text-xs mb-2 line-clamp-2">{item.description}</p>}
-                  <p className="text-orange-400 font-bold">{symbol}{item.price}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-medium text-sm">{item.name}</p>
+                    {item.description && (
+                      <p className="text-gray-500 text-xs mt-1 leading-relaxed">{item.description}</p>
+                    )}
+                  </div>
+                  <span className="text-orange-400 font-bold text-base flex-shrink-0 tabular-nums">
+                    {symbol}{item.price}
+                  </span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         )}
 
-        {/* Category Pills */}
-        {!search && (
-          <div className="flex gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hide">
-            {pl.categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => scrollToCategory(cat.id)}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  activeCat === cat.id
-                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25'
-                    : 'bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Menu Items */}
-        <div className="space-y-8">
-          {filtered.map((cat, idx) => (
-            <motion.div
-              key={cat.id}
-              ref={(el) => { catRefs.current[cat.id] = el; }}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.06 }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <h2 className="text-base font-bold text-white">{cat.name}</h2>
-                <div className="flex-1 h-px bg-white/5" />
-                <span className="text-xs text-gray-600">{cat.items.length} ürün</span>
-              </div>
-
-              <div className="space-y-2">
-                {cat.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between gap-4 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] rounded-xl px-4 py-3.5 transition-all"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium text-sm">{item.name}</p>
-                      {item.description && (
-                        <p className="text-gray-500 text-xs mt-0.5 leading-relaxed">{item.description}</p>
-                      )}
-                    </div>
-                    <span className="text-orange-400 font-bold text-base flex-shrink-0 tabular-nums">
-                      {symbol}{item.price}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Footer */}
-        <div className="mt-16 pt-6 border-t border-white/5 text-center">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-gray-600 hover:text-gray-400 text-xs transition-all">
-            <div className="w-4 h-4 rounded-md bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-              <QrCode className="w-2.5 h-2.5 text-white" />
-            </div>
-            LuxQr ile oluşturulmuştur
-          </Link>
-        </div>
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
