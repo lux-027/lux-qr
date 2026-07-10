@@ -644,7 +644,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         transition={{ duration: 0.4 }}
         className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
       >
-        {/* Site Header — same as MobileHeader */}
+        {/* Site Header */}
         <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-xl border-b border-white/10">
           <div className="flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
             <Link href="/" className="flex items-center gap-2">
@@ -654,12 +654,24 @@ export default function ViewPage({ params }: { params: { id: string } }) {
               <span className="text-xl font-bold text-white">LuxQr</span>
             </Link>
             <button
-              onClick={() => router.back()}
+              onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <Menu className="w-6 h-6" />
             </button>
           </div>
+          {menuOpen && (
+            <div className="max-w-lg mx-auto px-4 pb-3 border-t border-white/5 pt-2">
+              <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+                <QrCode className="w-4 h-4" />
+                QR Kod Oluştur
+              </Link>
+              <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+                <FileText className="w-4 h-4" />
+                Blog
+              </Link>
+            </div>
+          )}
         </header>
 
         <div className="max-w-lg mx-auto px-4 pt-20 pb-8 space-y-5">

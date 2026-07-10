@@ -91,6 +91,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
   const goHome = () => {
     setView('home');
     setSelectedCat(null);
+    setSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
