@@ -1,15 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
 import MobileHeader from './MobileHeader';
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
+
+  const hideChrome = pathname.startsWith('/view/') || pathname.startsWith('/menu/');
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  if (hideChrome) {
+    return <>{children}</>;
+  }
 
   return (
     <>
