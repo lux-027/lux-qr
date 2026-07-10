@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, QrCode, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShoppingBag, QrCode, ChevronDown, ChevronUp, Menu, ChevronLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface MenuItem {
   id: string;
@@ -29,7 +30,9 @@ interface PriceListData {
 const currencySymbols: Record<string, string> = { TL: '₺', USD: '$', EUR: '€', GBP: '£' };
 
 export default function PriceListPage({ content }: { content: string }) {
+  const router = useRouter();
   const [openCats, setOpenCats] = useState<string[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   let pl: PriceListData | null = null;
   try { pl = JSON.parse(content); } catch {}
@@ -54,14 +57,40 @@ export default function PriceListPage({ content }: { content: string }) {
       {/* Top Bar */}
       <div className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-              <QrCode className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-white font-bold text-sm">LuxQr</span>
-          </Link>
-          <span className="text-gray-500 text-xs">Dijital Menü</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-1.5 text-gray-400 hover:text-white transition-all"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                <QrCode className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-white font-bold text-sm">LuxQr</span>
+            </Link>
+          </div>
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 text-gray-400 hover:text-white text-xs transition-all"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Geri</span>
+          </button>
         </div>
+        {menuOpen && (
+          <div className="max-w-2xl mx-auto px-4 pb-3 border-t border-white/5 pt-2">
+            <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+              <QrCode className="w-4 h-4" />
+              QR Kod Oluştur
+            </Link>
+            <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+              <FileText className="w-4 h-4" />
+              Blog
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pb-16">

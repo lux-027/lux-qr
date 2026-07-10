@@ -29,9 +29,12 @@ import {
   Landmark,
   ShoppingBag,
   Tag,
-  Package
+  Package,
+  Menu,
+  ChevronLeft
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
 import PriceListPage from './PriceListPage';
 
@@ -48,10 +51,12 @@ type QrCodeData = {
 };
 
 export default function ViewPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [data, setData] = useState<QrCodeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [expired, setExpired] = useState(false);
   const [error, setError] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchQrCode();
@@ -622,7 +627,79 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   };
 
   if (data?.contentType === 'price-list') {
-    return <PriceListPage content={data.content} />;
+    let pl: any = null;
+    try { pl = JSON.parse(data.content); } catch {}
+    const currSymbols: any = { TL: '₺', USD: '$', EUR: '€', GBP: '£' };
+    const totalItems = pl?.categories?.reduce((a: number, c: any) => a + c.items.length, 0) || 0;
+    return (
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-4"
+      >
+        <div className="max-w-sm w-full">
+          {/* Brand Card */}
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 text-center">
+            {/* Logo */}
+            <div className="flex justify-center mb-5">
+              {pl?.logoUrl ? (
+                <div className="relative">
+                  <div className="absolute inset-0 bg-orange-500/20 blur-2xl rounded-full scale-150" />
+                  <img src={pl.logoUrl} alt={pl.brandName} className="relative w-20 h-20 rounded-2xl object-cover border-2 border-white/15 shadow-xl" />
+                </div>
+              ) : (
+                <div className="relative">
+                  <div className="absolute inset-0 bg-orange-500/20 blur-2xl rounded-full scale-150" />
+                  <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-xl">
+                    <ShoppingBag className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <h1 className="text-2xl font-bold text-white mb-1">{pl?.brandName || 'Marka'}</h1>
+            {pl?.brandDescription && (
+              <p className="text-gray-400 text-sm mb-6">{pl.brandDescription}</p>
+            )}
+
+            {/* Stats */}
+            <div className="flex items-center justify-center gap-6 py-5 border-y border-white/10 mb-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{pl?.categories?.length || 0}</p>
+                <p className="text-gray-500 text-xs mt-0.5">Kategori</p>
+              </div>
+              <div className="w-px h-10 bg-white/10" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{totalItems}</p>
+                <p className="text-gray-500 text-xs mt-0.5">Ürün</p>
+              </div>
+              <div className="w-px h-10 bg-white/10" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-400">{currSymbols[pl?.currency] || '₺'}</p>
+                <p className="text-gray-500 text-xs mt-0.5">{pl?.currency || 'TL'}</p>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <Link
+              href={`/menu/${data.id}`}
+              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-3.5 rounded-2xl transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-orange-500/30"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              <span>{pl?.brandName || 'Marka'} Fiyat Listesini Görüntüle</span>
+            </Link>
+          </div>
+
+          {/* LuxQr branding */}
+          <div className="text-center mt-6">
+            <p className="text-gray-600 text-xs">
+              <Link href="/" className="text-blue-400/60 hover:text-blue-400 transition-colors">LuxQr</Link> ile oluşturulmuştur
+            </p>
+          </div>
+        </div>
+      </motion.main>
+    );
   }
 
   return (
@@ -630,26 +707,50 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-4"
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col"
     >
-      <div className="max-w-4xl w-full">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
-            <div className="relative flex items-center justify-center gap-3">
-              <QrCode className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">
-                LuxQr
-              </h1>
-            </div>
+      {/* Sticky Top Bar */}
+      <div className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-white/10">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-1.5 text-gray-400 hover:text-white transition-all"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                <QrCode className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-white font-bold text-sm">LuxQr</span>
+            </Link>
           </div>
-        </motion.div>
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 text-gray-400 hover:text-white text-xs transition-all"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Geri</span>
+          </button>
+        </div>
+        {/* Dropdown Menu */}
+        {menuOpen && (
+          <div className="max-w-4xl mx-auto px-4 pb-3 border-t border-white/5 pt-2">
+            <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+              <QrCode className="w-4 h-4" />
+              QR Kod Oluştur
+            </Link>
+            <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+              <FileText className="w-4 h-4" />
+              Blog
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-center p-4">
+      <div className="max-w-4xl w-full">
 
         {renderContent()}
 
@@ -697,6 +798,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             </Link>
           </div>
         </motion.div>
+      </div>
       </div>
     </motion.main>
   );
