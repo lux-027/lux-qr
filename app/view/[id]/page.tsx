@@ -644,20 +644,25 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         transition={{ duration: 0.4 }}
         className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
       >
-        {/* LuxQr Top Header */}
-        <div className="border-b border-white/10 bg-slate-900/60 backdrop-blur-xl">
-          <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
+        {/* Site Header — same as MobileHeader */}
+        <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-xl border-b border-white/10">
+          <div className="flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                <QrCode className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-400 shadow-lg flex items-center justify-center">
+                <QrCode className="w-5 h-5 text-white" />
               </div>
-              <span className="text-white font-bold text-sm">LuxQr</span>
+              <span className="text-xl font-bold text-white">LuxQr</span>
             </Link>
-            <span className="text-gray-500 text-xs">Dijital Fiyat Listesi</span>
+            <button
+              onClick={() => router.back()}
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
           </div>
-        </div>
+        </header>
 
-        <div className="max-w-lg mx-auto px-4 py-8 space-y-5">
+        <div className="max-w-lg mx-auto px-4 pt-20 pb-8 space-y-5">
 
           {/* Brand Card */}
           <motion.div
