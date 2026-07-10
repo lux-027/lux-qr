@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ChevronDown } from 'lucide-react';
+import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag } from 'lucide-react';
 import ShareButton from './ShareButton';
 import { useState } from 'react';
 
@@ -13,8 +13,6 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
-  const isOnQrPage = pathname.startsWith('/qr/');
-  const [qrOpen, setQrOpen] = useState(isOnQrPage);
 
   const mainItems = [
     { href: '/', label: 'Ana Sayfa', icon: Home, color: 'text-amber-400' },
@@ -105,41 +103,33 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             {/* Divider */}
             <div className="border-t border-white/20 my-4"></div>
 
-            {/* QR Categories — Accordion */}
-            <button
-              onClick={() => setQrOpen(!qrOpen)}
-              className="w-full flex items-center justify-between px-2 py-1.5 mb-1 hover:bg-white/5 transition-all group"
-            >
-              <div className="flex items-center gap-2">
-                <QrCode className="w-4 h-4 text-blue-400" />
-                <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">QR Kod Türleri</span>
-              </div>
-              <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${qrOpen ? 'rotate-180' : ''}`} />
-            </button>
+            {/* QR Categories */}
+            <div className="flex items-center gap-2 px-2 py-1.5 mb-1">
+              <QrCode className="w-4 h-4 text-blue-400" />
+              <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">QR Kod Türleri</span>
+            </div>
 
-            {qrOpen && (
-              <div className="space-y-1 pl-1">
-                {qrItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ${
-                        isActive
-                          ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50 text-white'
-                          : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                      }`}
-                      style={isActive ? { boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)' } : {}}
-                    >
-                      <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : item.color}`} />
-                      <span className="font-medium text-sm">{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+            <div className="space-y-1 pl-1">
+              {qrItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50 text-white'
+                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                    }`}
+                    style={isActive ? { boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)' } : {}}
+                  >
+                    <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : item.color}`} />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
 
             {/* Divider */}
             <div className="border-t border-white/20 my-4"></div>

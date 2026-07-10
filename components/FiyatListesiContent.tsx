@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Plus, Trash2, ChevronDown, ChevronUp, Tag, Package,
   ShoppingBag, Store, Clock, ArrowRight, Loader2, CheckCircle, Zap,
-  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2
+  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode
 } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -40,6 +40,8 @@ const expirationOptions = [
   { value: '1week', label: '1 Hafta' },
   { value: '1month', label: '1 Ay' },
   { value: '3months', label: '3 Ay' },
+  { value: '6months', label: '6 Ay' },
+  { value: '12months', label: '12 Ay' },
 ];
 
 const currencyOptions = [
@@ -310,16 +312,20 @@ export default function FiyatListesiContent() {
         transition={{ delay: 0.2 }}
         className="text-center mb-6 md:mb-16"
       >
-        <div className="relative inline-block">
-          <div className="absolute inset-0 bg-orange-500/20 blur-3xl rounded-full" />
-          <div className="relative flex items-center justify-center gap-2 mb-2 md:mb-4">
-            <ShoppingBag className="w-7 h-7 md:w-12 md:h-14 text-orange-400 drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]" />
-            <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
+        <div className="flex items-center justify-center gap-3 md:gap-5 mb-3 md:mb-6">
+          <div className="relative">
+            <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/40 rotate-3 hover:-rotate-3 transition-transform duration-300">
+              <ShoppingBag className="w-7 h-7 md:w-10 md:h-10 text-white drop-shadow-lg" />
+            </div>
+            <div className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
+              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-white" />
+            </div>
+          </div>
+          <div className="text-left">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">Fiyat Listesi</h1>
+            <p className="text-lg md:text-2xl font-bold bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">QR Kod</p>
           </div>
         </div>
-        <p className="text-lg md:text-3xl lg:text-4xl font-bold text-gray-300 mb-1 md:mb-4">
-          <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">Fiyat Listesi QR</span>
-        </p>
         <p className="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto hidden md:block">
           Restoran menüsü, hizmet veya ürün fiyat listenizi QR koda dönüştürün
         </p>
@@ -351,8 +357,8 @@ export default function FiyatListesiContent() {
           {/* Brand Info */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                <Store className="w-4 h-4 inline mr-1" />
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+                <Store className="w-4 h-4 text-amber-400" />
                 Marka / İşletme Adı *
               </label>
               <input
@@ -365,8 +371,8 @@ export default function FiyatListesiContent() {
             </div>
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                <ImagePlus className="w-4 h-4 inline mr-1" />
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+                <ImagePlus className="w-4 h-4 text-pink-400" />
                 İşletme Logosu (İsteğe Bağlı)
               </label>
               <div className="flex items-center gap-4">
@@ -415,8 +421,8 @@ export default function FiyatListesiContent() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                <FileText className="w-4 h-4 inline mr-1" />
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+                <FileText className="w-4 h-4 text-violet-400" />
                 Kısa Açıklama (İsteğe Bağlı)
               </label>
               <input
@@ -428,8 +434,8 @@ export default function FiyatListesiContent() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                <DollarSign className="w-4 h-4 inline mr-1" />
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+                <DollarSign className="w-4 h-4 text-emerald-400" />
                 Para Birimi
               </label>
               <select
@@ -448,15 +454,20 @@ export default function FiyatListesiContent() {
 
       {/* Categories */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <div className="card-premium p-4 md:p-8">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
-              <Layers className="w-4 h-4 text-orange-400" />
-              Kategoriler ve Ürünler
-            </h3>
+        <div className="card-premium p-4 md:p-10">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg shadow-orange-500/30">
+                <Layers className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg md:text-2xl font-bold text-white">Kategoriler ve Ürünler</h3>
+                <p className="text-gray-500 text-xs md:text-sm mt-0.5">Her kategori için ürün, fiyat ve resim ekleyin</p>
+              </div>
+            </div>
             <button
               onClick={addCategory}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-300 text-sm transition-all"
+              className="flex items-center gap-1.5 px-3 md:px-4 py-2 bg-gradient-to-r from-orange-500/20 to-amber-500/20 hover:from-orange-500/30 hover:to-amber-500/30 border border-orange-500/30 rounded-xl text-orange-300 text-sm font-medium transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               Kategori Ekle
@@ -639,7 +650,7 @@ export default function FiyatListesiContent() {
                           {/* Ürün Ekle Butonu */}
                           <button
                             onClick={() => addItem(cat.id)}
-                            className="flex items-center gap-1.5 w-full justify-center py-2 text-slate-500 hover:text-orange-400 text-xs font-medium transition-all border border-dashed border-slate-700 hover:border-orange-500/40 rounded-lg mt-1"
+                            className="flex items-center gap-1.5 w-full justify-center py-2.5 text-orange-400 hover:text-white text-xs font-semibold transition-all border border-orange-500/40 hover:border-orange-500 bg-orange-500/10 hover:bg-orange-500/25 rounded-lg mt-1 shadow-[0_0_12px_rgba(249,115,22,0.15)] hover:shadow-[0_0_18px_rgba(249,115,22,0.3)]"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             Ürün Ekle
@@ -659,11 +670,11 @@ export default function FiyatListesiContent() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <div className="card-premium p-4 md:p-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              <Clock className="w-4 h-4 inline mr-1" />
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+              <Clock className="w-4 h-4 text-orange-400" />
               Geçerlilik Süresi
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
               {expirationOptions.map((opt) => (
                 <button
                   key={opt.value}
@@ -726,6 +737,46 @@ export default function FiyatListesiContent() {
             Marka adı, en az bir kategori ve ürün (ad + fiyat) giriniz
           </p>
         )}
+      </motion.div>
+
+      {/* Example Product Showcase */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+        <div className="card-premium p-3 md:p-8">
+          <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-5">
+            <div className="p-1.5 md:p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg">
+              <ImagePlus className="w-3 h-3 md:w-4 md:h-4 text-white" />
+            </div>
+            <div>
+              <h3 className="text-sm md:text-lg font-bold text-white">Örnek Ürün Görselleri</h3>
+              <p className="text-gray-500 text-xs hidden md:block mt-0.5">Her sektöre uygun fiyat listesi oluşturabilirsiniz</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 md:grid-cols-4 gap-1.5 md:gap-3">
+            {[
+              { url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80', label: 'Restoran', color: 'from-orange-500/80 to-amber-500/80' },
+              { url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', label: 'Giyim', color: 'from-blue-500/80 to-cyan-500/80' },
+              { url: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400&q=80', label: 'Elektronik', color: 'from-purple-500/80 to-pink-500/80' },
+              { url: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80', label: 'Güzellik', color: 'from-rose-500/80 to-pink-500/80' },
+              { url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', label: 'Hizmet', color: 'from-emerald-500/80 to-teal-500/80' },
+              { url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80', label: 'Mobilya', color: 'from-yellow-500/80 to-orange-500/80' },
+              { url: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?w=400&q=80', label: 'Spor', color: 'from-green-500/80 to-emerald-500/80' },
+              { url: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&q=80', label: 'Teknoloji', color: 'from-indigo-500/80 to-blue-500/80' },
+            ].map((item, i) => (
+              <div key={i} className="relative rounded-xl overflow-hidden group aspect-square">
+                <img
+                  src={item.url}
+                  alt={item.label}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${item.color} opacity-0 group-hover:opacity-60 transition-opacity duration-300`} />
+                <div className="absolute bottom-0 left-0 right-0 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <p className="text-white text-xs font-semibold text-center drop-shadow">{item.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-600 text-xs text-center mt-4">Ürünlerinize kendi resimlerinizi ekleyerek daha profesyonel görünüm elde edin</p>
+        </div>
       </motion.div>
 
       {/* Feature Cards */}

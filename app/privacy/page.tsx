@@ -104,9 +104,11 @@ export default function PrivacyPage() {
                     <li><strong className="text-white">1 Hafta:</strong> 7 gün sonra otomatik silinir</li>
                     <li><strong className="text-white">1 Ay:</strong> 30 gün sonra otomatik silinir</li>
                     <li><strong className="text-white">3 Ay:</strong> 90 gün sonra otomatik silinir</li>
+                    <li><strong className="text-white">6 Ay:</strong> 180 gün sonra otomatik silinir</li>
+                    <li><strong className="text-white">12 Ay:</strong> 365 gün sonra otomatik silinir</li>
                   </ul>
                   <p>
-                    Kullanıcı gizliliği ve veri güvenliği gereği, oluşturulan QR kodlar ve ilgili içerikler seçilen süre sonunda (maksimum 3 ay) sistemimizden kalıcı olarak silinmektedir. LuxQr bünyesinde sonsuza dek veri saklanmaz.
+                    Kullanıcı gizliliği ve veri güvenliği gereği, oluşturulan QR kodlar ve ilgili içerikler seçilen süre sonunda (maksimum 12 ay) sistemimizden kalıcı olarak silinmektedir. LuxQr bünyesinde sonsuza dek veri saklanmaz.
                   </p>
                   <p>
                     Süresi dolan paylaşımlar otomatik olarak sistemden temizlenir.

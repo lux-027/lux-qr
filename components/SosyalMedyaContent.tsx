@@ -11,7 +11,7 @@ export default function SosyalMedyaContent() {
   const [selectedPlatform, setSelectedPlatform] = useState<'instagram' | 'tiktok' | 'facebook' | 'youtube'>('instagram');
   const [url, setUrl] = useState('');
   const [note, setNote] = useState('');
-  const [expiration, setExpiration] = useState<'1day' | '1week' | '1month' | '3months'>('1day');
+  const [expiration, setExpiration] = useState<'1day' | '1week' | '1month' | '3months' | '6months' | '12months'>('1day');
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState(false);
 
@@ -244,12 +244,14 @@ export default function SosyalMedyaContent() {
               <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Geçerlilik Süresi
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
               {[
                 { value: '1day', label: '1 Gün', icon: Timer, color: 'text-cyan-400', activeColor: 'border-cyan-500/50 bg-cyan-500/10' },
                 { value: '1week', label: '1 Hafta', icon: AlarmClock, color: 'text-blue-400', activeColor: 'border-blue-500/50 bg-blue-500/10' },
                 { value: '1month', label: '1 Ay', icon: CalendarDays, color: 'text-purple-400', activeColor: 'border-purple-500/50 bg-purple-500/10' },
                 { value: '3months', label: '3 Ay', icon: CalendarRange, color: 'text-orange-400', activeColor: 'border-orange-500/50 bg-orange-500/10' },
+                { value: '6months', label: '6 Ay', icon: CalendarRange, color: 'text-rose-400', activeColor: 'border-rose-500/50 bg-rose-500/10' },
+                { value: '12months', label: '12 Ay', icon: CalendarRange, color: 'text-amber-400', activeColor: 'border-amber-500/50 bg-amber-500/10' },
               ].map((option) => (
                 <button
                   key={option.value}

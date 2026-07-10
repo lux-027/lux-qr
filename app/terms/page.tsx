@@ -123,9 +123,11 @@ export default function TermsPage() {
                     <li><strong className="text-white">1 Hafta:</strong> 7 gün sonra otomatik olarak silinir</li>
                     <li><strong className="text-white">1 Ay:</strong> 30 gün sonra otomatik olarak silinir</li>
                     <li><strong className="text-white">3 Ay:</strong> 90 gün sonra otomatik olarak silinir</li>
+                    <li><strong className="text-white">6 Ay:</strong> 180 gün sonra otomatik olarak silinir</li>
+                    <li><strong className="text-white">12 Ay:</strong> 365 gün sonra otomatik olarak silinir</li>
                   </ul>
                   <p>
-                    Sistemimiz bir kalıcı depolama servisi değildir; içerikler en fazla 90 gün süreyle barındırılır.
+                    Sistemimiz bir kalıcı depolama servisi değildir; içerikler en fazla 12 ay (365 gün) süreyle barındırılır.
                   </p>
                   <p>
                     Süresi dolan paylaşımlar otomatik olarak sistemden kalıcı olarak silinir ve geri yüklenemez.
