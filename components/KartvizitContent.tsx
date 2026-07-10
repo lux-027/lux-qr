@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CreditCard, Clock, Shield, Zap, Search, ChevronDown, User, Phone, Mail, Building2, Globe, MapPin, FileText } from 'lucide-react';
+import { CreditCard, Clock, Shield, Zap, Search, ChevronDown, User, Phone, Mail, Building2, Globe, MapPin, FileText, Wand2, ImagePlus, X as XIcon, Loader2, QrCode, Timer, AlarmClock, CalendarDays, CalendarRange } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
@@ -24,6 +24,9 @@ export default function KartvizitContent() {
   const [titleDropdownOpen, setTitleDropdownOpen] = useState(false);
   const [titleSearch, setTitleSearch] = useState('');
   const [showError, setShowError] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const titleDropdownRef = useRef<HTMLDivElement>(null);
 
   const titleOptions = [
@@ -64,6 +67,40 @@ export default function KartvizitContent() {
     return `${cleaned.slice(0, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7, 9)} ${cleaned.slice(9, 11)}`;
   };
 
+  const fillDemo = () => {
+    setFormData({
+      firstName: 'Emre',
+      lastName: 'Lux',
+      phone: '0500 000 00 00',
+      email: 'lux.studio.tr@gmail.com',
+      company: 'LuxQr Teknoloji A.Ş.',
+      title: 'CEO',
+      website: 'https://luxqrpro.site',
+      address: 'Bağcılar, İstanbul',
+    });
+    setPhotoUrl('/lux-inc-logo.png');
+    setNote('Dijital kartvizitim. İletişime geçmekten memnuniyet duyarım.');
+    setShowError(false);
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) setPhotoUrl(data.url);
+    } catch {
+      showNotification('Resim yüklenemedi', 'error');
+    } finally {
+      setPhotoUploading(false);
+      e.target.value = '';
+    }
+  };
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value);
     setFormData({ ...formData, phone: formatted });
@@ -99,7 +136,7 @@ EMAIL:${formData.email}
 ORG:${formData.company}
 TITLE:${formData.title}
 URL:${formData.website}
-ADR:;;${formData.address};;;;
+ADR:;;${formData.address};;;;${photoUrl ? `\nPHOTO;VALUE=URI:${photoUrl}` : ''}
 END:VCARD`;
 
       const response = await fetch('/api/generate', {
@@ -140,9 +177,16 @@ END:VCARD`;
           className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
+            <div className="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full" />
             <div className="relative flex items-center justify-center gap-3 mb-4">
-              <CreditCard className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+              <div className="relative">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-cyan-500/40 -rotate-3 hover:rotate-3 transition-transform duration-300">
+                  <CreditCard className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
+                  <QrCode className="w-4 h-4 text-white" />
+                </div>
+              </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
             </div>
           </div>
@@ -161,10 +205,63 @@ END:VCARD`;
           transition={{ delay: 0.3 }}
           className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg">
+                <CreditCard className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-base md:text-xl font-bold text-white">Kartvizit Bilgileri</h2>
+            </div>
+            <button
+              onClick={fillDemo}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-400 hover:text-gray-200 text-xs transition-all"
+            >
+              <Wand2 className="w-3 h-3" />
+              Demo
+            </button>
+          </div>
+          {/* Profil Fotoğrafı */}
+          <div className="flex items-center gap-4 mb-5 pb-5 border-b border-white/10">
+            <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+            {photoUrl ? (
+              <div className="relative group flex-shrink-0">
+                <img src={photoUrl} alt="Profil" className="w-16 h-16 rounded-full object-cover border-2 border-blue-500/50" />
+                {photoUploading && (
+                  <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 text-white animate-spin" />
+                  </div>
+                )}
+                <button
+                  onClick={() => setPhotoUrl('')}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center"
+                >
+                  <XIcon className="w-3 h-3 text-white" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => photoInputRef.current?.click()}
+                disabled={photoUploading}
+                className="w-16 h-16 rounded-full border-2 border-dashed border-slate-600 hover:border-blue-400 flex flex-col items-center justify-center text-slate-500 hover:text-blue-400 transition-all flex-shrink-0"
+              >
+                {photoUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImagePlus className="w-5 h-5" />}
+              </button>
+            )}
+            <div>
+              <p className="text-white text-sm font-medium">Profil Fotoğrafı</p>
+              <p className="text-slate-400 text-xs mt-0.5">Kartvizit görüntüsünde gösterilir</p>
+              {!photoUrl && (
+                <button onClick={() => photoInputRef.current?.click()} className="text-blue-400 text-xs mt-1 hover:underline">
+                  Fotoğraf Yükle
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <User className="w-5 h-5 text-blue-400" />
+                <User className="w-5 h-5 text-cyan-400" />
                 İsim *
               </label>
               <input
@@ -183,7 +280,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <User className="w-5 h-5 text-blue-400" />
+                <User className="w-5 h-5 text-cyan-400" />
                 Soyisim *
               </label>
               <input
@@ -202,7 +299,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <Phone className="w-5 h-5 text-blue-400" />
+                <Phone className="w-5 h-5 text-emerald-400" />
                 Telefon *
               </label>
               <input
@@ -221,7 +318,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <Mail className="w-5 h-5 text-blue-400" />
+                <Mail className="w-5 h-5 text-purple-400" />
                 E-posta *
               </label>
               <input
@@ -240,7 +337,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <Building2 className="w-5 h-5 text-blue-400" />
+                <Building2 className="w-5 h-5 text-amber-400" />
                 Şirket
               </label>
               <input
@@ -254,7 +351,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <CreditCard className="w-5 h-5 text-blue-400" />
+                <CreditCard className="w-5 h-5 text-pink-400" />
                 Ünvan
               </label>
               <div className="relative" ref={titleDropdownRef}>
@@ -311,7 +408,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <Globe className="w-5 h-5 text-blue-400" />
+                <Globe className="w-5 h-5 text-sky-400" />
                 Web Sitesi
               </label>
               <input
@@ -325,7 +422,7 @@ END:VCARD`;
 
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <MapPin className="w-5 h-5 text-blue-400" />
+                <MapPin className="w-5 h-5 text-rose-400" />
                 Adres
               </label>
               <input
@@ -340,7 +437,7 @@ END:VCARD`;
             {/* Note/Description Field */}
             <div>
               <label className="flex items-center gap-2 text-white font-semibold mb-2">
-                <FileText className="w-5 h-5 text-blue-400" />
+                <FileText className="w-5 h-5 text-violet-400" />
                 Not / Açıklama
               </label>
               <textarea
@@ -355,27 +452,25 @@ END:VCARD`;
           {/* Expiration Selection */}
           <div className="mt-4 md:mt-6">
             <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
-              <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+              <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Geçerlilik Süresi
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {[
-                { value: '1day', label: '1 Gün', icon: Clock },
-                { value: '1week', label: '1 Hafta', icon: Clock },
-                { value: '1month', label: '1 Ay', icon: Clock },
-                { value: '3months', label: '3 Ay', icon: Clock },
+                { value: '1day', label: '1 Gün', icon: Timer, color: 'text-cyan-400', activeColor: 'border-cyan-500/50 bg-cyan-500/10' },
+                { value: '1week', label: '1 Hafta', icon: AlarmClock, color: 'text-blue-400', activeColor: 'border-blue-500/50 bg-blue-500/10' },
+                { value: '1month', label: '1 Ay', icon: CalendarDays, color: 'text-purple-400', activeColor: 'border-purple-500/50 bg-purple-500/10' },
+                { value: '3months', label: '3 Ay', icon: CalendarRange, color: 'text-orange-400', activeColor: 'border-orange-500/50 bg-orange-500/10' },
               ].map((option) => (
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
-                    expiration === option.value
-                      ? 'border-blue-500/50 bg-blue-500/10 text-blue-400'
-                      : 'border-white/10 text-gray-400 hover:border-blue-500/50'
+                    expiration === option.value ? option.activeColor : 'border-white/10 text-gray-400 hover:border-white/20'
                   }`}
                 >
-                  <option.icon className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="text-xs md:text-sm font-medium">{option.label}</span>
+                  <option.icon className={`w-4 h-4 md:w-5 md:h-5 ${expiration === option.value ? option.color : 'text-gray-500'}`} />
+                  <span className={`text-xs md:text-sm font-medium ${expiration === option.value ? option.color : ''}`}>{option.label}</span>
                 </button>
               ))}
             </div>

@@ -820,7 +820,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400/50" />
               <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
             </div>
-            <div className="grid grid-cols-2 md:flex flex-col gap-2 md:gap-3">
+            <div className="grid grid-cols-2 gap-2">
               <Link href="/qr/metin" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <Type className="w-3 h-3 md:w-5 md:h-5 text-blue-400" />
                 <span>Metin</span>
@@ -841,15 +841,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 <Share2 className="w-3 h-3 md:w-5 md:h-5 text-pink-400" />
                 <span>Sosyal</span>
               </Link>
-              <Link href="/qr/ses-dosyasi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
+              <Link href="/qr/ses-dosyasi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <Mic className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
                 <span>Ses Dosyası</span>
               </Link>
-              <Link href="/qr/iban" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
+              <Link href="/qr/iban" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <Landmark className="w-3 h-3 md:w-5 md:h-5 text-green-400" />
                 <span>IBAN</span>
               </Link>
-              <Link href="/qr/fiyat-listesi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors col-span-2 md:col-span-1">
+              <Link href="/qr/fiyat-listesi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <ShoppingBag className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
                 <span>Fiyat Listesi</span>
               </Link>

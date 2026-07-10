@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mic, Clock, Shield, Zap, Upload, FileText, Square, Play } from 'lucide-react';
+import { Mic, Clock, Shield, Zap, Upload, FileText, Square, Play, QrCode, Timer, AlarmClock, CalendarDays, CalendarRange } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
@@ -176,9 +176,16 @@ export default function SesDosyasiContent() {
           className="text-center mb-12 md:mb-16"
         >
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
+            <div className="absolute inset-0 bg-orange-500/20 blur-3xl rounded-full" />
             <div className="relative flex items-center justify-center gap-3 mb-4">
-              <Mic className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+              <div className="relative">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/40 -rotate-3 hover:rotate-3 transition-transform duration-300">
+                  <Mic className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
+                  <QrCode className="w-4 h-4 text-white" />
+                </div>
+              </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
             </div>
           </div>
@@ -199,7 +206,7 @@ export default function SesDosyasiContent() {
         >
           <div>
             <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
-              <Upload className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+              <Upload className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Ses Dosyası Yükle
             </label>
             <div className="relative">
@@ -231,7 +238,7 @@ export default function SesDosyasiContent() {
                       <audio src={previewUrl} controls className="w-full max-w-md mx-auto" />
                     </div>
                   ) : (
-                    <Upload className="w-8 h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 md:mb-4" />
+                    <Upload className="w-8 h-8 md:w-12 md:h-12 text-orange-400 mx-auto mb-2 md:mb-4" />
                   )}
                   <p className="text-gray-400 mb-1 md:mb-2 text-sm md:text-base">
                     {file ? file.name : 'Dosya seçmek için tıklayın veya ses kaydedin'}
@@ -286,7 +293,7 @@ export default function SesDosyasiContent() {
           {/* Note/Description Field */}
           <div className="mt-4 md:mt-6">
             <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
-              <FileText className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+              <FileText className="w-4 h-4 md:w-5 md:h-5 text-violet-400" />
               Not / Açıklama
             </label>
             <textarea
@@ -300,27 +307,25 @@ export default function SesDosyasiContent() {
           {/* Expiration Selection */}
           <div className="mt-4 md:mt-6">
             <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
-              <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+              <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Geçerlilik Süresi
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {[
-                { value: '1day', label: '1 Gün', icon: Clock },
-                { value: '1week', label: '1 Hafta', icon: Clock },
-                { value: '1month', label: '1 Ay', icon: Clock },
-                { value: '3months', label: '3 Ay', icon: Clock },
+                { value: '1day', label: '1 Gün', icon: Timer, color: 'text-cyan-400', activeColor: 'border-cyan-500/50 bg-cyan-500/10' },
+                { value: '1week', label: '1 Hafta', icon: AlarmClock, color: 'text-blue-400', activeColor: 'border-blue-500/50 bg-blue-500/10' },
+                { value: '1month', label: '1 Ay', icon: CalendarDays, color: 'text-purple-400', activeColor: 'border-purple-500/50 bg-purple-500/10' },
+                { value: '3months', label: '3 Ay', icon: CalendarRange, color: 'text-orange-400', activeColor: 'border-orange-500/50 bg-orange-500/10' },
               ].map((option) => (
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
-                    expiration === option.value
-                      ? 'border-blue-500/50 bg-blue-500/10 text-blue-400'
-                      : 'border-white/10 text-gray-400 hover:border-blue-500/50'
+                    expiration === option.value ? option.activeColor : 'border-white/10 text-gray-400 hover:border-white/20'
                   }`}
                 >
-                  <option.icon className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="text-xs md:text-sm font-medium">{option.label}</span>
+                  <option.icon className={`w-4 h-4 md:w-5 md:h-5 ${expiration === option.value ? option.color : 'text-gray-500'}`} />
+                  <span className={`text-xs md:text-sm font-medium ${expiration === option.value ? option.color : ''}`}>{option.label}</span>
                 </button>
               ))}
             </div>

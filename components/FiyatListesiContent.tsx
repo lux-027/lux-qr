@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Plus, Trash2, ChevronDown, ChevronUp, Tag, Package,
   ShoppingBag, Store, Clock, ArrowRight, Loader2, CheckCircle, Zap,
-  ImagePlus, X as XIcon
+  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2
 } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -88,27 +88,43 @@ export default function FiyatListesiContent() {
         {
           id: generateId(),
           name: 'Başlangıçlar',
+          imageUrl: 'https://images.unsplash.com/photo-1543353071-087092ec393a?w=400&q=80',
           items: [
             { id: generateId(), name: 'Mercimek Çorbası', price: '85', description: 'Taze sebzelerle hazırlanmış, kırmızı biber yağlı', imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80' },
             { id: generateId(), name: 'Zeytinyağlı Yaprak Sarma', price: '110', description: '6 adet, limon dilimiyle servis edilir', imageUrl: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80' },
+            { id: generateId(), name: 'Humus', price: '95', description: 'Tahin ve zeytinyağı ile, pide ekmeği eşliğinde', imageUrl: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&q=80' },
           ],
         },
         {
           id: generateId(),
           name: 'Ana Yemekler',
+          imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80',
           items: [
             { id: generateId(), name: 'Izgara Köfte', price: '220', description: 'Pilav ve mevsim salata ile servis edilir', imageUrl: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80' },
             { id: generateId(), name: 'Tavuk Şiş', price: '195', description: 'Sebzeli, özel baharatlı marine', imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80' },
-            { id: generateId(), name: 'Karışık Izgara', price: '320', description: 'Et ve tavuk karışık, 2 kişilik porsiyon', imageUrl: '' },
+            { id: generateId(), name: 'Karışık Izgara', price: '320', description: 'Et ve tavuk karışık, 2 kişilik porsiyon', imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80' },
+            { id: generateId(), name: 'Levrek Izgara', price: '280', description: 'Taze levrek, sebze garnitürü ile', imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&q=80' },
+          ],
+        },
+        {
+          id: generateId(),
+          name: 'Tatlılar',
+          imageUrl: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&q=80',
+          items: [
+            { id: generateId(), name: 'Künefe', price: '130', description: 'Fıstıklı, sıcak servis', imageUrl: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=400&q=80' },
+            { id: generateId(), name: 'Cheesecake', price: '115', description: 'Frambuaz soslu, ev yapımı', imageUrl: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=80' },
+            { id: generateId(), name: 'Sütlaç', price: '85', description: 'Fırında pişirilmiş, tarçınlı', imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80' },
           ],
         },
         {
           id: generateId(),
           name: 'İçecekler',
+          imageUrl: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80',
           items: [
-            { id: generateId(), name: 'Ayran', price: '45', description: 'Ev yapımı, köpüklü', imageUrl: '' },
+            { id: generateId(), name: 'Ayran', price: '45', description: 'Ev yapımı, köpüklü', imageUrl: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80' },
             { id: generateId(), name: 'Limonata', price: '75', description: 'Taze sıkılmış nane yapraklı', imageUrl: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80' },
-            { id: generateId(), name: 'Çay', price: '30', description: 'Demlik çay', imageUrl: '' },
+            { id: generateId(), name: 'Türk Kahvesi', price: '65', description: 'Geleneksel pişirme, lokum ikramı', imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80' },
+            { id: generateId(), name: 'Çay', price: '30', description: 'Demlik çay, şeker seçeneğiyle', imageUrl: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80' },
           ],
         },
       ],
@@ -284,7 +300,7 @@ export default function FiyatListesiContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 md:p-8">
       <div className="max-w-6xl mx-auto">
 
       {/* Page Title */}
@@ -292,42 +308,43 @@ export default function FiyatListesiContent() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="text-center mb-12 md:mb-16"
+        className="text-center mb-6 md:mb-16"
       >
         <div className="relative inline-block">
           <div className="absolute inset-0 bg-orange-500/20 blur-3xl rounded-full" />
-          <div className="relative flex items-center justify-center gap-3 mb-4">
-            <ShoppingBag className="w-10 h-10 md:w-12 md:h-14 text-orange-400 drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]" />
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
+          <div className="relative flex items-center justify-center gap-2 mb-2 md:mb-4">
+            <ShoppingBag className="w-7 h-7 md:w-12 md:h-14 text-orange-400 drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]" />
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
           </div>
         </div>
-        <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-300 mb-4">
-          Modern <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(249,115,22,0.5)]">QR Kod Oluşturma</span>
+        <p className="text-lg md:text-3xl lg:text-4xl font-bold text-gray-300 mb-1 md:mb-4">
+          <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">Fiyat Listesi QR</span>
         </p>
-        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+        <p className="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto hidden md:block">
           Restoran menüsü, hizmet veya ürün fiyat listenizi QR koda dönüştürün
         </p>
       </motion.div>
 
-      <div className="space-y-6 md:space-y-8">
+      <div className="space-y-3 md:space-y-8">
       {/* Brand Info Card */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="card-premium p-6 md:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg">
-                <ShoppingBag className="w-6 h-6 text-white" />
+        <div className="card-premium p-4 md:p-8">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="p-2 md:p-3 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg">
+                <ShoppingBag className="w-4 h-4 md:w-6 md:h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Fiyat Listesi QR Kodu</h2>
-                <p className="text-gray-400 text-sm">Marka, kategori ve ürünlerinizi ekleyin</p>
+                <h2 className="text-base md:text-xl font-bold text-white">Marka Bilgileri</h2>
+                <p className="text-gray-500 text-xs hidden md:block">Marka, kategori ve ürünlerinizi ekleyin</p>
               </div>
             </div>
             <button
               onClick={fillDemo}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-400 hover:text-gray-200 text-xs transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-400 hover:text-gray-200 text-xs transition-all"
             >
-              Demo Doldur
+              <Wand2 className="w-3 h-3" />
+              Demo
             </button>
           </div>
 
@@ -399,6 +416,7 @@ export default function FiyatListesiContent() {
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
+                <FileText className="w-4 h-4 inline mr-1" />
                 Kısa Açıklama (İsteğe Bağlı)
               </label>
               <input
@@ -410,7 +428,10 @@ export default function FiyatListesiContent() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Para Birimi</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                <DollarSign className="w-4 h-4 inline mr-1" />
+                Para Birimi
+              </label>
               <select
                 value={priceList.currency}
                 onChange={(e) => setPriceList((p) => ({ ...p, currency: e.target.value }))}
@@ -427,9 +448,12 @@ export default function FiyatListesiContent() {
 
       {/* Categories */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <div className="card-premium p-6 md:p-8">
+        <div className="card-premium p-4 md:p-8">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-base font-semibold text-white">Kategoriler ve Ürünler</h3>
+            <h3 className="text-base font-semibold text-white flex items-center gap-2">
+              <Layers className="w-4 h-4 text-orange-400" />
+              Kategoriler ve Ürünler
+            </h3>
             <button
               onClick={addCategory}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-300 text-sm transition-all"
@@ -443,16 +467,20 @@ export default function FiyatListesiContent() {
             {priceList.categories.map((cat, catIdx) => {
               const isOpen = openCategories.includes(cat.id);
               return (
-                <div key={cat.id} className="border border-white/10 rounded-xl overflow-hidden">
-                  {/* Category Header */}
+                <div key={cat.id} className="rounded-xl overflow-hidden border border-slate-600/50">
+
+                  {/* ── Kategori Başlığı ── */}
                   <div
-                    className="flex items-center gap-2 px-4 py-3 bg-slate-800/60 cursor-pointer hover:bg-slate-800/90 transition-all"
+                    className={`flex items-center gap-2 px-3 py-3 cursor-pointer transition-all ${
+                      isOpen ? 'bg-slate-700/80' : 'bg-slate-800/80 hover:bg-slate-700/60'
+                    }`}
                     onClick={() => toggleCategory(cat.id)}
                   >
-                    <span className="text-gray-500 flex-shrink-0">
+                    <span className="text-orange-400 flex-shrink-0">
                       {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </span>
-                    {/* Category Image */}
+
+                    {/* Kategori Resmi */}
                     <div className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="file"
@@ -463,7 +491,7 @@ export default function FiyatListesiContent() {
                       />
                       {cat.imageUrl ? (
                         <div className="relative group">
-                          <img src={cat.imageUrl} alt={cat.name} className="w-8 h-8 rounded-lg object-cover border border-white/10" />
+                          <img src={cat.imageUrl} alt={cat.name} className="w-10 h-10 rounded-lg object-cover border border-white/20" />
                           {catUploading === cat.id && (
                             <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
                               <Loader2 className="w-3 h-3 text-white animate-spin" />
@@ -479,33 +507,38 @@ export default function FiyatListesiContent() {
                       ) : (
                         <button
                           onClick={() => catInputRefs.current[cat.id]?.click()}
-                          className="w-8 h-8 rounded-lg border border-dashed border-white/20 hover:border-white/40 flex items-center justify-center text-gray-600 hover:text-gray-400 transition-all"
+                          className="w-10 h-10 rounded-lg border border-dashed border-slate-500 hover:border-orange-400/60 flex items-center justify-center text-slate-500 hover:text-orange-400 transition-all"
                           title="Kategori resmi ekle"
                         >
                           <ImagePlus className="w-3.5 h-3.5" />
                         </button>
                       )}
                     </div>
+
                     <input
                       type="text"
                       value={cat.name}
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => updateCategory(cat.id, e.target.value)}
-                      placeholder={`Kategori adı (Örn: Başlangıçlar, Saçlar...)`}
-                      className="flex-1 bg-transparent text-white font-medium placeholder-gray-600 focus:outline-none text-sm cursor-text"
+                      placeholder="Kategori adı..."
+                      className="flex-1 bg-transparent text-white font-semibold placeholder-slate-500 focus:outline-none text-sm cursor-text"
                     />
-                    <span className="text-xs text-gray-600 flex-shrink-0">{cat.items.length} ürün</span>
+
+                    <span className="text-xs text-slate-400 bg-slate-600/50 px-2 py-0.5 rounded-full flex-shrink-0">
+                      {cat.items.length} ürün
+                    </span>
+
                     {priceList.categories.length > 1 && (
                       <button
                         onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); }}
-                        className="text-gray-600 hover:text-gray-400 transition-all flex-shrink-0 ml-1"
+                        className="text-slate-600 hover:text-red-400 transition-all flex-shrink-0 ml-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>
 
-                  {/* Items */}
+                  {/* ── Ürün Listesi ── */}
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
@@ -515,12 +548,15 @@ export default function FiyatListesiContent() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="divide-y divide-white/5">
+                        <div className="bg-slate-900/60 p-2.5 space-y-2">
                           {cat.items.map((item, itemIdx) => (
-                            <div key={item.id} className="px-4 py-3 space-y-2">
+                            <div key={item.id} className="bg-slate-800 border border-slate-700 hover:border-slate-500 rounded-lg px-3 py-2.5 space-y-2 transition-all">
+
+                              {/* Satır 1: numara + resim + ad + fiyat + sil */}
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-600 w-4 flex-shrink-0">{itemIdx + 1}</span>
-                                {/* Item Image */}
+                                <span className="text-xs text-slate-500 w-5 flex-shrink-0 text-center font-bold">{itemIdx + 1}</span>
+
+                                {/* Ürün Resmi */}
                                 <div className="flex-shrink-0">
                                   <input
                                     type="file"
@@ -531,7 +567,7 @@ export default function FiyatListesiContent() {
                                   />
                                   {item.imageUrl ? (
                                     <div className="relative group">
-                                      <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-white/10" />
+                                      <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded-lg object-cover border border-slate-600" />
                                       {itemUploading === item.id && (
                                         <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
                                           <Loader2 className="w-3 h-3 text-white animate-spin" />
@@ -547,54 +583,67 @@ export default function FiyatListesiContent() {
                                   ) : (
                                     <button
                                       onClick={() => itemInputRefs.current[item.id]?.click()}
-                                      className="w-10 h-10 rounded-lg border border-dashed border-white/20 hover:border-white/40 flex items-center justify-center text-gray-600 hover:text-gray-400 transition-all"
+                                      className="w-12 h-12 rounded-lg border border-dashed border-slate-600 hover:border-orange-400/60 flex items-center justify-center text-slate-600 hover:text-orange-400 transition-all"
                                       title="Resim ekle"
                                     >
-                                      <ImagePlus className="w-4 h-4" />
+                                      <ImagePlus className="w-3.5 h-3.5" />
                                     </button>
                                   )}
                                 </div>
+
+                                {/* Ad */}
                                 <input
                                   type="text"
                                   value={item.name}
                                   onChange={(e) => updateItem(cat.id, item.id, 'name', e.target.value)}
                                   placeholder="Ürün adı"
-                                  className="flex-1 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-white text-sm placeholder-gray-600 focus:outline-none transition-all"
+                                  className="flex-1 min-w-0 bg-slate-700/60 border border-slate-600 focus:border-orange-400 rounded-lg px-2.5 py-1.5 text-white text-sm font-medium placeholder-slate-500 focus:outline-none transition-all"
                                 />
-                                <input
-                                  type="text"
-                                  value={item.price}
-                                  onChange={(e) => updateItem(cat.id, item.id, 'price', e.target.value)}
-                                  placeholder="Fiyat"
-                                  className="w-20 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-white text-sm placeholder-gray-600 focus:outline-none transition-all text-right flex-shrink-0"
-                                />
+
+                                {/* Fiyat */}
+                                <div className="flex items-center gap-0.5 flex-shrink-0 bg-slate-700/50 border border-slate-600 rounded-lg px-2 py-1">
+                                  <span className="text-slate-400 text-xs font-medium">{priceList.currency}</span>
+                                  <input
+                                    type="number"
+                                    inputMode="decimal"
+                                    min="0"
+                                    step="0.01"
+                                    value={item.price}
+                                    onChange={(e) => updateItem(cat.id, item.id, 'price', e.target.value)}
+                                    placeholder="0"
+                                    className="w-14 bg-transparent border-none text-amber-300 text-sm font-semibold placeholder-slate-600 focus:outline-none text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  />
+                                </div>
+
                                 {cat.items.length > 1 && (
                                   <button
                                     onClick={() => removeItem(cat.id, item.id)}
-                                    className="text-gray-700 hover:text-gray-400 transition-all flex-shrink-0"
+                                    className="text-slate-600 hover:text-red-400 transition-all flex-shrink-0"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
                                 )}
                               </div>
+
+                              {/* Satır 2: açıklama */}
                               <input
                                 type="text"
                                 value={item.description}
                                 onChange={(e) => updateItem(cat.id, item.id, 'description', e.target.value)}
-                                placeholder="Açıklama (isteğe bağlı)"
-                                className="w-full bg-transparent border-b border-white/5 focus:border-white/20 py-1 text-gray-400 text-xs placeholder-gray-600 focus:outline-none transition-all ml-6"
+                                placeholder="Açıklama..."
+                                className="w-3/4 bg-slate-700/40 border border-slate-700 focus:border-slate-500 rounded-lg px-2.5 py-1 text-slate-300 text-xs placeholder-slate-600 focus:outline-none transition-all mx-auto block"
                               />
                             </div>
                           ))}
-                          <div className="px-4 py-2">
-                            <button
-                              onClick={() => addItem(cat.id)}
-                              className="flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-all"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                              Ürün ekle
-                            </button>
-                          </div>
+
+                          {/* Ürün Ekle Butonu */}
+                          <button
+                            onClick={() => addItem(cat.id)}
+                            className="flex items-center gap-1.5 w-full justify-center py-2 text-slate-500 hover:text-orange-400 text-xs font-medium transition-all border border-dashed border-slate-700 hover:border-orange-500/40 rounded-lg mt-1"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            Ürün Ekle
+                          </button>
                         </div>
                       </motion.div>
                     )}
@@ -608,18 +657,18 @@ export default function FiyatListesiContent() {
 
       {/* Expiration + Note */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <div className="card-premium p-6 md:p-8 space-y-5">
+        <div className="card-premium p-4 md:p-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-3">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               <Clock className="w-4 h-4 inline mr-1" />
-              QR Kod Geçerlilik Süresi
+              Geçerlilik Süresi
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {expirationOptions.map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => setExpiration(opt.value)}
-                  className={`py-3 rounded-xl border text-sm font-medium transition-all ${
+                  className={`py-2.5 rounded-xl border text-xs md:text-sm font-medium transition-all ${
                     expiration === opt.value
                       ? 'bg-blue-500/30 border-blue-500/50 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
                       : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
@@ -632,15 +681,15 @@ export default function FiyatListesiContent() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Not / Açıklama (İsteğe Bağlı)
+            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+              Not (İsteğe Bağlı)
             </label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              rows={3}
-              placeholder="QR kod için ek not ekleyin..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all resize-none"
+              rows={2}
+              placeholder="QR kod için ek not..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all resize-none"
             />
           </div>
         </div>
@@ -650,12 +699,17 @@ export default function FiyatListesiContent() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
         <button
           onClick={handleGenerate}
-          disabled={!isValid || isGenerating}
-          className={`btn-primary w-full py-4 rounded-2xl font-bold text-white text-lg flex items-center justify-center gap-3 transition-all duration-300 ${
-            !isValid || isGenerating ? 'opacity-50 cursor-not-allowed' : ''
+          disabled={!isValid || isGenerating || !!itemUploading || !!catUploading || logoUploading}
+          className={`btn-primary w-full py-3.5 md:py-4 rounded-2xl font-bold text-white text-base md:text-lg flex items-center justify-center gap-3 transition-all duration-300 ${
+            !isValid || isGenerating || !!itemUploading || !!catUploading || logoUploading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
-          {isGenerating ? (
+          {(itemUploading || catUploading || logoUploading) ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Resim Yükleniyor...
+            </>
+          ) : isGenerating ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
               QR Kod Oluşturuluyor...

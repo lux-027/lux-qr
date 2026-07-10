@@ -166,11 +166,10 @@ export default function RootLayout({
       <body className={`${inter.className} overflow-x-hidden`}>
         <CounterProvider>
           <NotificationProvider>
-            <LayoutWrapper>
+            <LayoutWrapper footer={<Footer />}>
               <PageWrapper>
                 {children}
               </PageWrapper>
-              <Footer />
             </LayoutWrapper>
           </NotificationProvider>
         </CounterProvider>

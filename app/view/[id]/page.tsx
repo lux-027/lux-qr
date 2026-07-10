@@ -132,8 +132,9 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       if (line.startsWith('URL:')) vcardData.website = line.substring(4);
       if (line.startsWith('ADR:')) {
         const parts = line.substring(4).split(';');
-        vcardData.address = parts[6] || parts[5] || parts[4] || '';
+        vcardData.address = parts[2] || '';
       }
+      if (line.startsWith('PHOTO;VALUE=URI:')) vcardData.photo = line.substring(16).trim();
     });
     
     return vcardData;
@@ -429,51 +430,119 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         }
         if (isVCard) {
           const vcardData = parseVCard(data.content);
+          const fullName = vcardData.fullName || `${vcardData.firstName || ''} ${vcardData.lastName || ''}`.trim();
+          const initials = `${vcardData.firstName?.[0] || ''}${vcardData.lastName?.[0] || ''}`.toUpperCase();
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-6">
-                {contentIcon}
-                <div>
-                  <h3 className="text-lg font-semibold text-white">{contentTitle}</h3>
-                  <p className="text-sm text-gray-400">Kartvizit Bilgisi</p>
-                </div>
-              </div>
-              <div className="bg-white/10 rounded-lg p-6">
-                <div className="flex flex-col md:flex-row gap-12">
-                  {/* Left side - Name and title */}
-                  <div className="flex-1 text-center md:text-left">
-                    <h4 className="text-xl font-bold text-white mb-1">{vcardData.fullName || vcardData.firstName + ' ' + vcardData.lastName}</h4>
-                    {vcardData.title && <p className="text-blue-400 font-medium">{vcardData.title}</p>}
-                    {vcardData.company && <p className="text-gray-400 text-sm mt-1">{vcardData.company}</p>}
+            <div className="max-w-sm mx-auto">
+              {/* ── Kart Gövdesi ── */}
+              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10">
+
+                {/* HEADER — gradient banner */}
+                <div className="relative bg-gradient-to-br from-slate-800 via-blue-950 to-slate-900 px-6 pt-8 pb-16">
+                  {/* Dekoratif arka plan daireler */}
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
+                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl" />
+
+                  {/* Logo + Şirket adı — sağ üst */}
+                  <div className="flex justify-between items-start relative z-10">
+                    <div>
+                      <p className="text-blue-300/70 text-[10px] font-semibold uppercase tracking-widest mb-1">Dijital Kartvizit</p>
+                      {vcardData.company && (
+                        <p className="text-white/80 text-sm font-medium">{vcardData.company}</p>
+                      )}
+                    </div>
+                    {vcardData.photo && (
+                      <img
+                        src={vcardData.photo}
+                        alt={vcardData.company || 'logo'}
+                        className="w-12 h-12 rounded-xl object-contain bg-white p-1.5 shadow-lg"
+                      />
+                    )}
                   </div>
-                  
-                  {/* Right side - Contact info */}
-                  <div className="flex-1 space-y-3">
-                    {vcardData.phone && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <Phone className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.phone}</span>
+                </div>
+
+                {/* AVATAR — banner üstüne taşan */}
+                <div className="relative bg-slate-900 px-6 pt-0 pb-5">
+                  <div className="flex items-end gap-4 -mt-10 mb-4">
+                    {vcardData.photo ? (
+                      <div className="w-20 h-20 rounded-2xl border-4 border-slate-900 shadow-xl overflow-hidden flex-shrink-0 bg-white">
+                        <img src={vcardData.photo} alt={fullName} className="w-full h-full object-contain p-1" />
                       </div>
+                    ) : (
+                      <div className="w-20 h-20 rounded-2xl border-4 border-slate-900 shadow-xl flex-shrink-0 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <span className="text-white text-2xl font-bold">{initials || <User className="w-8 h-8 text-white" />}</span>
+                      </div>
+                    )}
+                    <div className="pb-1">
+                      <h2 className="text-xl font-bold text-white leading-tight">{fullName}</h2>
+                      {vcardData.title && (
+                        <span className="inline-block mt-1 text-xs font-semibold text-blue-300 bg-blue-500/15 border border-blue-500/20 px-2 py-0.5 rounded-full">
+                          {vcardData.title}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Ayraç */}
+                  <div className="h-px bg-white/8 mb-4" />
+
+                  {/* İletişim satırları */}
+                  <div className="space-y-2.5">
+                    {vcardData.phone && (
+                      <a href={`tel:${vcardData.phone}`} className="flex items-center gap-3 group">
+                        <div className="w-9 h-9 rounded-xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/30 transition-all">
+                          <Phone className="w-4 h-4 text-blue-400" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">Telefon</p>
+                          <p className="text-white text-sm font-medium group-hover:text-blue-300 transition-colors">{vcardData.phone}</p>
+                        </div>
+                      </a>
                     )}
                     {vcardData.email && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <Mail className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.email}</span>
-                      </div>
+                      <a href={`mailto:${vcardData.email}`} className="flex items-center gap-3 group">
+                        <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/30 transition-all">
+                          <Mail className="w-4 h-4 text-purple-400" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">E-posta</p>
+                          <p className="text-white text-sm font-medium group-hover:text-purple-300 transition-colors">{vcardData.email}</p>
+                        </div>
+                      </a>
                     )}
                     {vcardData.website && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <Globe className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.website}</span>
-                      </div>
+                      <a href={vcardData.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/30 transition-all">
+                          <Globe className="w-4 h-4 text-cyan-400" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">Web Sitesi</p>
+                          <p className="text-white text-sm font-medium group-hover:text-cyan-300 transition-colors">{vcardData.website.replace(/^https?:\/\//, '')}</p>
+                        </div>
+                      </a>
                     )}
                     {vcardData.address && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <MapPin className="w-4 h-4 text-blue-400" />
-                        <span>{vcardData.address}</span>
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-4 h-4 text-emerald-400" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">Adres</p>
+                          <p className="text-white text-sm font-medium">{vcardData.address}</p>
+                        </div>
                       </div>
                     )}
                   </div>
+
+                  {/* Rehbere Ekle butonu */}
+                  <a
+                    href={`data:text/vcard;charset=utf-8,${encodeURIComponent(data.content)}`}
+                    download={`${fullName.replace(/\s+/g, '_')}.vcf`}
+                    className="mt-5 flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-[1.02]"
+                  >
+                    <User className="w-4 h-4" />
+                    Rehbere Ekle
+                  </a>
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
 import MobileHeader from './MobileHeader';
 
-export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
+export default function LayoutWrapper({ children, footer }: { children: React.ReactNode; footer?: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
 
@@ -25,6 +25,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       <div className="md:ml-64 pt-16 md:pt-0">
         {children}
+        {footer}
       </div>
     </>
   );
