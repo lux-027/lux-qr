@@ -9,11 +9,13 @@ interface MenuItem {
   name: string;
   price: string;
   description: string;
+  imageUrl?: string;
 }
 
 interface Category {
   id: string;
   name: string;
+  imageUrl?: string;
   items: MenuItem[];
 }
 
@@ -275,14 +277,19 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                       const cat = pl.categories.find(c => c.id === item.catId);
                       if (cat) openCategory(cat);
                     }}
-                    className="text-left bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-2xl p-4 transition-all"
+                    className="text-left bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden transition-all"
                   >
-                    <p className="text-xs text-orange-400/80 mb-1.5">{item.categoryName}</p>
-                    <p className="text-white font-semibold text-sm mb-1 leading-tight">{item.name}</p>
-                    {item.description && (
-                      <p className="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">{item.description}</p>
+                    {item.imageUrl && (
+                      <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
                     )}
-                    <p className="text-orange-400 font-bold">{symbol}{item.price}</p>
+                    <div className="p-4">
+                      <p className="text-xs text-orange-400/80 mb-1.5">{item.categoryName}</p>
+                      <p className="text-white font-semibold text-sm mb-1 leading-tight">{item.name}</p>
+                      {item.description && (
+                        <p className="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">{item.description}</p>
+                      )}
+                      <p className="text-orange-400 font-bold">{symbol}{item.price}</p>
+                    </div>
                   </motion.button>
                 ))}
               </div>
@@ -301,15 +308,22 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.05 }}
                     onClick={() => openCategory(cat)}
-                    className="w-full flex items-center justify-between bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] rounded-2xl px-5 py-4 transition-all group"
+                    className="w-full flex items-center justify-between bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] rounded-2xl overflow-hidden transition-all group"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center flex-shrink-0">
-                        <span className="text-orange-400 text-xs font-bold">{cat.items.length}</span>
+                    <div className="flex items-center gap-3 px-5 py-4">
+                      {cat.imageUrl ? (
+                        <img src={cat.imageUrl} alt={cat.name} className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center flex-shrink-0">
+                          <span className="text-orange-400 text-xs font-bold">{cat.items.length}</span>
+                        </div>
+                      )}
+                      <div className="text-left">
+                        <span className="text-white font-medium text-sm block">{cat.name}</span>
+                        <span className="text-gray-600 text-xs">{cat.items.length} ürün</span>
                       </div>
-                      <span className="text-white font-medium text-sm">{cat.name}</span>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-all" />
+                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-all mr-4" />
                   </motion.button>
                 ))}
               </div>
@@ -344,17 +358,22 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center justify-between gap-4 bg-white/[0.04] border border-white/[0.07] rounded-2xl px-5 py-4"
+                  className="flex items-center gap-4 bg-white/[0.04] border border-white/[0.07] rounded-2xl overflow-hidden"
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm">{item.name}</p>
-                    {item.description && (
-                      <p className="text-gray-500 text-xs mt-1 leading-relaxed">{item.description}</p>
-                    )}
+                  {item.imageUrl && (
+                    <img src={item.imageUrl} alt={item.name} className="w-20 h-20 object-cover flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0 flex items-center justify-between gap-3 px-4 py-4" style={{ paddingLeft: item.imageUrl ? '0' : undefined }}>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium text-sm">{item.name}</p>
+                      {item.description && (
+                        <p className="text-gray-500 text-xs mt-1 leading-relaxed">{item.description}</p>
+                      )}
+                    </div>
+                    <span className="text-orange-400 font-bold text-base flex-shrink-0 tabular-nums">
+                      {symbol}{item.price}
+                    </span>
                   </div>
-                  <span className="text-orange-400 font-bold text-base flex-shrink-0 tabular-nums">
-                    {symbol}{item.price}
-                  </span>
                 </motion.div>
               ))}
             </div>

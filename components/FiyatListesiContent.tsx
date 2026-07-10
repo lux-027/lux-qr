@@ -15,11 +15,13 @@ interface MenuItem {
   name: string;
   price: string;
   description: string;
+  imageUrl?: string;
 }
 
 interface Category {
   id: string;
   name: string;
+  imageUrl?: string;
   items: MenuItem[];
 }
 
@@ -57,6 +59,10 @@ export default function FiyatListesiContent() {
   const [logoUploading, setLogoUploading] = useState(false);
   const [logoPreview, setLogoPreview] = useState('');
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [itemUploading, setItemUploading] = useState<string | null>(null);
+  const itemInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const [catUploading, setCatUploading] = useState<string | null>(null);
+  const catInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const [priceList, setPriceList] = useState<PriceListData>({
     brandName: '',
@@ -75,7 +81,7 @@ export default function FiyatListesiContent() {
   const fillDemo = () => {
     setPriceList({
       brandName: 'Cafe Lux',
-      brandDescription: 'Taze malzemelerle hazırlanan lezzetler',
+      brandDescription: 'Taze malzemelerle hazırlanan lezzetler ve özel içecekler',
       currency: 'TL',
       logoUrl: '',
       categories: [
@@ -83,26 +89,26 @@ export default function FiyatListesiContent() {
           id: generateId(),
           name: 'Başlangıçlar',
           items: [
-            { id: generateId(), name: 'Mercimek Çorbası', price: '85', description: 'Taze sebzelerle' },
-            { id: generateId(), name: 'Zeytinyağlı Yaprak Sarma', price: '110', description: '6 adet, limonlu' },
+            { id: generateId(), name: 'Mercimek Çorbası', price: '85', description: 'Taze sebzelerle hazırlanmış, kırmızı biber yağlı', imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80' },
+            { id: generateId(), name: 'Zeytinyağlı Yaprak Sarma', price: '110', description: '6 adet, limon dilimiyle servis edilir', imageUrl: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80' },
           ],
         },
         {
           id: generateId(),
           name: 'Ana Yemekler',
           items: [
-            { id: generateId(), name: 'Izgara Köfte', price: '220', description: 'Pilav ve salata ile' },
-            { id: generateId(), name: 'Tavuk Şiş', price: '195', description: 'Sebzeli, özel marine' },
-            { id: generateId(), name: 'Karışık Izgara', price: '320', description: 'Et ve tavuk, 2 kişilik' },
+            { id: generateId(), name: 'Izgara Köfte', price: '220', description: 'Pilav ve mevsim salata ile servis edilir', imageUrl: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80' },
+            { id: generateId(), name: 'Tavuk Şiş', price: '195', description: 'Sebzeli, özel baharatlı marine', imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80' },
+            { id: generateId(), name: 'Karışık Izgara', price: '320', description: 'Et ve tavuk karışık, 2 kişilik porsiyon', imageUrl: '' },
           ],
         },
         {
           id: generateId(),
           name: 'İçecekler',
           items: [
-            { id: generateId(), name: 'Ayran', price: '45', description: 'Ev yapımı' },
-            { id: generateId(), name: 'Limonata', price: '75', description: 'Taze sıkılmış' },
-            { id: generateId(), name: 'Çay', price: '30', description: '' },
+            { id: generateId(), name: 'Ayran', price: '45', description: 'Ev yapımı, köpüklü', imageUrl: '' },
+            { id: generateId(), name: 'Limonata', price: '75', description: 'Taze sıkılmış nane yapraklı', imageUrl: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80' },
+            { id: generateId(), name: 'Çay', price: '30', description: 'Demlik çay', imageUrl: '' },
           ],
         },
       ],
@@ -145,10 +151,38 @@ export default function FiyatListesiContent() {
       ...prev,
       categories: [
         ...prev.categories,
-        { id: newId, name: '', items: [{ id: generateId(), name: '', price: '', description: '' }] },
+        { id: newId, name: '', imageUrl: '', items: [{ id: generateId(), name: '', price: '', description: '', imageUrl: '' }] },
       ],
     }));
     setOpenCategories((prev) => [...prev, newId]);
+  };
+
+  const handleCatImageUpload = async (catId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const localUrl = URL.createObjectURL(file);
+    setPriceList((prev) => ({
+      ...prev,
+      categories: prev.categories.map((c) => c.id === catId ? { ...c, imageUrl: localUrl } : c),
+    }));
+    setCatUploading(catId);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) {
+        setPriceList((prev) => ({
+          ...prev,
+          categories: prev.categories.map((c) => c.id === catId ? { ...c, imageUrl: data.url } : c),
+        }));
+        URL.revokeObjectURL(localUrl);
+      }
+    } catch (err) {
+      console.error('Category image upload error:', err);
+    } finally {
+      setCatUploading(null);
+    }
   };
 
   const removeCategory = (catId: string) => {
@@ -170,10 +204,32 @@ export default function FiyatListesiContent() {
       ...prev,
       categories: prev.categories.map((c) =>
         c.id === catId
-          ? { ...c, items: [...c.items, { id: generateId(), name: '', price: '', description: '' }] }
+          ? { ...c, items: [...c.items, { id: generateId(), name: '', price: '', description: '', imageUrl: '' }] }
           : c
       ),
     }));
+  };
+
+  const handleItemImageUpload = async (catId: string, itemId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const localUrl = URL.createObjectURL(file);
+    updateItem(catId, itemId, 'imageUrl', localUrl);
+    setItemUploading(itemId);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) {
+        updateItem(catId, itemId, 'imageUrl', data.url);
+        URL.revokeObjectURL(localUrl);
+      }
+    } catch (err) {
+      console.error('Item image upload error:', err);
+    } finally {
+      setItemUploading(null);
+    }
   };
 
   const removeItem = (catId: string, itemId: string) => {
@@ -396,6 +452,40 @@ export default function FiyatListesiContent() {
                     <span className="text-gray-500 flex-shrink-0">
                       {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </span>
+                    {/* Category Image */}
+                    <div className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        ref={(el) => { catInputRefs.current[cat.id] = el; }}
+                        onChange={(e) => handleCatImageUpload(cat.id, e)}
+                      />
+                      {cat.imageUrl ? (
+                        <div className="relative group">
+                          <img src={cat.imageUrl} alt={cat.name} className="w-8 h-8 rounded-lg object-cover border border-white/10" />
+                          {catUploading === cat.id && (
+                            <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
+                              <Loader2 className="w-3 h-3 text-white animate-spin" />
+                            </div>
+                          )}
+                          <button
+                            onClick={() => setPriceList((prev) => ({ ...prev, categories: prev.categories.map((c) => c.id === cat.id ? { ...c, imageUrl: '' } : c) }))}
+                            className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center"
+                          >
+                            <XIcon className="w-2.5 h-2.5 text-white" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => catInputRefs.current[cat.id]?.click()}
+                          className="w-8 h-8 rounded-lg border border-dashed border-white/20 hover:border-white/40 flex items-center justify-center text-gray-600 hover:text-gray-400 transition-all"
+                          title="Kategori resmi ekle"
+                        >
+                          <ImagePlus className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                     <input
                       type="text"
                       value={cat.name}
@@ -427,37 +517,73 @@ export default function FiyatListesiContent() {
                       >
                         <div className="divide-y divide-white/5">
                           {cat.items.map((item, itemIdx) => (
-                            <div key={item.id} className="flex items-center gap-2 px-4 py-3">
-                              <span className="text-xs text-gray-600 w-4 flex-shrink-0">{itemIdx + 1}</span>
-                              <input
-                                type="text"
-                                value={item.name}
-                                onChange={(e) => updateItem(cat.id, item.id, 'name', e.target.value)}
-                                placeholder="Ürün adı"
-                                className="flex-1 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-white text-sm placeholder-gray-600 focus:outline-none transition-all"
-                              />
+                            <div key={item.id} className="px-4 py-3 space-y-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-600 w-4 flex-shrink-0">{itemIdx + 1}</span>
+                                {/* Item Image */}
+                                <div className="flex-shrink-0">
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    ref={(el) => { itemInputRefs.current[item.id] = el; }}
+                                    onChange={(e) => handleItemImageUpload(cat.id, item.id, e)}
+                                  />
+                                  {item.imageUrl ? (
+                                    <div className="relative group">
+                                      <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-white/10" />
+                                      {itemUploading === item.id && (
+                                        <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
+                                          <Loader2 className="w-3 h-3 text-white animate-spin" />
+                                        </div>
+                                      )}
+                                      <button
+                                        onClick={() => updateItem(cat.id, item.id, 'imageUrl', '')}
+                                        className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center"
+                                      >
+                                        <XIcon className="w-2.5 h-2.5 text-white" />
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <button
+                                      onClick={() => itemInputRefs.current[item.id]?.click()}
+                                      className="w-10 h-10 rounded-lg border border-dashed border-white/20 hover:border-white/40 flex items-center justify-center text-gray-600 hover:text-gray-400 transition-all"
+                                      title="Resim ekle"
+                                    >
+                                      <ImagePlus className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                </div>
+                                <input
+                                  type="text"
+                                  value={item.name}
+                                  onChange={(e) => updateItem(cat.id, item.id, 'name', e.target.value)}
+                                  placeholder="Ürün adı"
+                                  className="flex-1 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-white text-sm placeholder-gray-600 focus:outline-none transition-all"
+                                />
+                                <input
+                                  type="text"
+                                  value={item.price}
+                                  onChange={(e) => updateItem(cat.id, item.id, 'price', e.target.value)}
+                                  placeholder="Fiyat"
+                                  className="w-20 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-white text-sm placeholder-gray-600 focus:outline-none transition-all text-right flex-shrink-0"
+                                />
+                                {cat.items.length > 1 && (
+                                  <button
+                                    onClick={() => removeItem(cat.id, item.id)}
+                                    className="text-gray-700 hover:text-gray-400 transition-all flex-shrink-0"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </div>
                               <input
                                 type="text"
                                 value={item.description}
                                 onChange={(e) => updateItem(cat.id, item.id, 'description', e.target.value)}
-                                placeholder="Açıklama"
-                                className="flex-1 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-gray-400 text-sm placeholder-gray-600 focus:outline-none transition-all hidden md:block"
+                                placeholder="Açıklama (isteğe bağlı)"
+                                className="w-full bg-transparent border-b border-white/5 focus:border-white/20 py-1 text-gray-400 text-xs placeholder-gray-600 focus:outline-none transition-all ml-6"
                               />
-                              <input
-                                type="text"
-                                value={item.price}
-                                onChange={(e) => updateItem(cat.id, item.id, 'price', e.target.value)}
-                                placeholder="Fiyat"
-                                className="w-20 bg-transparent border-b border-white/10 focus:border-white/30 py-1 text-white text-sm placeholder-gray-600 focus:outline-none transition-all text-right flex-shrink-0"
-                              />
-                              {cat.items.length > 1 && (
-                                <button
-                                  onClick={() => removeItem(cat.id, item.id)}
-                                  className="text-gray-700 hover:text-gray-400 transition-all flex-shrink-0"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              )}
                             </div>
                           ))}
                           <div className="px-4 py-2">
