@@ -57,13 +57,24 @@ export default function PriceListPage({ content }: { content: string }) {
   const toggle = (id: string) =>
     setOpenCats((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
 
-  const getFinalPrice = (item: MenuItem): string | null => {
-    if (item.discountedPrice && Number(item.discountedPrice) > 0) return Number(item.discountedPrice).toFixed(2);
-    if (item.discount && Number(item.discount) > 0) return (Number(item.price) * (1 - Number(item.discount) / 100)).toFixed(2);
-    return null;
-  };
+  const fmt = (val: string | number) => Number(val).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
   const hasItemDiscount = (item: MenuItem) =>
     (!!item.discountedPrice && Number(item.discountedPrice) > 0) || (!!item.discount && Number(item.discount) > 0);
+
+  const getFinalPrice = (item: MenuItem): string | null => {
+    if (item.discountedPrice && Number(item.discountedPrice) > 0) return fmt(item.discountedPrice);
+    if (item.discount && Number(item.discount) > 0) return fmt(Number(item.price) * (1 - Number(item.discount) / 100));
+    return null;
+  };
+
+  const getDiscountPercent = (item: MenuItem): string => {
+    if (item.discount && Number(item.discount) > 0) return item.discount;
+    if (item.discountedPrice && Number(item.discountedPrice) > 0 && Number(item.price) > 0) {
+      return Math.round((1 - Number(item.discountedPrice) / Number(item.price)) * 100).toString();
+    }
+    return '';
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -193,28 +204,27 @@ export default function PriceListPage({ content }: { content: string }) {
               </div>
               <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
                 {featured.map((item, i) => {
-                  const hasDiscount = item.discount && Number(item.discount) > 0;
-                  const finalPrice = hasDiscount
-                    ? (Number(item.price) * (1 - Number(item.discount!) / 100)).toFixed(2)
-                    : null;
+                  const hasDiscount = hasItemDiscount(item);
+                  const finalPrice = getFinalPrice(item);
+                  const pct = getDiscountPercent(item);
                   return (
                     <button
                       key={i}
-                      onClick={() => setSelectedItem(item)}
+                      onClick={() => setSelectedItem({ ...item, categoryName: item.categoryName || '' })}
                       className="flex-shrink-0 w-[calc(50%-6px)] snap-start bg-white/5 border border-white/10 rounded-2xl overflow-hidden text-left hover:bg-white/10 transition-all"
                     >
                       {item.imageUrl ? (
                         <div className="relative">
                           <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
-                          {hasDiscount && (
+                          {hasDiscount && pct && (
                             <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
-                              %{item.discount}
+                              %{pct}
                             </div>
                           )}
                         </div>
-                      ) : hasDiscount ? (
+                      ) : hasDiscount && pct ? (
                         <div className="h-10 flex items-center px-3 bg-red-500/10 border-b border-red-500/20">
-                          <span className="text-red-400 text-xs font-bold">%{item.discount} İndirim</span>
+                          <span className="text-red-400 text-xs font-bold">%{pct} İndirim</span>
                         </div>
                       ) : null}
                       <div className="p-3">
@@ -222,11 +232,11 @@ export default function PriceListPage({ content }: { content: string }) {
                         <p className="text-gray-600 text-[10px] mb-2">{item.categoryName}</p>
                         {hasDiscount ? (
                           <div>
-                            <p className="text-gray-500 text-[10px] line-through tabular-nums">{symbol}{item.price}</p>
+                            <p className="text-gray-500 text-[10px] line-through tabular-nums">{symbol}{fmt(item.price)}</p>
                             <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{finalPrice}</p>
                           </div>
                         ) : (
-                          <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{item.price}</p>
+                          <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{fmt(item.price)}</p>
                         )}
                       </div>
                     </button>
@@ -299,13 +309,13 @@ export default function PriceListPage({ content }: { content: string }) {
                                   <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
                                   {hasDiscount && (
                                     <div className="absolute -top-1.5 -left-1.5 bg-red-500 text-white text-[9px] font-bold px-1 py-0.5 rounded-md shadow leading-none">
-                                      %{item.discount}
+                                      %{getDiscountPercent(item)}
                                     </div>
                                   )}
                                 </div>
                               ) : hasDiscount ? (
                                 <div className="flex-shrink-0 bg-red-500/20 border border-red-500/30 rounded-lg px-1.5 py-0.5">
-                                  <span className="text-red-400 text-[10px] font-bold">{item.discount ? `%${item.discount}` : 'İndirim'}</span>
+                                  <span className="text-red-400 text-[10px] font-bold">%{getDiscountPercent(item)}</span>
                                 </div>
                               ) : null}
 
@@ -321,11 +331,11 @@ export default function PriceListPage({ content }: { content: string }) {
                               <div className="flex-shrink-0 text-right">
                                 {hasDiscount ? (
                                   <>
-                                    <p className="text-gray-500 text-xs line-through tabular-nums">{symbol}{item.price}</p>
+                                    <p className="text-gray-500 text-xs line-through tabular-nums">{symbol}{fmt(item.price)}</p>
                                     <p className="text-orange-400 font-bold text-base tabular-nums">{symbol}{finalPrice}</p>
                                   </>
                                 ) : (
-                                  <p className="text-orange-400 font-bold text-base tabular-nums">{symbol}{item.price}</p>
+                                  <p className="text-orange-400 font-bold text-base tabular-nums">{symbol}{fmt(item.price)}</p>
                                 )}
                               </div>
                             </button>
@@ -377,10 +387,10 @@ export default function PriceListPage({ content }: { content: string }) {
               {selectedItem.imageUrl ? (
                 <div className="relative">
                   <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-52 object-cover" />
-                  {selectedItem.discount && Number(selectedItem.discount) > 0 && (
+                  {hasItemDiscount(selectedItem) && (
                     <div className="absolute top-3 left-3 bg-red-500 text-white text-sm font-bold px-2.5 py-1 rounded-xl shadow-lg flex items-center gap-1">
                       <Tag className="w-3.5 h-3.5" />
-                      %{selectedItem.discount} İndirim
+                      %{getDiscountPercent(selectedItem)} İndirim
                     </div>
                   )}
                   <button
@@ -416,14 +426,14 @@ export default function PriceListPage({ content }: { content: string }) {
                   {hasItemDiscount(selectedItem) ? (
                     <div className="text-right">
                       <p className="text-gray-500 text-xs line-through tabular-nums">
-                        {symbol}{selectedItem.price}
+                        {symbol}{fmt(selectedItem.price)}
                       </p>
                       <p className="text-orange-400 font-bold text-xl tabular-nums">
                         {symbol}{getFinalPrice(selectedItem)}
                       </p>
                     </div>
                   ) : (
-                    <p className="text-orange-400 font-bold text-xl tabular-nums">{symbol}{selectedItem.price}</p>
+                    <p className="text-orange-400 font-bold text-xl tabular-nums">{symbol}{fmt(selectedItem.price)}</p>
                   )}
                 </div>
               </div>
