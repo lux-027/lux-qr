@@ -11,8 +11,10 @@ interface MenuItem {
   name: string;
   price: string;
   discount?: string;
+  discountedPrice?: string;
   description: string;
   imageUrl?: string;
+  categoryName?: string;
 }
 
 interface Category {
@@ -55,8 +57,13 @@ export default function PriceListPage({ content }: { content: string }) {
   const toggle = (id: string) =>
     setOpenCats((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
 
-  const discountedPrice = (price: string, discount: string) =>
-    (Number(price) * (1 - Number(discount) / 100)).toFixed(2);
+  const getFinalPrice = (item: MenuItem): string | null => {
+    if (item.discountedPrice && Number(item.discountedPrice) > 0) return Number(item.discountedPrice).toFixed(2);
+    if (item.discount && Number(item.discount) > 0) return (Number(item.price) * (1 - Number(item.discount) / 100)).toFixed(2);
+    return null;
+  };
+  const hasItemDiscount = (item: MenuItem) =>
+    (!!item.discountedPrice && Number(item.discountedPrice) > 0) || (!!item.discount && Number(item.discount) > 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -161,6 +168,75 @@ export default function PriceListPage({ content }: { content: string }) {
           ))}
         </div>
 
+        {/* Featured Items - Horizontal Scroll Carousel */}
+        {(() => {
+          const allItems = pl!.categories.flatMap((c) =>
+            c.items.map((item) => ({ ...item, categoryName: c.name }))
+          );
+          const discounted = allItems.filter((item) => hasItemDiscount(item));
+          const nonDiscounted = allItems.filter((item) => !hasItemDiscount(item));
+          const discountedSlice = discounted.slice(0, 6);
+          const needed = Math.max(0, 4 - discountedSlice.length);
+          const featured = [...discountedSlice, ...nonDiscounted.slice(0, needed)];
+
+          if (featured.length === 0) return null;
+          return (
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-6">
+              <div className="flex items-center gap-2 mb-3 px-1">
+                <Tag className="w-4 h-4 text-orange-400" />
+                <h2 className="text-sm font-semibold text-white">Öne Çıkan Ürünler</h2>
+                {discounted.length > 0 && (
+                  <span className="ml-auto text-[10px] text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
+                    {discounted.length} indirimli
+                  </span>
+                )}
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+                {featured.map((item, i) => {
+                  const hasDiscount = item.discount && Number(item.discount) > 0;
+                  const finalPrice = hasDiscount
+                    ? (Number(item.price) * (1 - Number(item.discount!) / 100)).toFixed(2)
+                    : null;
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedItem(item)}
+                      className="flex-shrink-0 w-[calc(50%-6px)] snap-start bg-white/5 border border-white/10 rounded-2xl overflow-hidden text-left hover:bg-white/10 transition-all"
+                    >
+                      {item.imageUrl ? (
+                        <div className="relative">
+                          <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
+                          {hasDiscount && (
+                            <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
+                              %{item.discount}
+                            </div>
+                          )}
+                        </div>
+                      ) : hasDiscount ? (
+                        <div className="h-10 flex items-center px-3 bg-red-500/10 border-b border-red-500/20">
+                          <span className="text-red-400 text-xs font-bold">%{item.discount} İndirim</span>
+                        </div>
+                      ) : null}
+                      <div className="p-3">
+                        <p className="text-white text-xs font-semibold leading-tight line-clamp-2 mb-1">{item.name}</p>
+                        <p className="text-gray-600 text-[10px] mb-2">{item.categoryName}</p>
+                        {hasDiscount ? (
+                          <div>
+                            <p className="text-gray-500 text-[10px] line-through tabular-nums">{symbol}{item.price}</p>
+                            <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{finalPrice}</p>
+                          </div>
+                        ) : (
+                          <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{item.price}</p>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          );
+        })()}
+
         {/* Categories */}
         <div className="space-y-3">
           {pl.categories.map((cat, idx) => {
@@ -209,8 +285,8 @@ export default function PriceListPage({ content }: { content: string }) {
                     >
                       <div className="border-t border-white/10 divide-y divide-white/5">
                         {cat.items.map((item) => {
-                          const hasDiscount = item.discount && Number(item.discount) > 0;
-                          const finalPrice = hasDiscount ? discountedPrice(item.price, item.discount!) : null;
+                          const hasDiscount = hasItemDiscount(item);
+                          const finalPrice = getFinalPrice(item);
                           return (
                             <button
                               key={item.id}
@@ -229,7 +305,7 @@ export default function PriceListPage({ content }: { content: string }) {
                                 </div>
                               ) : hasDiscount ? (
                                 <div className="flex-shrink-0 bg-red-500/20 border border-red-500/30 rounded-lg px-1.5 py-0.5">
-                                  <span className="text-red-400 text-[10px] font-bold">%{item.discount}</span>
+                                  <span className="text-red-400 text-[10px] font-bold">{item.discount ? `%${item.discount}` : 'İndirim'}</span>
                                 </div>
                               ) : null}
 
@@ -337,13 +413,13 @@ export default function PriceListPage({ content }: { content: string }) {
                 {/* Price */}
                 <div className="flex items-center justify-between bg-white/5 rounded-2xl px-4 py-3">
                   <span className="text-gray-400 text-sm">Fiyat</span>
-                  {selectedItem.discount && Number(selectedItem.discount) > 0 ? (
+                  {hasItemDiscount(selectedItem) ? (
                     <div className="text-right">
                       <p className="text-gray-500 text-xs line-through tabular-nums">
                         {symbol}{selectedItem.price}
                       </p>
                       <p className="text-orange-400 font-bold text-xl tabular-nums">
-                        {symbol}{discountedPrice(selectedItem.price, selectedItem.discount)}
+                        {symbol}{getFinalPrice(selectedItem)}
                       </p>
                     </div>
                   ) : (

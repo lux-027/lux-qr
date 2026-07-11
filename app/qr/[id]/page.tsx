@@ -820,7 +820,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400/50" />
               <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
             </div>
-            <div className="flex flex-col gap-1.5">
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
               <Link href="/qr/metin" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <Type className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
                 <span>Metin</span>

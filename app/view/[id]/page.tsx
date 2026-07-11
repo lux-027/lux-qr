@@ -704,10 +704,12 @@ export default function ViewPage({ params }: { params: { id: string } }) {
     const allItems = (pl?.categories || []).flatMap((c: any) =>
       (c.items || []).map((item: any) => ({ ...item, categoryName: c.name }))
     );
-    const discounted = allItems.filter((item: any) => item.discount && Number(item.discount) > 0);
-    const featured = discounted.length >= 2
-      ? discounted.slice(0, 6)
-      : [...discounted, ...allItems.filter((i: any) => !i.discount || Number(i.discount) === 0)].slice(0, 6);
+    const discounted = allItems.filter((item: any) => (item.discountedPrice && Number(item.discountedPrice) > 0) || (item.discount && Number(item.discount) > 0));
+    const nonDiscounted = allItems.filter((item: any) => !discounted.includes(item));
+    const minCount = 4;
+    const discountedSlice = discounted.slice(0, 6);
+    const needed = Math.max(0, minCount - discountedSlice.length);
+    const featured = [...discountedSlice, ...nonDiscounted.slice(0, needed)];
 
     return (
       <motion.main
