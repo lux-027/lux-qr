@@ -187,10 +187,10 @@ END:VCARD`;
                   <QrCode className="w-4 h-4 text-white" />
                 </div>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
+              <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
             </div>
           </div>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-300 mb-4">
+          <p className="text-base md:text-3xl lg:text-4xl font-semibold text-gray-300 mb-3">
             Modern <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">QR Kod Oluşturma</span>
           </p>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">

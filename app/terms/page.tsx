@@ -27,12 +27,12 @@ export default function TermsPage() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-3 mb-6">
-            <FileText className="w-12 h-12 text-blue-500" />
-            <h1 className="text-5xl font-bold text-white">
+            <FileText className="w-8 h-8 md:w-12 md:h-12 text-blue-500" />
+            <h1 className="text-2xl md:text-5xl font-bold text-white">
               Şartlar ve Koşullar
             </h1>
           </div>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm md:text-xl text-gray-400 max-w-2xl mx-auto">
             LuxQr hizmetlerini kullanırken bilmeniz gereken kurallar ve sorumluluklar
           </p>
         </motion.div>

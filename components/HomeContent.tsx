@@ -109,25 +109,25 @@ export default function HomeContent() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="text-center mb-24"
-          style={{ minHeight: '200px' }}
+          className="text-center mb-12 md:mb-24"
+          style={{ minHeight: '160px' }}
         >
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-500/20 blur-2xl md:blur-3xl rounded-full"></div>
             <div className="relative flex items-center justify-center gap-3 mb-4">
-              <QrCode className="w-10 h-10 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)] md:drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white">
+              <QrCode className="w-7 h-7 md:w-12 md:h-14 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)] md:drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+              <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white">
                 LuxQr
               </h1>
             </div>
           </div>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-300 mb-4">
+          <p className="text-base md:text-3xl lg:text-4xl font-semibold text-gray-300 mb-3">
             Modern{' '}
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(59,130,246,0.3)] md:drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">
               QR Kod Oluşturma
             </span>
           </p>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
             İhtiyacınıza uygun QR kod türünü seçin ve saniyeler içinde profesyonel QR kodlar oluşturun
           </p>
         </motion.div>
@@ -327,45 +327,95 @@ export default function HomeContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.2 }}
-          className="card-premium p-4 md:p-8 md:p-12 mb-16"
+          className="mb-16"
         >
-          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-8 text-gradient">
-            3 Kolay Adımda QR Kod Oluşturun
-          </h2>
-          <div className="space-y-4 md:space-y-8">
-            <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-md md:shadow-lg">
-                <span className="text-white font-bold text-base md:text-xl">1</span>
+          <div className="text-center mb-8 md:mb-12">
+            <span className="inline-block px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold mb-3">Nasıl Çalışır?</span>
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-white">
+              3 Adımda QR Kodunuz Hazır
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 md:gap-6 relative">
+            {/* Connector line (desktop only) */}
+            <div className="hidden md:block absolute top-10 left-1/3 right-1/3 h-px bg-gradient-to-r from-orange-500/40 via-amber-500/60 to-orange-500/40 z-0" />
+
+            {/* Step 1 */}
+            <div className="relative z-10 card-premium p-3 md:p-7 flex flex-col items-center text-center group hover:border-orange-500/40 transition-all">
+              <div className="relative mb-5">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-xl shadow-orange-500/30 group-hover:shadow-orange-500/50 transition-all">
+                  <svg className="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h8" /></svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-7 h-7 bg-slate-800 border-2 border-orange-500 rounded-xl flex items-center justify-center">
+                  <span className="text-orange-400 font-black text-sm">1</span>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Kategori Seçin</h3>
-                <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
-                  İhtiyacınıza uygun QR kod türünü seçin. WiFi ağ bilgileri için WiFi QR, dijital kartvizit için vCard QR, sosyal medya hesaplarınız için Sosyal Medya QR, ses dosyaları için Ses Dosyası QR veya metin, resim, video ve belgeler için Metin/Resim/Video QR kategorisini tercih edin. Her kategori özel olarak tasarlanmıştır ve maksimum kullanıcı deneyimi sunar.
-                </p>
+              <h3 className="text-white font-bold text-base md:text-lg mb-2">Tür Seçin</h3>
+              <p className="text-slate-400 text-xs md:text-sm leading-relaxed">WiFi, kartvizit, sosyal medya, fiyat listesi, ses, metin veya dosya — ihtiyacınıza uygun QR türünü seçin.</p>
+              <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+                {['WiFi', 'vCard', 'Sosyal Medya', 'Fiyat Listesi'].map(t => (
+                  <span key={t} className="px-2 py-0.5 rounded-md bg-slate-700/60 border border-slate-600 text-slate-400 text-[10px] font-medium">{t}</span>
+                ))}
               </div>
             </div>
-            
-            <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-md md:shadow-lg">
-                <span className="text-white font-bold text-base md:text-xl">2</span>
+
+            {/* Step 2 */}
+            <div className="relative z-10 card-premium p-3 md:p-7 flex flex-col items-center text-center group hover:border-amber-500/40 transition-all">
+              <div className="relative mb-5">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center shadow-xl shadow-amber-500/30 group-hover:shadow-amber-500/50 transition-all">
+                  <svg className="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-7 h-7 bg-slate-800 border-2 border-amber-500 rounded-xl flex items-center justify-center">
+                  <span className="text-amber-400 font-black text-sm">2</span>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Bilgilerinizi Girin veya Dosyanızı Yükleyin</h3>
-                <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
-                  Seçtiğiniz kategoriye göre gerekli bilgileri girin. WiFi için ağ adı ve şifre, kartvizit için iletişim bilgileri, sosyal medya için profil linkleri veya metin/resim/video için içeriklerinizi sağlayın. Dosya yüklemeleri için maksimum 100MB boyutunda dosyalarınızı güvenli bir şekilde yükleyebilirsiniz. Tüm veriler şifreli olarak işlenir.
-                </p>
+              <h3 className="text-white font-bold text-base md:text-lg mb-2">Bilgileri Girin</h3>
+              <p className="text-slate-400 text-xs md:text-sm leading-relaxed">Formları doldurun ya da dosyanızı sürükleyip bırakın. Verileriniz şifreli olarak işlenir, güvenliğiniz önceliğimizdir.</p>
+              <div className="mt-4 w-full bg-slate-800/80 border border-slate-700 rounded-xl p-3 text-left">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-400" />
+                  <span className="text-slate-500 text-[10px]">Ağ Adı</span>
+                </div>
+                <div className="h-1.5 bg-slate-700 rounded-full w-3/4 mb-2" />
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-400" />
+                  <span className="text-slate-500 text-[10px]">Şifre</span>
+                </div>
+                <div className="h-1.5 bg-slate-700 rounded-full w-1/2 mt-2" />
               </div>
             </div>
-            
-            <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shadow-md md:shadow-lg">
-                <span className="text-white font-bold text-base md:text-xl">3</span>
+
+            {/* Step 3 */}
+            <div className="relative z-10 card-premium p-3 md:p-7 flex flex-col items-center text-center group hover:border-emerald-500/40 transition-all">
+              <div className="relative mb-5">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-xl shadow-emerald-500/30 group-hover:shadow-emerald-500/50 transition-all">
+                  <svg className="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.243m-4.243 0a1 1 0 00-1 1M9 17h2m2 0h2M3 21l1.5-1.5M21 21l-1.5-1.5M3 3l1.5 1.5M21 3l-1.5 1.5" /></svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-7 h-7 bg-slate-800 border-2 border-emerald-500 rounded-xl flex items-center justify-center">
+                  <span className="text-emerald-400 font-black text-sm">3</span>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base md:text-xl font-semibold text-white mb-1 md:mb-2">Özelleştirin ve Yüksek Çözünürlüklü Olarak İndirin</h3>
-                <p className="text-gray-400 leading-relaxed text-xs md:text-sm">
-                  QR kodunuzu oluşturduktan sonra yüksek çözünürlüklü PNG formatında indirebilir, doğrudan sosyal medyada paylaşabilir veya link olarak kopyalayabilirsiniz. QR kodunuz mobil uyumlu, baskı kalitesinde ve tarama hızı optimize edilmiştir. İsterseniz geçerlilik süresi belirleyerek verilerinizin güvenli bir şekilde saklanmasını sağlayabilirsiniz.
-                </p>
+              <h3 className="text-white font-bold text-base md:text-lg mb-2">QR Kodunuzu Alın</h3>
+              <p className="text-slate-400 text-xs md:text-sm leading-relaxed">Saniyeler içinde yüksek çözünürlüklü QR kodunuz hazır. İndirin, paylaşın veya baskıya gönderin.</p>
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                  </div>
+                  <span className="text-slate-500 text-[9px]">İndir</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                  </div>
+                  <span className="text-slate-500 text-[9px]">Paylaş</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </div>
+                  <span className="text-slate-500 text-[9px]">Kopyala</span>
+                </div>
               </div>
             </div>
           </div>

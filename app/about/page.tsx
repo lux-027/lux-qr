@@ -29,12 +29,12 @@ export default function AboutPage() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-3 mb-6">
-            <QrCode className="w-12 h-12 text-blue-500" />
-            <h1 className="text-5xl font-bold text-white">
+            <QrCode className="w-8 h-8 md:w-12 md:h-12 text-blue-500" />
+            <h1 className="text-2xl md:text-5xl font-bold text-white">
               LuxQr
             </h1>
           </div>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm md:text-xl text-gray-400 max-w-2xl mx-auto">
             Dijital dünyada dosya ve metin paylaşımını kolaylaştıran modern QR kod çözümü
           </p>
         </motion.div>
@@ -47,13 +47,13 @@ export default function AboutPage() {
           className="max-w-4xl mx-auto mb-16"
         >
           <div className="bg-white/5 backdrop-blur-sm glow-border-strong rounded-2xl p-4 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Misyonumuz</h2>
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+            <h2 className="text-lg md:text-3xl font-bold text-white mb-3 md:mb-6">Misyonumuz</h2>
+            <p className="text-gray-300 text-xs md:text-lg leading-relaxed mb-3 md:mb-4">
               LuxQr, karmaşık dosya paylaşım süreçlerini basitleştirmek için tasarlandı. 
               Geleneksel paylaşım yöntemlerinin karmaşıklığına son vererek, 
               kullanıcıların metin, resim, video ve dosyalarını saniyeler içinde güvenle paylaşmalarını sağlıyoruz.
             </p>
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+            <p className="text-gray-300 text-xs md:text-lg leading-relaxed">
               Teknolojiyi herkes için erişilebilir kılarak, dijital iletişimi daha hızlı, 
               daha güvenli ve daha verimli hale getiriyoruz.
             </p>
@@ -68,7 +68,7 @@ export default function AboutPage() {
           className="max-w-6xl mx-auto mb-16"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-6 md:mb-10">Özelliklerimiz</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             <div className="bg-white/5 backdrop-blur-sm glow-border rounded-2xl p-4 md:p-6 hover:bg-white/10 transition-colors">
               <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 glow-border w-fit mb-3 md:mb-4">
                 <Zap className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />

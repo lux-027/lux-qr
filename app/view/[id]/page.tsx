@@ -701,10 +701,13 @@ export default function ViewPage({ params }: { params: { id: string } }) {
     const currSymbols: any = { TL: '₺', USD: '$', EUR: '€', GBP: '£' };
     const sym = currSymbols[pl?.currency] || '₺';
     const totalItems = pl?.categories?.reduce((a: number, c: any) => a + c.items.length, 0) || 0;
-    const featured = (pl?.categories || [])
-      .filter((c: any) => c.items?.length > 0)
-      .slice(0, 4)
-      .map((c: any) => ({ ...c.items[0], categoryName: c.name }));
+    const allItems = (pl?.categories || []).flatMap((c: any) =>
+      (c.items || []).map((item: any) => ({ ...item, categoryName: c.name }))
+    );
+    const discounted = allItems.filter((item: any) => item.discount && Number(item.discount) > 0);
+    const featured = discounted.length >= 2
+      ? discounted.slice(0, 6)
+      : [...discounted, ...allItems.filter((i: any) => !i.discount || Number(i.discount) === 0)].slice(0, 6);
 
     return (
       <motion.main
@@ -715,18 +718,18 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       >
         {/* Site Header */}
         <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-xl border-b border-white/10">
-          <div className="flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-400 shadow-lg flex items-center justify-center">
-                <QrCode className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-400 shadow-lg flex items-center justify-center">
+                <QrCode className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">LuxQr</span>
+              <span className="text-2xl font-bold text-white">LuxQr</span>
             </Link>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+              className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-7 h-7" />
             </button>
           </div>
           {menuOpen && (
@@ -743,7 +746,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           )}
         </header>
 
-        <div className="max-w-lg mx-auto px-4 pt-20 pb-8 space-y-5">
+        <div className="max-w-lg mx-auto px-4 pt-24 pb-8 space-y-5">
 
           {/* Brand Card */}
           <motion.div
@@ -797,28 +800,62 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             </Link>
           </motion.div>
 
-          {/* Featured Items */}
+          {/* Featured Items - Horizontal Scroll Carousel */}
           {featured.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.12 }}
-              className="bg-white/5 border border-white/10 rounded-3xl p-5"
             >
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-3 px-1">
                 <Tag className="w-4 h-4 text-orange-400" />
                 <h2 className="text-sm font-semibold text-white">Öne Çıkan Ürünler</h2>
+                {discounted.length > 0 && (
+                  <span className="ml-auto text-[10px] text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
+                    {discounted.length} indirimli
+                  </span>
+                )}
               </div>
-              <div className="space-y-3">
-                {featured.map((item: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between gap-3 py-2 border-b border-white/5 last:border-0">
-                    <div className="min-w-0">
-                      <p className="text-white text-sm font-medium truncate">{item.name}</p>
-                      <p className="text-gray-500 text-xs">{item.categoryName}</p>
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+                {featured.map((item: any, i: number) => {
+                  const hasDiscount = item.discount && Number(item.discount) > 0;
+                  const finalPrice = hasDiscount
+                    ? (Number(item.price) * (1 - Number(item.discount) / 100)).toFixed(2)
+                    : null;
+                  return (
+                    <div
+                      key={i}
+                      className="flex-shrink-0 w-[calc(50%-6px)] snap-start bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+                    >
+                      {item.imageUrl ? (
+                        <div className="relative">
+                          <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
+                          {hasDiscount && (
+                            <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
+                              %{item.discount}
+                            </div>
+                          )}
+                        </div>
+                      ) : hasDiscount ? (
+                        <div className="h-10 flex items-center px-3 bg-red-500/10 border-b border-red-500/20">
+                          <span className="text-red-400 text-xs font-bold">%{item.discount} İndirim</span>
+                        </div>
+                      ) : null}
+                      <div className="p-3">
+                        <p className="text-white text-xs font-semibold leading-tight line-clamp-2 mb-1">{item.name}</p>
+                        <p className="text-gray-600 text-[10px] mb-2">{item.categoryName}</p>
+                        {hasDiscount ? (
+                          <div>
+                            <p className="text-gray-500 text-[10px] line-through tabular-nums">{sym}{item.price}</p>
+                            <p className="text-orange-400 font-bold text-sm tabular-nums">{sym}{finalPrice}</p>
+                          </div>
+                        ) : (
+                          <p className="text-orange-400 font-bold text-sm tabular-nums">{sym}{item.price}</p>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-orange-400 font-bold text-sm flex-shrink-0">{sym}{item.price}</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </motion.div>
           )}

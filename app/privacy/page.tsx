@@ -29,12 +29,12 @@ export default function PrivacyPage() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Shield className="w-12 h-12 text-blue-500" />
-            <h1 className="text-5xl font-bold text-white">
+            <Shield className="w-8 h-8 md:w-12 md:h-12 text-blue-500" />
+            <h1 className="text-2xl md:text-5xl font-bold text-white">
               Gizlilik Politikası
             </h1>
           </div>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm md:text-xl text-gray-400 max-w-2xl mx-auto">
             Verilerinizin güvenliği ve gizliliği bizim için önceliklidir
           </p>
         </motion.div>

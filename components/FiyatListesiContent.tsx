@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Plus, Trash2, ChevronDown, ChevronUp, Tag, Package,
   ShoppingBag, Store, Clock, ArrowRight, Loader2, CheckCircle, Zap,
-  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode
+  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode, Percent
 } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -14,6 +14,8 @@ interface MenuItem {
   id: string;
   name: string;
   price: string;
+  discount: string;
+  discountedPrice?: string;
   description: string;
   imageUrl?: string;
 }
@@ -58,6 +60,7 @@ export default function FiyatListesiContent() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [openCategories, setOpenCategories] = useState<string[]>([]);
+  const [discountModal, setDiscountModal] = useState<{ catId: string; itemId: string; tempVal: string } | null>(null);
   const [logoUploading, setLogoUploading] = useState(false);
   const [logoPreview, setLogoPreview] = useState('');
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -75,61 +78,181 @@ export default function FiyatListesiContent() {
       {
         id: generateId(),
         name: '',
-        items: [{ id: generateId(), name: '', price: '', description: '' }],
+        items: [{ id: generateId(), name: '', price: '', discount: '', discountedPrice: undefined, description: '' }],
       },
     ],
   });
 
-  const fillDemo = () => {
-    setPriceList({
+  const demoScenarios: Array<{ brandName: string; brandDescription: string; currency: string; categories: Array<{ name: string; imageUrl: string; items: Array<{ name: string; price: string; discount: string; description: string; imageUrl: string }> }> }> = [
+    {
       brandName: 'Cafe Lux',
       brandDescription: 'Taze malzemelerle hazırlanan lezzetler ve özel içecekler',
       currency: 'TL',
-      logoUrl: '',
       categories: [
         {
-          id: generateId(),
           name: 'Başlangıçlar',
           imageUrl: 'https://images.unsplash.com/photo-1543353071-087092ec393a?w=400&q=80',
           items: [
-            { id: generateId(), name: 'Mercimek Çorbası', price: '85', description: 'Taze sebzelerle hazırlanmış, kırmızı biber yağlı', imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80' },
-            { id: generateId(), name: 'Zeytinyağlı Yaprak Sarma', price: '110', description: '6 adet, limon dilimiyle servis edilir', imageUrl: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80' },
-            { id: generateId(), name: 'Humus', price: '95', description: 'Tahin ve zeytinyağı ile, pide ekmeği eşliğinde', imageUrl: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&q=80' },
+            { name: 'Mercimek Çorbası', price: '85', discount: '10', description: 'Taze sebzelerle hazırlanmış, kırmızı biber yağlı', imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80' },
+            { name: 'Zeytinyağlı Yaprak Sarma', price: '110', discount: '', description: '6 adet, limon dilimiyle servis edilir', imageUrl: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80' },
+            { name: 'Humus', price: '95', discount: '15', description: 'Tahin ve zeytinyağı ile, pide ekmeği eşliğinde', imageUrl: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&q=80' },
           ],
         },
         {
-          id: generateId(),
           name: 'Ana Yemekler',
           imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80',
           items: [
-            { id: generateId(), name: 'Izgara Köfte', price: '220', description: 'Pilav ve mevsim salata ile servis edilir', imageUrl: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80' },
-            { id: generateId(), name: 'Tavuk Şiş', price: '195', description: 'Sebzeli, özel baharatlı marine', imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80' },
-            { id: generateId(), name: 'Karışık Izgara', price: '320', description: 'Et ve tavuk karışık, 2 kişilik porsiyon', imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80' },
-            { id: generateId(), name: 'Levrek Izgara', price: '280', description: 'Taze levrek, sebze garnitürü ile', imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&q=80' },
+            { name: 'Izgara Köfte', price: '220', discount: '20', description: 'Pilav ve mevsim salata ile servis edilir', imageUrl: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80' },
+            { name: 'Tavuk Şiş', price: '195', discount: '', description: 'Sebzeli, özel baharatlı marine', imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80' },
+            { name: 'Karışık Izgara', price: '320', discount: '', description: 'Et ve tavuk karışık, 2 kişilik porsiyon', imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80' },
           ],
         },
         {
-          id: generateId(),
           name: 'Tatlılar',
           imageUrl: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&q=80',
           items: [
-            { id: generateId(), name: 'Künefe', price: '130', description: 'Fıstıklı, sıcak servis', imageUrl: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=400&q=80' },
-            { id: generateId(), name: 'Cheesecake', price: '115', description: 'Frambuaz soslu, ev yapımı', imageUrl: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=80' },
-            { id: generateId(), name: 'Sütlaç', price: '85', description: 'Fırında pişirilmiş, tarçınlı', imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80' },
+            { name: 'Künefe', price: '130', discount: '', description: 'Fıstıklı, sıcak servis', imageUrl: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=400&q=80' },
+            { name: 'Cheesecake', price: '115', discount: '25', description: 'Frambuaz soslu, ev yapımı', imageUrl: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=80' },
+            { name: 'Sütlaç', price: '85', discount: '', description: 'Fırında pişirilmiş, tarçınlı', imageUrl: 'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&q=80' },
           ],
         },
         {
-          id: generateId(),
           name: 'İçecekler',
           imageUrl: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80',
           items: [
-            { id: generateId(), name: 'Ayran', price: '45', description: 'Ev yapımı, köpüklü', imageUrl: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80' },
-            { id: generateId(), name: 'Limonata', price: '75', description: 'Taze sıkılmış nane yapraklı', imageUrl: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80' },
-            { id: generateId(), name: 'Türk Kahvesi', price: '65', description: 'Geleneksel pişirme, lokum ikramı', imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80' },
-            { id: generateId(), name: 'Çay', price: '30', description: 'Demlik çay, şeker seçeneğiyle', imageUrl: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80' },
+            { name: 'Ayran', price: '45', discount: '', description: 'Ev yapımı, köpüklü', imageUrl: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&q=80' },
+            { name: 'Limonata', price: '75', discount: '', description: 'Taze sıkılmış nane yapraklı', imageUrl: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80' },
+            { name: 'Türk Kahvesi', price: '65', discount: '', description: 'Geleneksel pişirme, lokum ikramı', imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80' },
+            { name: 'Çay', price: '30', discount: '', description: 'Demlik çay, şeker seçeneğiyle', imageUrl: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80' },
           ],
         },
       ],
+    },
+    {
+      brandName: 'TeknoMart',
+      brandDescription: 'Elektronik ve aksesuarda en iyi fiyatlar',
+      currency: 'TL',
+      categories: [
+        {
+          name: 'Telefonlar',
+          imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80',
+          items: [
+            { name: 'Akıllı Telefon A12', price: '12999', discount: '15', description: '6.5" AMOLED, 128GB, çift kamera', imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&q=80' },
+            { name: 'Akıllı Telefon Pro', price: '21999', discount: '', description: '6.7" ekran, 256GB, 108MP kamera', imageUrl: 'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=400&q=80' },
+            { name: 'Bütçe Dostu Model', price: '6499', discount: '20', description: '6.2" ekran, 64GB, uzun pil ömrü', imageUrl: 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400&q=80' },
+          ],
+        },
+        {
+          name: 'Kulaklıklar',
+          imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',
+          items: [
+            { name: 'Kablosuz Kulaklık', price: '1299', discount: '', description: 'Gürültü engelleme, 30 saat pil', imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80' },
+            { name: 'Oyuncu Kulaklık', price: '899', discount: '10', description: '7.1 surround, RGB aydınlatma', imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&q=80' },
+            { name: 'Spor Kulakiçi', price: '549', discount: '', description: 'Su geçirmez IPX5, şarj kutusu', imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80' },
+          ],
+        },
+        {
+          name: 'Aksesuarlar',
+          imageUrl: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&q=80',
+          items: [
+            { name: 'Hızlı Şarj Adaptörü', price: '299', discount: '', description: '65W GaN, çoklu port', imageUrl: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&q=80' },
+            { name: 'Powerbank 20000mAh', price: '649', discount: '12', description: 'İki çıkış, hızlı şarj destekli', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80' },
+            { name: 'USB-C Kablo', price: '149', discount: '', description: '2 metre, 100W güç aktarımı', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80' },
+          ],
+        },
+      ],
+    },
+    {
+      brandName: 'ModaStil Butik',
+      brandDescription: 'Sezonun en trend parçaları bir arada',
+      currency: 'TL',
+      categories: [
+        {
+          name: 'Üst Giyim',
+          imageUrl: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80',
+          items: [
+            { name: 'Basic T-Shirt', price: '299', discount: '20', description: '%100 pamuk, 5 renk seçeneği', imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80' },
+            { name: 'Oversize Sweatshirt', price: '549', discount: '', description: 'Unisex, kapüşonlu', imageUrl: 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80' },
+            { name: 'Gömlek Linen', price: '749', discount: '15', description: 'Keten karışımı, yazlık', imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80' },
+          ],
+        },
+        {
+          name: 'Alt Giyim',
+          imageUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80',
+          items: [
+            { name: 'Slim Fit Jean', price: '899', discount: '', description: 'Streç denim, 3 renk', imageUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80' },
+            { name: 'Chino Pantolon', price: '749', discount: '10', description: 'Hafif kumaş, slim kesim', imageUrl: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&q=80' },
+            { name: 'Şort Bermuda', price: '449', discount: '', description: 'Plaj ve günlük kullanım', imageUrl: 'https://images.unsplash.com/photo-1591195853828-11db59a44f43?w=400&q=80' },
+          ],
+        },
+        {
+          name: 'Ayakkabı',
+          imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+          items: [
+            { name: 'Spor Sneaker', price: '1299', discount: '25', description: 'Hafif taban, nefes alan kumaş', imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80' },
+            { name: 'Klasik Loafer', price: '1599', discount: '', description: 'Deri üst, şık görünüm', imageUrl: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&q=80' },
+            { name: 'Sandalet', price: '699', discount: '', description: 'Yazlık, konforlu taban', imageUrl: 'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400&q=80' },
+          ],
+        },
+      ],
+    },
+    {
+      brandName: 'GreenSpa Güzellik',
+      brandDescription: 'Doğal ürünlerle profesyonel bakım hizmetleri',
+      currency: 'TL',
+      categories: [
+        {
+          name: 'Saç Bakımı',
+          imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80',
+          items: [
+            { name: 'Saç Kesimi (Bayan)', price: '350', discount: '', description: 'Yıkama ve föhn dahil', imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80' },
+            { name: 'Keratin Bakımı', price: '1200', discount: '10', description: 'Formaldehit içermez, 3-4 ay kalıcı', imageUrl: 'https://images.unsplash.com/photo-1560066984-138daaa4e4e9?w=400&q=80' },
+            { name: 'Saç Boyama', price: '800', discount: '', description: 'Kök boyama, tüm saç seçeneği', imageUrl: 'https://images.unsplash.com/photo-1522337094-1e6e7b2cbde2?w=400&q=80' },
+          ],
+        },
+        {
+          name: 'Cilt Bakımı',
+          imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80',
+          items: [
+            { name: 'Klasik Cilt Bakımı', price: '550', discount: '15', description: 'Derin temizlik, nem maskesi', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80' },
+            { name: 'Anti-Aging Bakım', price: '950', discount: '', description: 'C vitamini serum, kolajen maske', imageUrl: 'https://images.unsplash.com/photo-1556228720-da9a9ce57568?w=400&q=80' },
+            { name: 'Makyaj', price: '700', discount: '', description: 'Günlük veya özel gün makyajı', imageUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80' },
+          ],
+        },
+        {
+          name: 'Masaj & Vücut',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80',
+          items: [
+            { name: 'Klasik Masaj (50dk)', price: '650', discount: '20', description: 'Tam vücut rahatlama masajı', imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80' },
+            { name: 'Aromaterapi Masajı', price: '850', discount: '', description: 'Esansiyel yağlar ile 60 dakika', imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=400&q=80' },
+            { name: 'Hamam & Kese', price: '500', discount: '', description: 'Geleneksel Türk hamamı deneyimi', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80' },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const fillDemo = () => {
+    const scenario = demoScenarios[Math.floor(Math.random() * demoScenarios.length)];
+    setPriceList({
+      brandName: scenario.brandName,
+      brandDescription: scenario.brandDescription,
+      currency: scenario.currency,
+      logoUrl: '',
+      categories: scenario.categories.map((cat) => ({
+        id: generateId(),
+        name: cat.name,
+        imageUrl: cat.imageUrl,
+        items: cat.items.map((item) => ({
+          id: generateId(),
+          name: item.name,
+          price: item.price,
+          discount: item.discount ?? '',
+          discountedPrice: item.discount ? String(Math.round(Number(item.price) * (1 - Number(item.discount) / 100))) : undefined,
+          description: item.description,
+          imageUrl: item.imageUrl,
+        })),
+      })),
     });
     setOpenCategories([]);
   };
@@ -169,7 +292,7 @@ export default function FiyatListesiContent() {
       ...prev,
       categories: [
         ...prev.categories,
-        { id: newId, name: '', imageUrl: '', items: [{ id: generateId(), name: '', price: '', description: '', imageUrl: '' }] },
+        { id: newId, name: '', imageUrl: '', items: [{ id: generateId(), name: '', price: '', discount: '', description: '', imageUrl: '' }] },
       ],
     }));
     setOpenCategories((prev) => [...prev, newId]);
@@ -222,7 +345,7 @@ export default function FiyatListesiContent() {
       ...prev,
       categories: prev.categories.map((c) =>
         c.id === catId
-          ? { ...c, items: [...c.items, { id: generateId(), name: '', price: '', description: '', imageUrl: '' }] }
+          ? { ...c, items: [...c.items, { id: generateId(), name: '', price: '', discount: '', discountedPrice: undefined, description: '', imageUrl: '' }] }
           : c
       ),
     }));
@@ -322,16 +445,16 @@ export default function FiyatListesiContent() {
             </div>
           </div>
           <div className="text-left">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">Fiyat Listesi</h1>
-            <p className="text-lg md:text-2xl font-bold bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">QR Kod</p>
+            <h1 className="text-xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">Fiyat Listesi</h1>
+            <p className="text-sm md:text-2xl font-semibold bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">QR Kod</p>
           </div>
         </div>
-        <p className="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto hidden md:block">
+        <p className="text-gray-400 text-xs md:text-lg max-w-2xl mx-auto text-center mt-1">
           Restoran menüsü, hizmet veya ürün fiyat listenizi QR koda dönüştürün
         </p>
       </motion.div>
 
-      <div className="space-y-3 md:space-y-8">
+      <div className="space-y-5 md:space-y-8">
       {/* Brand Info Card */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <div className="card-premium p-4 md:p-8">
@@ -467,14 +590,14 @@ export default function FiyatListesiContent() {
             </div>
             <button
               onClick={addCategory}
-              className="flex items-center gap-1.5 px-3 md:px-4 py-2 bg-gradient-to-r from-orange-500/20 to-amber-500/20 hover:from-orange-500/30 hover:to-amber-500/30 border border-orange-500/30 rounded-xl text-orange-300 text-sm font-medium transition-all"
+              className="flex items-center gap-1.5 px-3 md:px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 border border-blue-500/30 rounded-xl text-blue-300 text-sm font-medium transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               Kategori Ekle
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {priceList.categories.map((cat, catIdx) => {
               const isOpen = openCategories.includes(cat.id);
               return (
@@ -559,61 +682,44 @@ export default function FiyatListesiContent() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="bg-slate-900/60 p-2.5 space-y-2">
+                        <div className="bg-slate-900/60 p-2.5 space-y-3">
                           {cat.items.map((item, itemIdx) => (
-                            <div key={item.id} className="bg-slate-800 border border-slate-700 hover:border-slate-500 rounded-lg px-3 py-2.5 space-y-2 transition-all">
-
-                              {/* Satır 1: numara + resim + ad + fiyat + sil */}
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs text-slate-500 w-5 flex-shrink-0 text-center font-bold">{itemIdx + 1}</span>
-
-                                {/* Ürün Resmi */}
+                            <div key={item.id} className="bg-slate-800/80 border border-slate-700 hover:border-slate-500 rounded-xl p-3.5 transition-all">
+                              {/* Üst: Resim + Ad & Açıklama */}
+                              <div className="flex gap-3 mb-3">
+                                {/* Resim */}
                                 <div className="flex-shrink-0">
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    ref={(el) => { itemInputRefs.current[item.id] = el; }}
-                                    onChange={(e) => handleItemImageUpload(cat.id, item.id, e)}
-                                  />
+                                  <input type="file" accept="image/*" className="hidden" ref={(el) => { itemInputRefs.current[item.id] = el; }} onChange={(e) => handleItemImageUpload(cat.id, item.id, e)} />
                                   {item.imageUrl ? (
                                     <div className="relative group">
-                                      <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded-lg object-cover border border-slate-600" />
-                                      {itemUploading === item.id && (
-                                        <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
-                                          <Loader2 className="w-3 h-3 text-white animate-spin" />
-                                        </div>
+                                      <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-xl object-cover border border-slate-600" />
+                                      {itemUploading === item.id && <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center"><Loader2 className="w-3 h-3 text-white animate-spin" /></div>}
+                                      {item.discount && Number(item.discount) > 0 && (
+                                        <div className="absolute -top-1.5 -left-1.5 bg-red-500 text-white text-[9px] font-bold px-1 py-0.5 rounded-md shadow-lg leading-none">%{item.discount}</div>
                                       )}
-                                      <button
-                                        onClick={() => updateItem(cat.id, item.id, 'imageUrl', '')}
-                                        className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center"
-                                      >
+                                      <button onClick={() => updateItem(cat.id, item.id, 'imageUrl', '')} className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center">
                                         <XIcon className="w-2.5 h-2.5 text-white" />
                                       </button>
                                     </div>
                                   ) : (
-                                    <button
-                                      onClick={() => itemInputRefs.current[item.id]?.click()}
-                                      className="w-12 h-12 rounded-lg border border-dashed border-slate-600 hover:border-orange-400/60 flex items-center justify-center text-slate-600 hover:text-orange-400 transition-all"
-                                      title="Resim ekle"
-                                    >
-                                      <ImagePlus className="w-3.5 h-3.5" />
+                                    <button onClick={() => itemInputRefs.current[item.id]?.click()} className="w-20 h-20 rounded-xl border border-dashed border-slate-600 hover:border-orange-400/60 flex flex-col items-center justify-center gap-2 text-slate-500 hover:text-orange-400 transition-all" title="Resim ekle">
+                                      <ImagePlus className="w-6 h-6" />
+                                      <span className="text-[10px] font-medium">Resim ekle</span>
                                     </button>
                                   )}
                                 </div>
+                                {/* Ad + Açıklama */}
+                                <div className="flex-1 min-w-0 flex flex-col gap-2">
+                                  <input type="text" value={item.name} onChange={(e) => updateItem(cat.id, item.id, 'name', e.target.value)} placeholder="Ürün adı" className="w-full bg-slate-700/60 border border-slate-600 focus:border-orange-400 rounded-lg px-3 py-2 text-white text-sm font-medium placeholder-slate-500 focus:outline-none transition-all" />
+                                  <textarea value={item.description} onChange={(e) => { updateItem(cat.id, item.id, 'description', e.target.value); e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }} placeholder="Açıklama..." rows={2} className="w-full bg-slate-700/30 border border-slate-700 focus:border-slate-500 rounded-lg px-3 py-1.5 text-slate-300 text-xs placeholder-slate-600 focus:outline-none transition-all resize-none overflow-hidden leading-relaxed" />
+                                </div>
+                              </div>
 
-                                {/* Ad */}
-                                <input
-                                  type="text"
-                                  value={item.name}
-                                  onChange={(e) => updateItem(cat.id, item.id, 'name', e.target.value)}
-                                  placeholder="Ürün adı"
-                                  className="flex-1 min-w-0 bg-slate-700/60 border border-slate-600 focus:border-orange-400 rounded-lg px-2.5 py-1.5 text-white text-sm font-medium placeholder-slate-500 focus:outline-none transition-all"
-                                />
-
+                              {/* Alt: Fiyat + İndirim + Sil — yan yana */}
+                              <div className="flex items-center gap-2">
                                 {/* Fiyat */}
-                                <div className="flex items-center gap-0.5 flex-shrink-0 bg-slate-700/50 border border-slate-600 rounded-lg px-2 py-1">
-                                  <span className="text-slate-400 text-xs font-medium">{priceList.currency}</span>
+                                <div className="flex items-center gap-1 bg-slate-700/60 border border-slate-500 rounded-lg px-2.5 py-2 flex-shrink-0">
+                                  <span className="text-slate-400 text-xs font-semibold">{priceList.currency}</span>
                                   <input
                                     type="number"
                                     inputMode="decimal"
@@ -621,29 +727,45 @@ export default function FiyatListesiContent() {
                                     step="0.01"
                                     value={item.price}
                                     onChange={(e) => updateItem(cat.id, item.id, 'price', e.target.value)}
-                                    placeholder="0"
-                                    className="w-14 bg-transparent border-none text-amber-300 text-sm font-semibold placeholder-slate-600 focus:outline-none text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    placeholder="0.00"
+                                    className="w-16 bg-transparent border-none text-amber-300 text-sm font-bold placeholder-slate-600 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   />
                                 </div>
 
+                                {/* İndirim */}
+                                {item.discount && Number(item.discount) > 0 ? (
+                                  <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/25 rounded-lg px-2.5 py-2 flex-1">
+                                    <span className="text-red-400 text-xs font-bold whitespace-nowrap">%{item.discount}</span>
+                                    <span className="text-emerald-400 text-xs font-semibold tabular-nums">{priceList.currency}{item.discountedPrice}</span>
+                                    <button
+                                      onClick={() => setPriceList((prev: any) => ({ ...prev, categories: prev.categories.map((c: any) => c.id === cat.id ? { ...c, items: c.items.map((i: any) => i.id === item.id ? { ...i, discountedPrice: undefined, discount: '' } : i) } : c) }))}
+                                      className="ml-auto text-[9px] text-slate-600 hover:text-red-400 transition-all whitespace-nowrap"
+                                    >
+                                      Kaldır
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    disabled={!item.price || Number(item.price) <= 0}
+                                    onClick={() => setDiscountModal({ catId: cat.id, itemId: item.id, tempVal: '' })}
+                                    className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all border disabled:opacity-30 disabled:cursor-not-allowed text-emerald-400 bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 hover:border-emerald-500/70 whitespace-nowrap"
+                                  >
+                                    <Percent className="w-2.5 h-2.5" />
+                                    İndirim Ekle
+                                  </button>
+                                )}
+
+                                {/* Sil */}
                                 {cat.items.length > 1 && (
                                   <button
                                     onClick={() => removeItem(cat.id, item.id)}
-                                    className="text-slate-600 hover:text-red-400 transition-all flex-shrink-0"
+                                    className="ml-auto flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all"
+                                    title="Ürünü sil"
                                   >
-                                    <Trash2 className="w-3.5 h-3.5" />
+                                    <Trash2 className="w-4 h-4" />
                                   </button>
                                 )}
                               </div>
-
-                              {/* Satır 2: açıklama */}
-                              <input
-                                type="text"
-                                value={item.description}
-                                onChange={(e) => updateItem(cat.id, item.id, 'description', e.target.value)}
-                                placeholder="Açıklama..."
-                                className="w-3/4 bg-slate-700/40 border border-slate-700 focus:border-slate-500 rounded-lg px-2.5 py-1 text-slate-300 text-xs placeholder-slate-600 focus:outline-none transition-all mx-auto block"
-                              />
                             </div>
                           ))}
 
@@ -711,7 +833,7 @@ export default function FiyatListesiContent() {
         <button
           onClick={handleGenerate}
           disabled={!isValid || isGenerating || !!itemUploading || !!catUploading || logoUploading}
-          className={`btn-primary w-full py-3.5 md:py-4 rounded-2xl font-bold text-white text-base md:text-lg flex items-center justify-center gap-3 transition-all duration-300 ${
+          className={`btn-primary w-full py-2.5 md:py-4 rounded-xl md:rounded-2xl font-bold text-white text-sm md:text-lg flex items-center justify-center gap-2 md:gap-3 transition-all duration-300 ${
             !isValid || isGenerating || !!itemUploading || !!catUploading || logoUploading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
@@ -880,6 +1002,76 @@ export default function FiyatListesiContent() {
         </p>
       </motion.div>
       </div>
+      </div>
+
+      {discountModal && (
+        <DiscountModalInner
+          discountModal={discountModal}
+          setDiscountModal={setDiscountModal as any}
+          priceList={priceList}
+          setPriceList={setPriceList}
+        />
+      )}
+    </div>
+  );
+}
+
+function DiscountModalInner({ discountModal, setDiscountModal, priceList, setPriceList }: {
+  discountModal: { catId: string; itemId: string; tempVal: string };
+  setDiscountModal: (v: any) => void;
+  priceList: any;
+  setPriceList: (fn: any) => void;
+}) {
+  const cat = priceList.categories.find((c: any) => c.id === discountModal.catId);
+  const item = cat?.items.find((i: any) => i.id === discountModal.itemId);
+  if (!item) return null;
+  const pct = discountModal.tempVal && Number(discountModal.tempVal) > 0 && Number(item.price) > 0
+    ? Math.round((1 - Number(discountModal.tempVal) / Number(item.price)) * 100)
+    : 0;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" onClick={() => setDiscountModal(null)}>
+      <div className="w-full max-w-xs bg-slate-900 border border-white/10 rounded-2xl p-5 shadow-2xl" onClick={e => e.stopPropagation()}>
+        <h3 className="text-white font-bold text-base mb-1">İndirim Ekle</h3>
+        <p className="text-slate-500 text-xs mb-4">{item.name || 'Ürün'} — Fiyat: {priceList.currency}{item.price}</p>
+        <label className="text-slate-400 text-xs font-semibold block mb-1">İndirimli Fiyat</label>
+        <div className="flex items-center gap-2 bg-slate-800 border border-slate-600 rounded-xl px-3 py-2.5 mb-3">
+          <span className="text-slate-400 text-sm font-semibold">{priceList.currency}</span>
+          <input
+            type="number"
+            inputMode="decimal"
+            autoFocus
+            min="0"
+            step="0.01"
+            value={discountModal.tempVal}
+            onChange={e => setDiscountModal({ ...discountModal, tempVal: e.target.value })}
+            placeholder="0.00"
+            className="flex-1 bg-transparent border-none text-emerald-400 text-lg font-bold placeholder-slate-600 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+        </div>
+        {pct > 0 && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2 mb-4 flex items-center justify-between">
+            <span className="text-slate-400 text-xs">Hesaplanan indirim</span>
+            <span className="text-red-400 font-bold text-lg">%{pct}</span>
+          </div>
+        )}
+        <div className="flex gap-2">
+          <button onClick={() => setDiscountModal(null)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm font-medium transition-all">İptal</button>
+          <button
+            disabled={!discountModal.tempVal || pct <= 0}
+            onClick={() => {
+              setPriceList((prev: any) => ({
+                ...prev,
+                categories: prev.categories.map((c: any) =>
+                  c.id === discountModal.catId
+                    ? { ...c, items: c.items.map((i: any) => i.id === discountModal.itemId ? { ...i, discountedPrice: discountModal.tempVal, discount: String(pct) } : i) }
+                    : c
+                ),
+              }));
+              setDiscountModal(null);
+            }}
+            className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold transition-all"
+          >Onayla</button>
+        </div>
       </div>
     </div>
   );

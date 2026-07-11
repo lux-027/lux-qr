@@ -820,37 +820,37 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400/50" />
               <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Link href="/qr/metin" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Type className="w-3 h-3 md:w-5 md:h-5 text-blue-400" />
+            <div className="flex flex-col gap-1.5">
+              <Link href="/qr/metin" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Type className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
                 <span>Metin</span>
               </Link>
-              <Link href="/qr/metin-belge" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <FileText className="w-3 h-3 md:w-5 md:h-5 text-blue-400" />
-                <span>Resim/Video/Belge</span>
+              <Link href="/qr/metin-belge" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <FileText className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
+                <span>Resim / Video / Belge</span>
               </Link>
-              <Link href="/qr/wifi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Wifi className="w-3 h-3 md:w-5 md:h-5 text-cyan-400" />
+              <Link href="/qr/wifi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Wifi className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-400 flex-shrink-0" />
                 <span>WiFi</span>
               </Link>
-              <Link href="/qr/kartvizit" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Building2 className="w-3 h-3 md:w-5 md:h-5 text-purple-400" />
+              <Link href="/qr/kartvizit" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Building2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-purple-400 flex-shrink-0" />
                 <span>Kartvizit</span>
               </Link>
-              <Link href="/qr/sosyal-medya" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Share2 className="w-3 h-3 md:w-5 md:h-5 text-pink-400" />
-                <span>Sosyal</span>
+              <Link href="/qr/sosyal-medya" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Share2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-pink-400 flex-shrink-0" />
+                <span>Sosyal Medya</span>
               </Link>
-              <Link href="/qr/ses-dosyasi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Mic className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
+              <Link href="/qr/ses-dosyasi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Mic className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 flex-shrink-0" />
                 <span>Ses Dosyası</span>
               </Link>
-              <Link href="/qr/iban" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Landmark className="w-3 h-3 md:w-5 md:h-5 text-green-400" />
+              <Link href="/qr/iban" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <Landmark className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-400 flex-shrink-0" />
                 <span>IBAN</span>
               </Link>
-              <Link href="/qr/fiyat-listesi" className="flex items-center justify-center gap-2 md:gap-3 px-2 md:px-4 py-2 md:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <ShoppingBag className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
+              <Link href="/qr/fiyat-listesi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <ShoppingBag className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 flex-shrink-0" />
                 <span>Fiyat Listesi</span>
               </Link>
             </div>

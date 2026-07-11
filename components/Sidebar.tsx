@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag } from 'lucide-react';
+import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ChevronDown } from 'lucide-react';
 import ShareButton from './ShareButton';
 import { useState } from 'react';
 
@@ -13,6 +13,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
+  const [qrOpen, setQrOpen] = useState(true);
 
   const mainItems = [
     { href: '/', label: 'Ana Sayfa', icon: Home, color: 'text-amber-400' },
@@ -104,12 +105,19 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <div className="border-t border-white/20 my-4"></div>
 
             {/* QR Categories */}
-            <div className="flex items-center gap-2 px-2 py-1.5 mb-1">
-              <QrCode className="w-4 h-4 text-blue-400" />
-              <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">QR Kod Türleri</span>
-            </div>
+            {/* Header: clickable on mobile, static on desktop */}
+            <button
+              onClick={() => setQrOpen(o => !o)}
+              className="md:cursor-default w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-1 rounded-lg hover:bg-white/5 md:hover:bg-transparent transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <QrCode className="w-4 h-4 text-blue-400" />
+                <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">QR Kod Türleri</span>
+              </div>
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 md:hidden ${qrOpen ? 'rotate-180' : ''}`} />
+            </button>
 
-            <div className="space-y-1 pl-1">
+            <div className={`space-y-1 pl-1 overflow-hidden transition-all duration-200 ${qrOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 md:max-h-96 md:opacity-100'}`}>
               {qrItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (

@@ -128,12 +128,12 @@ export default function FAQPage() {
           className="text-center mb-16"
         >
           <div className="flex flex-col items-center justify-center gap-3 mb-6">
-            <HelpCircle className="w-12 h-12 text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
-            <h1 className="text-5xl font-bold text-white text-gradient">
+            <HelpCircle className="w-8 h-8 md:w-12 md:h-12 text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
+            <h1 className="text-2xl md:text-5xl font-bold text-white text-gradient">
               Sıkça Sorulan Sorular
             </h1>
           </div>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm md:text-xl text-gray-400 max-w-2xl mx-auto">
             LuxQr hakkında merak edilenler ve sıkça karşılaşılan sorular
           </p>
         </motion.div>
