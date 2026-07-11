@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Plus, Trash2, ChevronDown, ChevronUp, Tag, Package,
   ShoppingBag, Store, Clock, ArrowRight, Loader2, CheckCircle, Zap,
-  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode, Percent
+  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode, Percent, Pencil
 } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -61,6 +61,9 @@ export default function FiyatListesiContent() {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   const [discountModal, setDiscountModal] = useState<{ catId: string; itemId: string; tempVal: string } | null>(null);
+  const [itemModal, setItemModal] = useState<{ catId: string; item: MenuItem; isNew: boolean } | null>(null);
+  const itemModalImgRef = useRef<HTMLInputElement | null>(null);
+  const [itemModalUploading, setItemModalUploading] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
   const [logoPreview, setLogoPreview] = useState('');
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -74,13 +77,7 @@ export default function FiyatListesiContent() {
     brandDescription: '',
     currency: 'TL',
     logoUrl: '',
-    categories: [
-      {
-        id: generateId(),
-        name: '',
-        items: [{ id: generateId(), name: '', price: '', discount: '', discountedPrice: undefined, description: '' }],
-      },
-    ],
+    categories: [],
   });
 
   const demoScenarios: Array<{ brandName: string; brandDescription: string; currency: string; categories: Array<{ name: string; imageUrl: string; items: Array<{ name: string; price: string; discount: string; description: string; imageUrl: string }> }> }> = [
@@ -292,7 +289,7 @@ export default function FiyatListesiContent() {
       ...prev,
       categories: [
         ...prev.categories,
-        { id: newId, name: '', imageUrl: '', items: [{ id: generateId(), name: '', price: '', discount: '', description: '', imageUrl: '' }] },
+        { id: newId, name: '', imageUrl: '', items: [] },
       ],
     }));
     setOpenCategories((prev) => [...prev, newId]);
@@ -341,14 +338,42 @@ export default function FiyatListesiContent() {
   };
 
   const addItem = (catId: string) => {
+    setOpenCategories((prev) => prev.includes(catId) ? prev : [...prev, catId]);
+    setItemModal({ catId, item: { id: generateId(), name: '', price: '', discount: '', discountedPrice: undefined, description: '', imageUrl: '' }, isNew: true });
+  };
+
+  const openEditItemModal = (catId: string, item: MenuItem) => {
+    setItemModal({ catId, item: { ...item }, isNew: false });
+  };
+
+  const saveItemModal = () => {
+    if (!itemModal) return;
+    const { catId, item, isNew } = itemModal;
     setPriceList((prev) => ({
       ...prev,
       categories: prev.categories.map((c) =>
         c.id === catId
-          ? { ...c, items: [...c.items, { id: generateId(), name: '', price: '', discount: '', discountedPrice: undefined, description: '', imageUrl: '' }] }
+          ? isNew
+            ? { ...c, items: [...c.items, item] }
+            : { ...c, items: c.items.map((i) => (i.id === item.id ? item : i)) }
           : c
       ),
     }));
+    setItemModal(null);
+  };
+
+  const handleItemModalImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const local = URL.createObjectURL(file);
+    setItemModal((p) => p ? { ...p, item: { ...p.item, imageUrl: local } } : null);
+    setItemModalUploading(true);
+    try {
+      const fd = new FormData(); fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) { setItemModal((p) => p ? { ...p, item: { ...p.item, imageUrl: data.url } } : null); URL.revokeObjectURL(local); }
+    } catch { /* ignore */ } finally { setItemModalUploading(false); }
   };
 
   const handleItemImageUpload = async (catId: string, itemId: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -393,9 +418,12 @@ export default function FiyatListesiContent() {
     }));
   };
 
+  const emptyNamedCategories = priceList.categories.filter((c) => c.items.length === 0);
   const isValid =
     priceList.brandName.trim() !== '' &&
-    priceList.categories.some((c) => c.name.trim() !== '' && c.items.some((i) => i.name.trim() !== '' && i.price.trim() !== ''));
+    priceList.categories.length > 0 &&
+    priceList.categories.some((c) => c.name.trim() !== '' && c.items.some((i) => i.name.trim() !== '' && i.price.trim() !== '')) &&
+    emptyNamedCategories.length === 0;
 
   const handleGenerate = async () => {
     if (!isValid) return;
@@ -578,6 +606,45 @@ export default function FiyatListesiContent() {
       {/* Categories */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <div className="card-premium p-4 md:p-10">
+          <div className="mb-6 rounded-2xl bg-slate-800/40 border border-slate-700/50 overflow-hidden">
+            <div className="px-5 py-3.5 bg-gradient-to-r from-orange-500/10 to-amber-500/10 border-b border-slate-700/50 flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs font-bold">?</span>
+              </div>
+              <span className="text-sm font-bold text-white">Nasıl Kullanılır?</span>
+            </div>
+            <div className="p-2.5 sm:p-4 flex flex-row sm:flex-row items-stretch gap-2 sm:gap-3">
+              <div className="flex-1 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3.5 rounded-lg sm:rounded-xl bg-blue-500/10 border border-blue-500/20">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-blue-500/25 border-2 border-blue-500/50 flex items-center justify-center flex-shrink-0">
+                  <span className="text-blue-400 text-xs sm:text-sm font-black">1</span>
+                </div>
+                <div className="text-center sm:text-left">
+                  <p className="text-white text-[11px] sm:text-sm font-bold leading-none mb-0.5">Kategori Oluştur</p>
+                  <p className="text-slate-500 text-[10px] sm:text-xs leading-snug"><span className="text-blue-400 font-medium">Kategori Ekle</span> butonuna bas, isim gir</p>
+                </div>
+              </div>
+              <div className="flex items-center text-slate-700"><ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 -rotate-90" /></div>
+              <div className="flex-1 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3.5 rounded-lg sm:rounded-xl bg-orange-500/10 border border-orange-500/20">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-orange-500/25 border-2 border-orange-500/50 flex items-center justify-center flex-shrink-0">
+                  <span className="text-orange-400 text-xs sm:text-sm font-black">2</span>
+                </div>
+                <div className="text-center sm:text-left">
+                  <p className="text-white text-[11px] sm:text-sm font-bold leading-none mb-0.5">Kategoriyi Aç</p>
+                  <p className="text-slate-500 text-[10px] sm:text-xs leading-snug">Satıra tıkla, <span className="text-orange-400 font-medium">+ Ürün Ekle</span> çıkar</p>
+                </div>
+              </div>
+              <div className="flex items-center text-slate-700"><ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 -rotate-90" /></div>
+              <div className="flex-1 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3.5 rounded-lg sm:rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-emerald-500/25 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0">
+                  <span className="text-emerald-400 text-xs sm:text-sm font-black">3</span>
+                </div>
+                <div className="text-center sm:text-left">
+                  <p className="text-white text-[11px] sm:text-sm font-bold leading-none mb-0.5">Ürün Ekle</p>
+                  <p className="text-slate-500 text-[10px] sm:text-xs leading-snug">Ad, fiyat, resim ve indirim gir</p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg shadow-orange-500/30">
@@ -608,7 +675,7 @@ export default function FiyatListesiContent() {
                     className={`flex items-center gap-2 px-3 py-3 cursor-pointer transition-all ${
                       isOpen ? 'bg-slate-700/80' : 'bg-slate-800/80 hover:bg-slate-700/60'
                     }`}
-                    onClick={() => toggleCategory(cat.id)}
+                    onClick={() => { if (cat.name.trim()) toggleCategory(cat.id); }}
                   >
                     <span className="text-orange-400 flex-shrink-0">
                       {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -662,14 +729,12 @@ export default function FiyatListesiContent() {
                       {cat.items.length} ürün
                     </span>
 
-                    {priceList.categories.length > 1 && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); }}
-                        className="text-slate-600 hover:text-red-400 transition-all flex-shrink-0 ml-1"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); }}
+                      className="text-slate-600 hover:text-red-400 transition-all flex-shrink-0 ml-1"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
                   {/* ── Ürün Listesi ── */}
@@ -682,89 +747,36 @@ export default function FiyatListesiContent() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="bg-slate-900/60 p-2.5 space-y-3">
-                          {cat.items.map((item, itemIdx) => (
-                            <div key={item.id} className="bg-slate-800/80 border border-slate-700 hover:border-slate-500 rounded-xl p-3.5 transition-all">
-                              {/* Üst: Resim + Ad & Açıklama */}
-                              <div className="flex gap-3 mb-3">
-                                {/* Resim */}
-                                <div className="flex-shrink-0">
-                                  <input type="file" accept="image/*" className="hidden" ref={(el) => { itemInputRefs.current[item.id] = el; }} onChange={(e) => handleItemImageUpload(cat.id, item.id, e)} />
-                                  {item.imageUrl ? (
-                                    <div className="relative group">
-                                      <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-xl object-cover border border-slate-600" />
-                                      {itemUploading === item.id && <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center"><Loader2 className="w-3 h-3 text-white animate-spin" /></div>}
-                                      {item.discount && Number(item.discount) > 0 && (
-                                        <div className="absolute -top-1.5 -left-1.5 bg-red-500 text-white text-[9px] font-bold px-1 py-0.5 rounded-md shadow-lg leading-none">%{item.discount}</div>
-                                      )}
-                                      <button onClick={() => updateItem(cat.id, item.id, 'imageUrl', '')} className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center">
-                                        <XIcon className="w-2.5 h-2.5 text-white" />
-                                      </button>
-                                    </div>
+                        <div className="bg-slate-900/60 p-2.5 space-y-2">
+                          {cat.items.map((item) => (
+                            <div key={item.id} className="flex items-center gap-3 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl px-3 py-2.5 transition-all">
+                              {item.imageUrl ? (
+                                <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-slate-600 flex-shrink-0" />
+                              ) : (
+                                <div className="w-10 h-10 rounded-lg bg-slate-700 border border-slate-600 flex items-center justify-center flex-shrink-0">
+                                  <Package className="w-4 h-4 text-slate-500" />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-white text-sm font-medium truncate">{item.name || <span className="text-slate-500 italic">İsimsiz ürün</span>}</p>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  {item.price ? (
+                                    <span className="text-amber-400 text-xs font-bold">{priceList.currency} {item.price}</span>
                                   ) : (
-                                    <button onClick={() => itemInputRefs.current[item.id]?.click()} className="w-20 h-20 rounded-xl border border-dashed border-slate-600 hover:border-orange-400/60 flex flex-col items-center justify-center gap-2 text-slate-500 hover:text-orange-400 transition-all" title="Resim ekle">
-                                      <ImagePlus className="w-6 h-6" />
-                                      <span className="text-[10px] font-medium">Resim ekle</span>
-                                    </button>
+                                    <span className="text-slate-600 text-xs">Fiyat girilmedi</span>
+                                  )}
+                                  {item.discount && Number(item.discount) > 0 && (
+                                    <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-1.5 py-0.5 rounded-full font-bold">%{item.discount}</span>
                                   )}
                                 </div>
-                                {/* Ad + Açıklama */}
-                                <div className="flex-1 min-w-0 flex flex-col gap-2">
-                                  <input type="text" value={item.name} onChange={(e) => updateItem(cat.id, item.id, 'name', e.target.value)} placeholder="Ürün adı" className="w-full bg-slate-700/60 border border-slate-600 focus:border-orange-400 rounded-lg px-3 py-2 text-white text-sm font-medium placeholder-slate-500 focus:outline-none transition-all" />
-                                  <textarea value={item.description} onChange={(e) => { updateItem(cat.id, item.id, 'description', e.target.value); e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }} placeholder="Açıklama..." rows={2} className="w-full bg-slate-700/30 border border-slate-700 focus:border-slate-500 rounded-lg px-3 py-1.5 text-slate-300 text-xs placeholder-slate-600 focus:outline-none transition-all resize-none overflow-hidden leading-relaxed" />
-                                </div>
                               </div>
-
-                              {/* Alt: Fiyat + İndirim + Sil — yan yana */}
-                              <div className="flex items-center gap-2">
-                                {/* Fiyat */}
-                                <div className="flex items-center gap-1 bg-slate-700/60 border border-slate-500 rounded-lg px-2.5 py-2 flex-shrink-0">
-                                  <span className="text-slate-400 text-xs font-semibold">{priceList.currency}</span>
-                                  <input
-                                    type="number"
-                                    inputMode="decimal"
-                                    min="0"
-                                    step="0.01"
-                                    value={item.price}
-                                    onChange={(e) => updateItem(cat.id, item.id, 'price', e.target.value)}
-                                    placeholder="0.00"
-                                    className="w-16 bg-transparent border-none text-amber-300 text-sm font-bold placeholder-slate-600 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                  />
-                                </div>
-
-                                {/* İndirim */}
-                                {item.discount && Number(item.discount) > 0 ? (
-                                  <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/25 rounded-lg px-2.5 py-2 flex-1">
-                                    <span className="text-red-400 text-xs font-bold whitespace-nowrap">%{item.discount}</span>
-                                    <span className="text-emerald-400 text-xs font-semibold tabular-nums">{priceList.currency}{item.discountedPrice}</span>
-                                    <button
-                                      onClick={() => setPriceList((prev: any) => ({ ...prev, categories: prev.categories.map((c: any) => c.id === cat.id ? { ...c, items: c.items.map((i: any) => i.id === item.id ? { ...i, discountedPrice: undefined, discount: '' } : i) } : c) }))}
-                                      className="ml-auto text-[9px] text-slate-600 hover:text-red-400 transition-all whitespace-nowrap"
-                                    >
-                                      Kaldır
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    disabled={!item.price || Number(item.price) <= 0}
-                                    onClick={() => setDiscountModal({ catId: cat.id, itemId: item.id, tempVal: '' })}
-                                    className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all border disabled:opacity-30 disabled:cursor-not-allowed text-emerald-400 bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 hover:border-emerald-500/70 whitespace-nowrap"
-                                  >
-                                    <Percent className="w-2.5 h-2.5" />
-                                    İndirim Ekle
-                                  </button>
-                                )}
-
-                                {/* Sil */}
-                                {cat.items.length > 1 && (
-                                  <button
-                                    onClick={() => removeItem(cat.id, item.id)}
-                                    className="ml-auto flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all"
-                                    title="Ürünü sil"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                )}
+                              <div className="flex items-center gap-1.5 flex-shrink-0">
+                                <button onClick={() => openEditItemModal(cat.id, item)} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-500 hover:text-blue-400 hover:bg-blue-500/10 border border-transparent hover:border-blue-500/20 transition-all" title="Düzenle">
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                                <button onClick={() => removeItem(cat.id, item.id)} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all" title="Sil">
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
                               </div>
                             </div>
                           ))}
@@ -854,7 +866,12 @@ export default function FiyatListesiContent() {
             </>
           )}
         </button>
-        {!isValid && (
+        {!isValid && emptyNamedCategories.length > 0 && (
+          <p className="text-center text-red-400 text-sm mt-2">
+            ⚠️ {emptyNamedCategories.length} {emptyNamedCategories.length === 1 ? 'kategoride' : 'kategoride'} ürün yok. Her kategoriye en az 1 ürün ekleyin veya boş kategorileri silin.
+          </p>
+        )}
+        {!isValid && emptyNamedCategories.length === 0 && (
           <p className="text-center text-gray-500 text-sm mt-2">
             Marka adı, en az bir kategori ve ürün (ad + fiyat) giriniz
           </p>
@@ -1012,6 +1029,123 @@ export default function FiyatListesiContent() {
           setPriceList={setPriceList}
         />
       )}
+
+      {/* ── Ürün Ekle / Düzenle Modal ── */}
+      <AnimatePresence>
+        {itemModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            onClick={() => setItemModal(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 60, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 60, scale: 0.97 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center"><Package className="w-4 h-4 text-white" /></div>
+                  <h3 className="text-white font-bold text-base">{itemModal.isNew ? 'Ürün Ekle' : 'Ürünü Düzenle'}</h3>
+                </div>
+                <button onClick={() => setItemModal(null)} className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"><XIcon className="w-4 h-4" /></button>
+              </div>
+
+              <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="flex items-center gap-4">
+                  <input type="file" accept="image/*" className="hidden" ref={itemModalImgRef} onChange={handleItemModalImg} />
+                  {itemModal.item.imageUrl ? (
+                    <div className="relative group flex-shrink-0">
+                      <img src={itemModal.item.imageUrl} alt="" className="w-20 h-20 rounded-2xl object-cover border border-white/15" />
+                      {itemModalUploading && <div className="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center"><Loader2 className="w-5 h-5 text-white animate-spin" /></div>}
+                      <button onClick={() => setItemModal((p) => p ? { ...p, item: { ...p.item, imageUrl: '' } } : null)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center shadow"><XIcon className="w-3 h-3 text-white" /></button>
+                    </div>
+                  ) : (
+                    <button onClick={() => itemModalImgRef.current?.click()} className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-600 hover:border-orange-400/60 flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-orange-400 transition-all flex-shrink-0">
+                      {itemModalUploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <><ImagePlus className="w-6 h-6" /><span className="text-[10px]">Resim ekle</span></>}
+                    </button>
+                  )}
+                  <div className="flex-1">
+                    <p className="text-slate-400 text-xs mb-1">Ürün görseli (isteğe bağlı)</p>
+                    <p className="text-slate-600 text-[11px]">JPG, PNG, WEBP desteklenir</p>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Ürün Adı <span className="text-red-400">*</span></label>
+                  <input type="text" value={itemModal.item.name} onChange={(e) => setItemModal((p) => p ? { ...p, item: { ...p.item, name: e.target.value } } : null)}
+                    placeholder="Ör: Mercimek Çorbası" autoFocus
+                    className="w-full bg-slate-800 border border-slate-600 focus:border-orange-400 rounded-xl px-4 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none transition-all" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Açıklama</label>
+                  <textarea value={itemModal.item.description} onChange={(e) => setItemModal((p) => p ? { ...p, item: { ...p.item, description: e.target.value } } : null)}
+                    placeholder="Ürün hakkında kısa açıklama..." rows={2}
+                    className="w-full bg-slate-800 border border-slate-600 focus:border-slate-500 rounded-xl px-4 py-2.5 text-slate-300 text-sm placeholder-slate-600 focus:outline-none transition-all resize-none" />
+                </div>
+
+                {(() => {
+                  const op = Number(itemModal.item.price);
+                  const dp = Number(itemModal.item.discountedPrice);
+                  const discTooHigh = !!itemModal.item.discountedPrice && dp >= op && op > 0;
+                  return (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Fiyat <span className="text-red-400">*</span></label>
+                        <div className="flex items-center gap-1.5 bg-slate-800 border border-slate-600 focus-within:border-amber-400 rounded-xl px-3 py-2.5 transition-all">
+                          <span className="text-slate-400 text-xs font-semibold">{priceList.currency}</span>
+                          <input type="text" inputMode="decimal" value={itemModal.item.price}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.');
+                              if ((v.match(/\./g) || []).length <= 1) {
+                                setItemModal((p) => p ? { ...p, item: { ...p.item, price: v, discount: '', discountedPrice: undefined } } : null);
+                              }
+                            }}
+                            placeholder="0.00" className="flex-1 bg-transparent text-amber-300 text-sm font-bold placeholder-slate-600 focus:outline-none" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-400 mb-1.5">İndirimli Fiyat</label>
+                        <div className={`flex items-center gap-1.5 bg-slate-800 border rounded-xl px-3 py-2.5 transition-all ${discTooHigh ? 'border-red-500/60 focus-within:border-red-400' : 'border-slate-600 focus-within:border-emerald-400'}`}>
+                          <span className="text-slate-400 text-xs font-semibold">{priceList.currency}</span>
+                          <input type="text" inputMode="decimal"
+                            value={itemModal.item.discountedPrice || ''}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.');
+                              if ((v.match(/\./g) || []).length <= 1) {
+                                const dpn = Number(v);
+                                const opn = Number(itemModal.item.price);
+                                const pct = opn > 0 && dpn > 0 && dpn < opn ? String(Math.max(1, Math.round((1 - dpn / opn) * 100))) : '';
+                                setItemModal((p) => p ? { ...p, item: { ...p.item, discountedPrice: v, discount: pct } } : null);
+                              }
+                            }}
+                            placeholder="0.00" className="flex-1 bg-transparent text-emerald-400 text-sm font-bold placeholder-slate-600 focus:outline-none" />
+                        </div>
+                        {discTooHigh && (
+                          <p className="text-[10px] text-red-400 mt-1 font-medium">İndirimli fiyat orijinal fiyattan düşük olmalı</p>
+                        )}
+                        {!discTooHigh && itemModal.item.discount && Number(itemModal.item.discount) > 0 && (
+                          <p className="text-[10px] text-emerald-400 mt-1 text-center font-bold">%{itemModal.item.discount} indirim</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              <div className="flex gap-3 px-5 py-4 border-t border-white/10">
+                <button onClick={() => setItemModal(null)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm font-medium transition-all">İptal</button>
+                <button disabled={!itemModal.item.name.trim() || !itemModal.item.price.trim() || itemModalUploading || (!!itemModal.item.discountedPrice && Number(itemModal.item.discountedPrice) >= Number(itemModal.item.price) && Number(itemModal.item.price) > 0)} onClick={saveItemModal}
+                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold transition-all shadow-lg shadow-orange-500/30">
+                  {itemModal.isNew ? 'Ürünü Ekle' : 'Kaydet'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -13,7 +13,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
-  const [qrOpen, setQrOpen] = useState(true);
+  const [qrOpen, setQrOpen] = useState(false);
 
   const mainItems = [
     { href: '/', label: 'Ana Sayfa', icon: Home, color: 'text-amber-400' },
