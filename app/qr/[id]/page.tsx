@@ -1,11 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type, ShoppingBag, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type, ShoppingBag, ExternalLink, Plus, MoreHorizontal, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import QRCode from 'qrcode';
+import QRCodeStyling from 'qr-code-styling';
 
 export default function QRResultPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -18,6 +19,49 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const [qrData, setQrData] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedQrType, setSelectedQrType] = useState<'normal' | 'bank'>('normal');
+  const [showOtherActions, setShowOtherActions] = useState(false);
+  const [qrColor, setQrColor] = useState<'black' | 'neon' | 'sunset' | 'arctic' | 'berry'>('black');
+
+  const luxCenterLogo = `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="100"><rect width="220" height="100" rx="28" fill="#ffffff"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" fill="#0f172a" letter-spacing="12">L U X</text></svg>`) : ''}`;
+
+  const colorThemes: Record<typeof qrColor, { stops: { offset: number; color: string }[]; label: string }> = {
+    black: { label: 'Siyah', stops: [{ offset: 0, color: '#000000' }, { offset: 0.5, color: '#374151' }, { offset: 1, color: '#000000' }] },
+    neon: { label: 'Neon', stops: [{ offset: 0, color: '#a3e635' }, { offset: 0.5, color: '#22c55e' }, { offset: 1, color: '#10b981' }] },
+    sunset: { label: 'Sunset', stops: [{ offset: 0, color: '#fbbf24' }, { offset: 0.5, color: '#f97316' }, { offset: 1, color: '#dc2626' }] },
+    arctic: { label: 'Arctic', stops: [{ offset: 0, color: '#67e8f9' }, { offset: 0.5, color: '#0ea5e9' }, { offset: 1, color: '#2563eb' }] },
+    berry: { label: 'Berry', stops: [{ offset: 0, color: '#c084fc' }, { offset: 0.5, color: '#ec4899' }, { offset: 1, color: '#f43f5e' }] },
+  };
+
+  const generateStyledQR = async (data: string): Promise<string> => {
+    const gradientStops = colorThemes[qrColor].stops;
+
+    const qr = new QRCodeStyling({
+      width: 256,
+      height: 256,
+      data,
+      margin: 8,
+      qrOptions: { errorCorrectionLevel: 'H' },
+      dotsOptions: {
+        type: 'dots',
+        gradient: { type: 'linear', rotation: 45, colorStops: gradientStops },
+      },
+      cornersSquareOptions: {
+        type: 'extra-rounded',
+        gradient: { type: 'linear', rotation: 45, colorStops: gradientStops },
+      },
+      cornersDotOptions: {
+        type: 'dot',
+        gradient: { type: 'linear', rotation: 45, colorStops: gradientStops },
+      },
+      backgroundOptions: { color: '#ffffff' },
+      image: luxCenterLogo,
+      imageOptions: { crossOrigin: 'anonymous', margin: 6, hideBackgroundDots: true },
+    });
+
+    const blob = await qr.getRawData('png');
+    if (blob instanceof Blob) return URL.createObjectURL(blob);
+    return '';
+  };
 
   useEffect(() => {
     const fetchQRData = async () => {
@@ -33,8 +77,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           setQrData(data.data);
           setCurrentImageIndex(0);
           setQrCodeUrl(`${window.location.origin}/qr/${params.id}`);
-          const qrData = await QRCode.toDataURL(data.data.viewUrl || data.data.content);
-          setQrDataUrl(qrData);
+          const styledQrData = await generateStyledQR(data.data.viewUrl || data.data.content);
+          setQrDataUrl(styledQrData);
           
           // Generate bank QR code from EPC content
           if (data.data.contentType === 'iban') {
@@ -54,7 +98,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     };
 
     fetchQRData();
-  }, [params.id]);
+  }, [params.id, qrColor]);
 
   const handleCopy = () => {
     // Always copy the full original URL for social media
@@ -790,10 +834,6 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 backgroundColor: '#0f172a',
               }}
             >
-              <div
-                className="absolute inset-0 bg-black/30"
-                style={{ backdropFilter: `blur(${bio.blurAmount ?? 12}px)`, WebkitBackdropFilter: `blur(${bio.blurAmount ?? 12}px)` }}
-              />
             </div>
             <div className="px-3 md:px-4 pb-3 md:pb-4 -mt-8 md:-mt-10 relative z-10">
               <div className="flex items-end gap-2 md:gap-3 mb-2 md:mb-3 min-w-0">
@@ -986,14 +1026,50 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               {selectedQrType === 'normal' && (
                 <div className="mb-6">
                   <p className="text-sm font-medium text-gray-600 mb-2 text-center">Normal QR (Görüntüleme)</p>
-                  <div className="bg-white p-4 rounded-xl border-2 border-gray-200">
-                  <img
-                src={qrDataUrl}
-                alt="QR Code"
-                width={256}
-                height={256}
-                className="w-64 h-64"
-              />
+                  <div className="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-xl">
+                    <img
+                      src={qrDataUrl}
+                      alt="QR Code"
+                      width={256}
+                      height={256}
+                      className="w-64 h-64 mx-auto"
+                    />
+                  </div>
+
+                  {/* Color Palette */}
+                  <div className="flex flex-wrap justify-center gap-2 mt-4">
+                    {[
+                      { key: 'black', label: 'Siyah', bg: 'from-gray-900 via-gray-700 to-gray-900' },
+                      { key: 'neon', label: 'Neon', bg: 'from-lime-300 via-green-500 to-emerald-600' },
+                      { key: 'sunset', label: 'Sunset', bg: 'from-amber-300 via-orange-500 to-red-600' },
+                      { key: 'arctic', label: 'Arctic', bg: 'from-cyan-300 via-sky-500 to-blue-600' },
+                      { key: 'berry', label: 'Berry', bg: 'from-violet-400 via-pink-500 to-rose-500' },
+                    ].map((c) => (
+                      <button
+                        key={c.key}
+                        onClick={() => setQrColor(c.key as typeof qrColor)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                          qrColor === c.key
+                            ? 'border-gray-800 shadow-md bg-white'
+                            : 'border-gray-200 hover:border-gray-400 bg-white/70'
+                        }`}
+                      >
+                        <span className={`w-3.5 h-3.5 rounded-full bg-gradient-to-br ${c.bg}`} />
+                        {c.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 text-center">
+                    <p className={`text-xl font-black tracking-[0.25em] bg-gradient-to-r bg-clip-text text-transparent ${
+                      qrColor === 'black' ? 'from-gray-900 via-gray-700 to-gray-900' :
+                      qrColor === 'neon' ? 'from-lime-300 via-green-500 to-emerald-600' :
+                      qrColor === 'sunset' ? 'from-amber-300 via-orange-500 to-red-600' :
+                      qrColor === 'arctic' ? 'from-cyan-300 via-sky-500 to-blue-600' :
+                      'from-violet-400 via-pink-500 to-rose-500'
+                    }`}>
+                      LUX QR
+                    </p>
                   </div>
                 </div>
               )}
@@ -1008,43 +1084,11 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 </div>
               )}
 
-              {/* Button Group */}
+              {/* Primary Button Group */}
               <div className="flex flex-wrap gap-3 md:gap-4 justify-center w-full">
                 <button
-                  onClick={selectedQrType === 'bank' ? handleBankQrDownload : handleDownload}
-                  className="flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 text-sm md:text-base"
-                >
-                  <Download className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="font-medium">İndir</span>
-                </button>
-
-                <button
-                  onClick={handlePrint}
-                  className="flex items-center gap-2 bg-purple-500/80 hover:bg-purple-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 text-sm md:text-base"
-                >
-                  <Printer className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="font-medium">Yazdır</span>
-                </button>
-
-                <button
-                  onClick={() => window.open(qrData?.viewUrl || qrCodeUrl, '_blank')}
-                  className="flex items-center gap-2 bg-green-500/80 hover:bg-green-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-green-500/30 text-sm md:text-base"
-                >
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="font-medium">Linke Git</span>
-                </button>
-
-                <button
-                  onClick={handleShareLink}
-                  className="flex items-center gap-2 bg-orange-500/80 hover:bg-orange-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30 text-sm md:text-base"
-                >
-                  <Share2 className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="font-medium">Linki Paylaş</span>
-                </button>
-
-                <button
                   onClick={handleShareQR}
-                  className="flex items-center gap-2 bg-pink-500/80 hover:bg-pink-500 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/30 text-sm md:text-base"
+                  className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/30 text-sm md:text-base"
                 >
                   <QrCode className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">QR Paylaş</span>
@@ -1052,12 +1096,70 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
                 <button
                   onClick={() => router.push('/qr/metin-belge')}
-                  className="flex items-center gap-2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-gray-500/30 text-sm md:text-base"
+                  className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 text-sm md:text-base"
                 >
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+                  <Plus className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Yeni QR Kod</span>
                 </button>
+
+                <button
+                  onClick={() => setShowOtherActions((p) => !p)}
+                  className="flex items-center gap-2 bg-slate-700/80 hover:bg-slate-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-slate-500/30 text-sm md:text-base"
+                >
+                  <MoreHorizontal className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="font-medium">Diğer İşlemler</span>
+                </button>
               </div>
+
+              {/* Other Actions Modal */}
+              <AnimatePresence>
+                {showOtherActions && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setShowOtherActions(false)}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-full max-w-sm bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+                    >
+                      <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+                        <h3 className="text-white font-bold text-base">Diğer İşlemler</h3>
+                        <button
+                          onClick={() => setShowOtherActions(false)}
+                          className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="p-4 grid gap-2">
+                        {[
+                          { onClick: selectedQrType === 'bank' ? handleBankQrDownload : handleDownload, icon: Download, label: 'İndir', bg: 'bg-blue-500 hover:bg-blue-600' },
+                          { onClick: handlePrint, icon: Printer, label: 'Yazdır', bg: 'bg-purple-500 hover:bg-purple-600' },
+                          { onClick: () => window.open(qrData?.viewUrl || qrCodeUrl, '_blank'), icon: ArrowRight, label: 'Linke Git', bg: 'bg-green-500 hover:bg-green-600' },
+                          { onClick: handleShareLink, icon: Share2, label: 'Linki Paylaş', bg: 'bg-orange-500 hover:bg-orange-600' },
+                        ].map((item) => (
+                          <button
+                            key={item.label}
+                            onClick={() => { item.onClick(); setShowOtherActions(false); }}
+                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white transition-all hover:scale-[1.02] ${item.bg}`}
+                          >
+                            <item.icon className="w-5 h-5" />
+                            <span className="font-medium">{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </motion.div>
@@ -1088,6 +1190,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             {renderContent()}
           </div>
         </motion.div>
+
       </div>
     </div>
   );

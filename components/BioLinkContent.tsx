@@ -28,6 +28,8 @@ import {
   Heart,
   Share2,
   Clock,
+  PenLine,
+  Eye,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
@@ -43,7 +45,6 @@ interface BioLinkData {
   username: string;
   logoUrl: string;
   background: string;
-  blurAmount: number;
   links: BioLink[];
 }
 
@@ -56,6 +57,28 @@ const backgrounds = [
   { id: 'gradient-6', name: 'Gece Gökyüzü', value: 'linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4c1d95 100%)' },
   { id: 'gradient-7', name: 'Gün Batımı', value: 'linear-gradient(135deg, #f97316 0%, #db2777 50%, #7c3aed 100%)' },
   { id: 'gradient-8', name: 'Deniz', value: 'linear-gradient(135deg, #06b6d4 0%, #2563eb 50%, #1e40af 100%)' },
+  { id: 'gradient-9', name: 'Orman', value: 'linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%)' },
+  { id: 'gradient-10', name: 'Şeker', value: 'linear-gradient(135deg, #f472b6 0%, #fb7185 50%, #fda4af 100%)' },
+  { id: 'gradient-11', name: 'Lav', value: 'linear-gradient(135deg, #450a0a 0%, #991b1b 50%, #ef4444 100%)' },
+  { id: 'gradient-12', name: 'Elektrik', value: 'linear-gradient(135deg, #020617 0%, #1d4ed8 50%, #06b6d4 100%)' },
+  { id: 'gradient-13', name: 'Şeftali', value: 'linear-gradient(135deg, #fed7aa 0%, #fb923c 50%, #f43f5e 100%)' },
+  { id: 'gradient-14', name: 'Galaksi', value: 'linear-gradient(135deg, #020617 0%, #4c1d95 50%, #7e22ce 100%)' },
+  { id: 'gradient-15', name: 'Gümüş', value: 'linear-gradient(135deg, #475569 0%, #94a3b8 50%, #e2e8f0 100%)' },
+  { id: 'gradient-16', name: 'Altın', value: 'linear-gradient(135deg, #a16207 0%, #eab308 50%, #facc15 100%)' },
+  { id: 'gradient-17', name: 'Mercan', value: 'linear-gradient(135deg, #f43f5e 0%, #fb923c 50%, #ef4444 100%)' },
+  { id: 'gradient-18', name: 'Buzul', value: 'linear-gradient(135deg, #cffafe 0%, #22d3ee 50%, #0891b2 100%)' },
+  { id: 'gradient-19', name: 'Çimen', value: 'linear-gradient(135deg, #3f6212 0%, #65a30d 50%, #a3e635 100%)' },
+  { id: 'gradient-20', name: 'Mystic', value: 'linear-gradient(135deg, #2e1065 0%, #7c3aed 50%, #c026d3 100%)' },
+  { id: 'gradient-21', name: 'Tropikal', value: 'linear-gradient(135deg, #fcd34d 0%, #f97316 50%, #ec4899 100%)' },
+  { id: 'gradient-22', name: 'Neon', value: 'linear-gradient(135deg, #022c22 0%, #10b981 50%, #a3e635 100%)' },
+  { id: 'gradient-23', name: 'Gül Kurusu', value: 'linear-gradient(135deg, #be123c 0%, #fb7185 50%, #fda4af 100%)' },
+  { id: 'gradient-24', name: 'Yarı Gece', value: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)' },
+  { id: 'gradient-25', name: 'Kahve', value: 'linear-gradient(135deg, #451a03 0%, #92400e 50%, #d97706 100%)' },
+  { id: 'gradient-26', name: 'Lacivert', value: 'linear-gradient(135deg, #020617 0%, #172554 50%, #1e40af 100%)' },
+  { id: 'gradient-27', name: 'Koyu Orman', value: 'linear-gradient(135deg, #022c22 0%, #14532d 50%, #166534 100%)' },
+  { id: 'gradient-28', name: 'Pembe Mor', value: 'linear-gradient(135deg, #f472b6 0%, #a855f7 50%, #6366f1 100%)' },
+  { id: 'gradient-29', name: 'Gökyüzü', value: 'linear-gradient(135deg, #e0f2fe 0%, #38bdf8 50%, #0284c7 100%)' },
+  { id: 'gradient-30', name: 'Kırmızı Siyah', value: 'linear-gradient(135deg, #000000 0%, #7f1d1d 50%, #dc2626 100%)' },
 ];
 
 function generateId() {
@@ -74,7 +97,6 @@ export default function BioLinkContent() {
     username: '',
     logoUrl: '',
     background: backgrounds[0].value,
-    blurAmount: 12,
     links: [],
   });
   const [previewMode, setPreviewMode] = useState<'phone' | 'tablet'>('phone');
@@ -187,8 +209,7 @@ export default function BioLinkContent() {
       title,
       username,
       logoUrl: `https://picsum.photos/400/400?random=${seed}`,
-      background: Math.random() > 0.3 ? randomBg : `url(https://picsum.photos/1200/800?random=${seed + 1})`,
-      blurAmount: 8 + Math.floor(Math.random() * 14),
+      background: randomBg,
       links: demoLinks,
     });
     showNotification('Demo veriler yüklendi', 'success');
@@ -295,60 +316,32 @@ export default function BioLinkContent() {
 
           {/* Background + Preview */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            <div className="card-premium p-4 md:p-5">
-              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <Palette className="w-5 h-5 text-pink-400" />
+            <div className="card-premium p-2.5 md:p-5 order-2 lg:order-1">
+              <h2 className="text-sm md:text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <Palette className="w-3.5 h-3.5 md:w-5 md:h-5 text-pink-400" />
                 Arka Plan
               </h2>
 
             {/* Presets */}
-            <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 mb-4">
+            <div className="grid grid-cols-10 sm:grid-cols-6 md:grid-cols-7 gap-1 md:gap-2 mb-2 md:mb-4">
               {backgrounds.map((bg) => (
                 <button
                   key={bg.id}
                   onClick={() => setData((p) => ({ ...p, background: bg.value }))}
                   className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                    data.background === bg.value ? 'border-orange-400 ring-2 ring-orange-400/30' : 'border-transparent hover:border-white/20'
+                    data.background === bg.value
+                      ? 'border-white/70 ring-2 ring-white/50 scale-[1.05] shadow-lg shadow-white/10'
+                      : 'border-transparent hover:border-white/30 hover:scale-[1.02]'
                   }`}
                   style={{ background: bg.value, backgroundSize: 'cover', backgroundPosition: 'center' }}
                   title={bg.name}
                 />
               ))}
             </div>
-
-            {/* Blur Steps */}
-            <div className="pt-4 border-t border-slate-700/60">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-bold text-white flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-emerald-400" />
-                  Bulanıklık
-                </label>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-                  {data.blurAmount}px
-                </span>
-              </div>
-              <div className="grid grid-cols-5 gap-2">
-                {[
-                  { value: 0, label: 'Kapalı' },
-                  { value: 8, label: 'Az' },
-                  { value: 15, label: 'Orta' },
-                  { value: 22, label: 'Çok' },
-                  { value: 30, label: 'Tam' },
-                ].map((step) => (
-                  <button
-                    key={step.value}
-                    onClick={() => setData((p) => ({ ...p, blurAmount: step.value }))}
-                    className={`py-2 rounded-xl text-xs font-medium border transition-all ${
-                      data.blurAmount === step.value
-                        ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
-                        : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
-                    }`}
-                  >
-                    {step.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <p className="text-slate-400 text-[10px] md:text-xs leading-relaxed flex items-start gap-2">
+              <Palette className="w-3.5 h-3.5 md:w-4 md:h-4 text-pink-400 flex-shrink-0 mt-0.5" />
+              Seçtiğiniz renk, Bio Link sayfanızın arka planı ve QR sonuç ekranında otomatik olarak kullanılır. 30 farklı hazır gradyan temasından istediğinizi deneyebilirsiniz.
+            </p>
           </div>
 
             {/* Preview */}
@@ -356,23 +349,30 @@ export default function BioLinkContent() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="card-premium p-4 md:p-5 flex flex-col"
+              className="card-premium p-4 md:p-5 flex flex-col order-1 lg:order-2"
             >
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Önizleme</h3>
-                <div className="flex items-center gap-1 p-1 rounded-lg bg-slate-800 border border-slate-700">
+                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-purple-400" />
+                  Önizleme
+                </h3>
+                <div className="flex items-center gap-1 p-1 rounded-full bg-slate-800/80 border border-white/10 backdrop-blur-sm">
                   <button
                     onClick={() => setPreviewMode('phone')}
-                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                      previewMode === 'phone' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30' : 'text-slate-400 hover:text-white'
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                      previewMode === 'phone'
+                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                        : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     Telefon
                   </button>
                   <button
                     onClick={() => setPreviewMode('tablet')}
-                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                      previewMode === 'tablet' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30' : 'text-slate-400 hover:text-white'
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                      previewMode === 'tablet'
+                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                        : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     Tablet
@@ -397,10 +397,6 @@ export default function BioLinkContent() {
                             backgroundRepeat: 'no-repeat',
                             backgroundColor: '#0f172a',
                           }}
-                        />
-                        <div
-                          className="absolute inset-0 bg-black/20"
-                          style={{ backdropFilter: `blur(${data.blurAmount}px)`, WebkitBackdropFilter: `blur(${data.blurAmount}px)` }}
                         />
                         <div className="relative z-10 flex flex-col items-center justify-center h-full px-3 py-4 text-center">
                           {data.logoUrl ? (
@@ -456,10 +452,6 @@ export default function BioLinkContent() {
                             backgroundColor: '#0f172a',
                           }}
                         />
-                        <div
-                          className="absolute inset-0 bg-black/20"
-                          style={{ backdropFilter: `blur(${data.blurAmount}px)`, WebkitBackdropFilter: `blur(${data.blurAmount}px)` }}
-                        />
                         <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-2 h-full px-3 py-2 text-center md:text-left">
                           <div className="flex flex-col items-center md:items-start flex-shrink-0">
                             {data.logoUrl ? (
@@ -511,13 +503,15 @@ export default function BioLinkContent() {
                 <LinkIcon className="w-5 h-5 text-emerald-400" />
                 Linkler
               </h2>
-              <button
-                onClick={addLink}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg text-blue-300 text-sm transition-all"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Link Ekle
-              </button>
+              {data.links.length > 0 && (
+                <button
+                  onClick={addLink}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg text-blue-300 text-sm transition-all"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Link Ekle
+                </button>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -557,7 +551,63 @@ export default function BioLinkContent() {
                 ))}
               </AnimatePresence>
               {data.links.length === 0 && (
-                <div className="text-center py-6 text-slate-500 text-sm">Henüz link eklenmedi. Yukarıdaki butona tıklayın.</div>
+                <div className="py-4 perspective-[1000px]">
+                  <div className="flex justify-center mb-5">
+                    <button
+                      onClick={addLink}
+                      className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-105 text-sm font-medium"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Link Ekle
+                    </button>
+                  </div>
+                  <div className="flex justify-center" style={{ perspective: '1000px' }}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20, rotateY: -8 }}
+                      animate={{ opacity: 1, y: 0, rotateY: -8 }}
+                      transition={{ duration: 0.6 }}
+                      className="w-full max-w-[280px] sm:max-w-[320px] rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 shadow-2xl shadow-black/50 overflow-hidden"
+                      style={{ transform: 'rotateY(-8deg) translateZ(10px)', transformStyle: 'preserve-3d' }}
+                    >
+                      {/* Browser top bar */}
+                      <div className="bg-slate-900/80 px-3 py-2 flex items-center gap-2 border-b border-white/10">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                        </div>
+                        <div className="flex-1 mx-2 h-5 bg-slate-800 rounded-md flex items-center px-2">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400/60 mr-2" />
+                          <span className="text-[10px] text-slate-500 truncate">luxqrpro.site/view/@kullanici</span>
+                        </div>
+                      </div>
+
+                      {/* Page preview */}
+                      <div className="p-4 bg-gradient-to-br from-slate-900 to-slate-950">
+                        <div className="flex flex-col items-center mb-4">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 shadow-lg" />
+                          <div className="h-3 bg-white/20 rounded w-32 mb-1.5" />
+                          <div className="h-2.5 bg-white/10 rounded w-20" />
+                        </div>
+                        <div className="space-y-2">
+                          <div className="h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2">
+                            <div className="w-4 h-4 rounded-full bg-pink-500/40" />
+                            <div className="h-2 bg-white/20 rounded w-20" />
+                          </div>
+                          <div className="h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2">
+                            <div className="w-4 h-4 rounded-full bg-sky-500/40" />
+                            <div className="h-2 bg-white/20 rounded w-24" />
+                          </div>
+                          <div className="h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2">
+                            <div className="w-4 h-4 rounded-full bg-red-500/40" />
+                            <div className="h-2 bg-white/20 rounded w-16" />
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                  <p className="text-slate-400 text-xs md:text-sm text-center mt-5">Link ekleyerek tüm sosyal medya ve web sayfalarınızı tek bir Bio Link sayfasında toplayın.</p>
+                </div>
               )}
             </div>
           </div>
@@ -665,12 +715,12 @@ export default function BioLinkContent() {
           className="space-y-8 md:space-y-10"
         >
           {/* How it works */}
-          <div className="card-premium p-5 md:p-6">
-            <h2 className="text-lg md:text-2xl font-bold text-white mb-5 md:mb-6 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-yellow-400" />
+          <div className="card-premium p-4 md:p-6">
+            <h2 className="text-base md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-400" />
               Nasıl Çalışır?
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6">
               {[
                 { step: '1', title: 'Bilgileri Gir', desc: 'İsminizi, kullanıcı adınızı ve logonuzu yükleyin.', icon: User, from: 'from-blue-500', to: 'to-cyan-500' },
                 { step: '2', title: 'Linkleri Ekle', desc: 'Sosyal medya ve web sayfalarınızın linklerini ekleyin.', icon: LinkIcon, from: 'from-emerald-500', to: 'to-teal-500' },
@@ -678,61 +728,61 @@ export default function BioLinkContent() {
               ].map((item) => (
                 <div
                   key={item.step}
-                  className="group relative p-5 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
+                  className="group relative p-4 md:p-5 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
                   style={{ perspective: '1000px' }}
                 >
-                  <div className={`absolute -top-3 w-9 h-9 rounded-full bg-gradient-to-br ${item.from} ${item.to} ring-2 ring-white/20 flex items-center justify-center shadow-lg shadow-black/40`}>
-                    <span className="text-white font-black text-sm">{item.step}</span>
+                  <div className={`absolute -top-2.5 md:-top-3 w-7 h-7 md:w-9 md:h-9 rounded-full bg-gradient-to-br ${item.from} ${item.to} ring-2 ring-white/20 flex items-center justify-center shadow-lg shadow-black/40`}>
+                    <span className="text-white font-black text-xs md:text-sm">{item.step}</span>
                   </div>
-                  <div className={`w-11 h-11 mt-4 mb-3 rounded-xl bg-gradient-to-br ${item.from} ${item.to} shadow-lg shadow-black/30 flex items-center justify-center`}>
-                    <item.icon className="w-5 h-5 text-white drop-shadow" />
+                  <div className={`w-9 h-9 md:w-11 md:h-11 mt-3 md:mt-4 mb-2 md:mb-3 rounded-xl bg-gradient-to-br ${item.from} ${item.to} shadow-lg shadow-black/30 flex items-center justify-center`}>
+                    <item.icon className="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow" />
                   </div>
-                  <h3 className="text-white font-bold text-sm mb-1">{item.title}</h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">{item.desc}</p>
+                  <h3 className="text-white font-bold text-xs md:text-sm mb-1">{item.title}</h3>
+                  <p className="text-slate-400 text-[11px] md:text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6">
             {[
               { title: 'Özel Logo', desc: 'Markanızı veya fotoğrafınızı sayfa başına yerleştirin.', icon: User, color: 'from-blue-500 to-cyan-500' },
-              { title: 'Arka Plan Seçimi', desc: 'Hazır renkler, fotoğraflar veya kendi resminizi kullanın.', icon: Palette, color: 'from-pink-500 to-rose-500' },
+              { title: 'Arka Plan Seçimi', desc: '30 farklı hazır renk temasından istediğinizi seçin.', icon: Palette, color: 'from-pink-500 to-rose-500' },
               { title: 'Sınırsız Link', desc: 'Tüm sosyal medya ve web linklerinizi tek ekranda toplayın.', icon: ExternalLink, color: 'from-emerald-500 to-teal-500' },
               { title: 'QR Kod', desc: 'Bio Link sayfanıza yönlendiren QR kodu saniyeler içinde oluşturun.', icon: QrCode, color: 'from-orange-500 to-amber-500' },
             ].map((f) => (
-              <div key={f.title} className="group relative p-5 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 flex items-start gap-4 hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/30 ring-1 ring-white/20`}>
-                  <f.icon className="w-5 h-5 text-white drop-shadow" />
+              <div key={f.title} className="group relative p-4 md:p-5 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 flex items-start gap-3 md:gap-4 hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
+                <div className={`w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/30 ring-1 ring-white/20`}>
+                  <f.icon className="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow" />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-sm md:text-base mb-1">{f.title}</h3>
-                  <p className="text-slate-400 text-xs md:text-sm leading-relaxed">{f.desc}</p>
+                  <h3 className="text-white font-bold text-xs md:text-base mb-1">{f.title}</h3>
+                  <p className="text-slate-400 text-[11px] md:text-sm leading-relaxed">{f.desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Use cases */}
-          <div className="relative p-6 md:p-8 rounded-3xl bg-slate-800/70 backdrop-blur-sm border border-white/10">
-            <h2 className="text-lg md:text-2xl font-bold text-white mb-5 md:mb-6 flex items-center gap-2">
-              <Heart className="w-5 h-5 md:w-6 md:h-6 text-rose-400" />
+          <div className="relative p-4 md:p-8 rounded-3xl bg-slate-800/70 backdrop-blur-sm border border-white/10">
+            <h2 className="text-base md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+              <Heart className="w-4 h-4 md:w-6 md:h-6 text-rose-400" />
               Bio Link Kimler İçin?
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {[
                 { title: 'Etkinlikler', desc: 'Bilet, konum ve sosyal medya linklerini tek yerde paylaşın.', icon: Calendar, color: 'from-violet-500 to-purple-500' },
                 { title: 'İşletmeler', desc: 'Menü, rezervasyon ve iletişim linklerini müşterilere sunun.', icon: Store, color: 'from-blue-500 to-cyan-500' },
                 { title: 'Freelancer', desc: 'Portfolyo, blog ve sosyal medya hesaplarınızı sergileyin.', icon: Briefcase, color: 'from-emerald-500 to-teal-500' },
                 { title: 'İçerik Üreticileri', desc: 'Tüm platformları takipçilerinize tek linkle ulaştırın.', icon: Share2, color: 'from-orange-500 to-amber-500' },
               ].map((u) => (
-                <div key={u.title} className="group p-5 rounded-2xl bg-slate-900/40 border border-white/10 text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
-                  <div className={`w-11 h-11 mx-auto mb-3 rounded-xl bg-gradient-to-br ${u.color} flex items-center justify-center shadow-lg shadow-black/30 ring-1 ring-white/20`}>
-                    <u.icon className="w-5 h-5 text-white drop-shadow" />
+                <div key={u.title} className="group p-3 md:p-5 rounded-2xl bg-slate-900/40 border border-white/10 text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
+                  <div className={`w-9 h-9 md:w-11 md:h-11 mx-auto mb-2 md:mb-3 rounded-xl bg-gradient-to-br ${u.color} flex items-center justify-center shadow-lg shadow-black/30 ring-1 ring-white/20`}>
+                    <u.icon className="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow" />
                   </div>
-                  <h3 className="text-white font-bold text-sm mb-1">{u.title}</h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">{u.desc}</p>
+                  <h3 className="text-white font-bold text-xs md:text-sm mb-1">{u.title}</h3>
+                  <p className="text-slate-400 text-[10px] md:text-xs leading-relaxed">{u.desc}</p>
                 </div>
               ))}
             </div>

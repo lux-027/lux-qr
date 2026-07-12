@@ -707,10 +707,6 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   backgroundColor: '#0f172a',
                 }}
               />
-              <div
-                className="absolute inset-0 bg-black/25"
-                style={{ backdropFilter: `blur(${bio.blurAmount ?? 12}px)`, WebkitBackdropFilter: `blur(${bio.blurAmount ?? 12}px)` }}
-              />
               <div className="relative z-10 flex flex-col items-center justify-center min-h-[560px] px-6 py-10 text-center">
                 {bio.logoUrl ? (
                   <img
