@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
     // Calculate expiration date and TTL (in seconds)
     let expiresAt = null;
     let ttlSeconds = null;
-    const MAX_TTL_SECONDS = 90 * 24 * 60 * 60; // 90 days = 7,776,000 seconds (3 months)
 
     if (expiration === '1day') {
       expiresAt = addDays(new Date(), 1);
@@ -26,7 +25,13 @@ export async function POST(request: NextRequest) {
       ttlSeconds = 30 * 24 * 60 * 60; // 30 days
     } else if (expiration === '3months') {
       expiresAt = addMonths(new Date(), 3);
-      ttlSeconds = MAX_TTL_SECONDS; // 90 days (3 months)
+      ttlSeconds = 90 * 24 * 60 * 60; // 90 days
+    } else if (expiration === '6months') {
+      expiresAt = addMonths(new Date(), 6);
+      ttlSeconds = 180 * 24 * 60 * 60; // 180 days
+    } else if (expiration === '12months') {
+      expiresAt = addMonths(new Date(), 12);
+      ttlSeconds = 365 * 24 * 60 * 60; // 365 days
     }
 
     // Create QR code record

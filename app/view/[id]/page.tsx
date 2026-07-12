@@ -22,6 +22,7 @@ import {
   EyeOff,
   Share2,
   Link as LinkIcon,
+  ExternalLink,
   Instagram,
   Facebook,
   Youtube,
@@ -686,6 +687,74 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       case 'price-list': {
         return <PriceListPage content={data.content} />;
       }
+      case 'bio-link': {
+        let bio: any = null;
+        try { bio = JSON.parse(data.content); } catch {}
+        if (!bio) return <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"><p className="text-gray-400">Bio link yüklenemedi.</p></div>;
+        return (
+          <div className="max-w-md mx-auto">
+            <div
+              className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
+              style={{ minHeight: '560px' }}
+            >
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: bio.background,
+                  backgroundSize: bio.background?.startsWith('linear-gradient') ? 'cover' : 'contain',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundColor: '#0f172a',
+                }}
+              />
+              <div
+                className="absolute inset-0 bg-black/25"
+                style={{ backdropFilter: `blur(${bio.blurAmount ?? 12}px)`, WebkitBackdropFilter: `blur(${bio.blurAmount ?? 12}px)` }}
+              />
+              <div className="relative z-10 flex flex-col items-center justify-center min-h-[560px] px-6 py-10 text-center">
+                {bio.logoUrl ? (
+                  <img
+                    src={bio.logoUrl}
+                    alt={bio.title}
+                    className="w-24 h-24 rounded-3xl object-cover border-4 border-white/20 shadow-2xl mb-5"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-3xl bg-white/10 border-4 border-white/20 flex items-center justify-center mb-5">
+                    <User className="w-12 h-12 text-white/60" />
+                  </div>
+                )}
+                <h2 className="text-2xl font-bold text-white mb-1">{bio.title}</h2>
+                {bio.username && <p className="text-white/60 text-sm mb-8">@{bio.username}</p>}
+                <div className="w-full max-w-xs space-y-3">
+                  {(bio.links || []).map((link: any, idx: number) => (
+                    <motion.a
+                      key={link.id || idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="flex items-center justify-center gap-2 w-full py-3.5 px-5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white font-medium transition-all"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      {link.title}
+                    </motion.a>
+                  ))}
+                </div>
+                {bio.username && (
+                  <div className="mt-auto pt-8">
+                    <p className="text-white/40 text-xs flex items-center gap-1">
+                      <LinkIcon className="w-3 h-3" />
+                      {bio.username}.xxx
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
       default:
         return (
           <div className="p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
@@ -918,96 +987,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col"
     >
-      {/* Sticky Top Bar */}
-      <div className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="p-1.5 text-gray-400 hover:text-white transition-all"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                <QrCode className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-bold text-sm">LuxQr</span>
-            </Link>
-          </div>
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-gray-400 hover:text-white text-xs transition-all"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Geri</span>
-          </button>
-        </div>
-        {/* Dropdown Menu */}
-        {menuOpen && (
-          <div className="max-w-4xl mx-auto px-4 pb-3 border-t border-white/5 pt-2">
-            <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
-              <QrCode className="w-4 h-4" />
-              QR Kod Oluştur
-            </Link>
-            <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
-              <FileText className="w-4 h-4" />
-              Blog
-            </Link>
-          </div>
-        )}
-      </div>
-
       <div className="flex-1 flex flex-col items-center justify-center p-4">
-      <div className="max-w-4xl w-full">
-
-        {renderContent()}
-
-        {/* Note/Description Display */}
-        {data?.note && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="card-premium p-6 mt-6"
-          >
-            <div className="flex items-start gap-3">
-              <FileText className="w-5 h-5 text-blue-400 mt-1 flex-shrink-0" />
-              <div>
-                <h4 className="text-white font-semibold mb-2">Not / Açıklama</h4>
-                <p className="text-gray-300 leading-relaxed">{data.note}</p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Action Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="card-premium p-6 mt-8"
-        >
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            {data?.filePath && (
-              <button
-                onClick={downloadFile}
-                className="flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
-              >
-                <Download className="w-5 h-5" />
-                <span className="font-medium">İndir</span>
-              </button>
-            )}
-            <Link
-              href="/"
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg"
-            >
-              <QrCode className="w-5 h-5" />
-              <span className="font-medium">Kendi QR Kodunu Oluştur</span>
-            </Link>
-          </div>
-        </motion.div>
-      </div>
+        <div className="max-w-4xl w-full">
+          {renderContent()}
+        </div>
       </div>
     </motion.main>
   );

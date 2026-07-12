@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon, ShoppingBag } from 'lucide-react';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
@@ -67,6 +67,13 @@ const qrCategories = [
     icon: ShoppingBag,
     href: '/qr/fiyat-listesi',
     color: 'from-orange-500 to-amber-500',
+  },
+  {
+    title: 'Bio Link',
+    description: 'Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın',
+    icon: ExternalLink,
+    href: '/qr/bio-link',
+    color: 'from-emerald-500 to-teal-500',
   },
 ];
 
@@ -353,7 +360,7 @@ export default function HomeContent() {
               <h3 className="text-white font-bold text-base md:text-lg mb-2">Tür Seçin</h3>
               <p className="text-slate-400 text-xs md:text-sm leading-relaxed">WiFi, kartvizit, sosyal medya, fiyat listesi, ses, metin veya dosya — ihtiyacınıza uygun QR türünü seçin.</p>
               <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-                {['WiFi', 'vCard', 'Sosyal Medya', 'Fiyat Listesi'].map(t => (
+                {['WiFi', 'vCard', 'Sosyal Medya', 'Fiyat Listesi', 'Bio Link'].map(t => (
                   <span key={t} className="px-2 py-0.5 rounded-md bg-slate-700/60 border border-slate-600 text-slate-400 text-[10px] font-medium">{t}</span>
                 ))}
               </div>

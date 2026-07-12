@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type, ShoppingBag } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type, ShoppingBag, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -170,6 +170,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       navigator.share({
         title: qrData?.contentType === 'price-list'
           ? `Fiyat Listesi - LuxQr`
+          : qrData?.contentType === 'bio-link'
+          ? `Bio Link - LuxQr`
           : 'QR Kod - LuxQr',
         url: shareUrl,
       });
@@ -360,6 +362,16 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         companyName = orgMatch[1];
         contentTitle = companyName;
         contentIcon = <Building2 className="w-6 h-6 text-blue-400" />;
+      }
+    }
+
+    // Bio Link
+    if (qrData.contentType === 'bio-link') {
+      let bio: any = null;
+      try { bio = JSON.parse(qrData.content); } catch {}
+      if (bio?.title) {
+        contentTitle = bio.title;
+        contentIcon = <ExternalLink className="w-6 h-6 text-emerald-400" />;
       }
     }
 
@@ -762,6 +774,63 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           </div>
         );
       }
+      case 'bio-link': {
+        let bio: any = null;
+        try { bio = JSON.parse(qrData.content); } catch {}
+        if (!bio) return <div className="bg-white/5 border border-white/10 rounded-xl p-4"><p className="text-gray-400 text-sm">Bio link yüklenemedi.</p></div>;
+        return (
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden w-full max-w-full">
+            <div
+              className="relative h-28 md:h-36 w-full"
+              style={{
+                background: bio.background,
+                backgroundSize: bio.background?.startsWith('linear-gradient') ? 'cover' : 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundColor: '#0f172a',
+              }}
+            >
+              <div
+                className="absolute inset-0 bg-black/30"
+                style={{ backdropFilter: `blur(${bio.blurAmount ?? 12}px)`, WebkitBackdropFilter: `blur(${bio.blurAmount ?? 12}px)` }}
+              />
+            </div>
+            <div className="px-3 md:px-4 pb-3 md:pb-4 -mt-8 md:-mt-10 relative z-10">
+              <div className="flex items-end gap-2 md:gap-3 mb-2 md:mb-3 min-w-0">
+                {bio.logoUrl ? (
+                  <img
+                    src={bio.logoUrl}
+                    alt={bio.title}
+                    className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover border-4 border-slate-900 shadow-xl flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 border-4 border-slate-900 flex items-center justify-center flex-shrink-0 shadow-xl">
+                    <User className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                  </div>
+                )}
+                <div className="pb-1 min-w-0 flex-1 overflow-hidden">
+                  <h3 className="text-white font-bold text-sm md:text-lg truncate">{bio.title}</h3>
+                  {bio.username && <p className="text-emerald-400 text-xs truncate">@{bio.username}</p>}
+                </div>
+              </div>
+              <div className="space-y-1.5 md:space-y-2">
+                {(bio.links || []).map((link: any, idx: number) => (
+                  <a
+                    key={link.id || idx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full py-2 md:py-2.5 px-2.5 md:px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs md:text-sm font-medium transition-all min-w-0"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0" />
+                    <span className="truncate">{link.title}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      }
       default:
         return (
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
@@ -852,6 +921,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <Link href="/qr/fiyat-listesi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
                 <ShoppingBag className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 flex-shrink-0" />
                 <span>Fiyat Listesi</span>
+              </Link>
+              <Link href="/qr/bio-link" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400 flex-shrink-0" />
+                <span>Bio Link</span>
               </Link>
             </div>
             <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-white/10 flex flex-col items-center hidden md:flex">

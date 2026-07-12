@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {
   QrCode, HelpCircle, Info, FileText, MessageSquare, BarChart3, ChevronRight,
   Type, Image as ImageIcon, CreditCard, Wifi, Share2, Mic, Landmark, ShoppingBag,
-  Shield, Scale, Mail, BookOpen, Zap, Users, Star,
+  Shield, Scale, Mail, BookOpen, Zap, Users, Star, ExternalLink,
 } from 'lucide-react';
 import { useCounter } from '@/context/CounterContext';
 
@@ -20,6 +20,7 @@ export default function Footer() {
     { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-400' },
     { href: '/qr/iban', label: 'IBAN', icon: Landmark, color: 'text-yellow-400' },
     { href: '/qr/fiyat-listesi', label: 'Fiyat Listesi', icon: ShoppingBag, color: 'text-rose-400' },
+    { href: '/qr/bio-link', label: 'Bio Link', icon: ExternalLink, color: 'text-emerald-400' },
   ];
 
   const companyLinks = [
