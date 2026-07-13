@@ -572,15 +572,27 @@ Güvenli QR kod oluşturmak için LuxQr'ı tercih edin!`,
       },
     ];
 
+    const results: string[] = [];
     for (const post of posts) {
-      await savePost(post as any);
+      try {
+        await savePost(post as any);
+        results.push(`OK: ${post.id}`);
+      } catch (e) {
+        results.push(`ERR: ${post.id} - ${String(e)}`);
+      }
     }
+
+    // Verify: read back the list
+    const { kv } = await import('@vercel/kv');
+    const allIds = await kv.smembers('posts:all');
 
     return NextResponse.json({
       success: true,
       message: `${posts.length} blog yazısı başarıyla eklendi`,
       count: posts.length,
       slugs: posts.map(p => p.slug),
+      results,
+      allIdsInKv: allIds,
     });
   } catch (error) {
     console.error('Seed error:', error);
