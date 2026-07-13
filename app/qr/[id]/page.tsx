@@ -857,7 +857,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 {(bio.links || []).map((link: any, idx: number) => (
                   <a
                     key={link.id || idx}
-                    href={link.url}
+                    href={link.url && !link.url.match(/^https?:\/\//) ? `https://${link.url}` : link.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full py-2 md:py-2.5 px-2.5 md:px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs md:text-sm font-medium transition-all min-w-0"

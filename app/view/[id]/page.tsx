@@ -725,7 +725,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   {(bio.links || []).map((link: any, idx: number) => (
                     <motion.a
                       key={link.id || idx}
-                      href={link.url}
+                      href={link.url && !link.url.match(/^https?:\/\//) ? `https://${link.url}` : link.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       initial={{ opacity: 0, y: 10 }}

@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Allow: /qr/metin
+Allow: /qr/metin-belge
+Allow: /qr/ses-dosyasi
+Allow: /qr/kartvizit
+Allow: /qr/wifi
+Allow: /qr/sosyal-medya
+Allow: /qr/iban
+Allow: /qr/fiyat-listesi
+Allow: /qr/bio-link
+Allow: /blog
+Disallow: /api/
+Disallow: /view/
 
 Sitemap: https://www.luxqrpro.site/sitemap.xml

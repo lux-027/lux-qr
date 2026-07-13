@@ -532,6 +532,10 @@ export default function BioLinkContent() {
                         type="text"
                         value={link.url}
                         onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                        onBlur={(e) => {
+                          const v = e.target.value.trim();
+                          if (v && !v.match(/^https?:\/\//)) updateLink(link.id, 'url', `https://${v}`);
+                        }}
                         placeholder="https://..."
                         className="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
                       />
