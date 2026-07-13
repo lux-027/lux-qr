@@ -34,8 +34,18 @@ export async function POST(request: NextRequest) {
       ttlSeconds = 365 * 24 * 60 * 60; // 365 days
     }
 
-    // Create QR code record
-    const qrId = uuidv4();
+    // Create QR code record — use slug for bio-link
+    let qrId = uuidv4();
+    if (contentType === 'bio-link') {
+      try {
+        const parsed = JSON.parse(content || '{}');
+        const username = (parsed.username || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20);
+        if (username) {
+          const suffix = Math.random().toString(36).substring(2, 6);
+          qrId = `${username}-${suffix}`;
+        }
+      } catch {}
+    }
     const viewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.luxqrpro.site'}/view/${qrId}`;
     const qrCode: QrCodeData = {
       id: qrId,

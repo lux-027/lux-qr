@@ -297,18 +297,14 @@ export default function BioLinkContent() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Link Adı</label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-slate-500 text-sm">luxqrpro.site/view/</span>
-                    <input
-                      type="text"
-                      value={data.username}
-                      onChange={(e) => setData((p) => ({ ...p, username: e.target.value.replace(/\s+/g, '') }))}
-                      placeholder="luxqr"
-                      className="flex-1 bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
-                    />
-                  </div>
-                  <p className="text-slate-500 text-[11px] mt-1.5">Bu alan sadece görsel amaçlıdır, otomatik ID atanır.</p>
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Kullanıcı Adı</label>
+                  <input
+                    type="text"
+                    value={data.username}
+                    onChange={(e) => setData((p) => ({ ...p, username: e.target.value.replace(/\s+/g, '') }))}
+                    placeholder="luxqr"
+                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
+                  />
                 </div>
               </div>
             </div>

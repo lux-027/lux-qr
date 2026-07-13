@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X, Home, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink, ChevronDown } from 'lucide-react';
 import ShareButton from './ShareButton';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,19 +13,32 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
+  const basicHrefs = ['/qr/metin', '/qr/metin-belge', '/qr/ses-dosyasi'];
+  const advancedHrefs = ['/qr/kartvizit', '/qr/wifi', '/qr/sosyal-medya', '/qr/iban', '/qr/fiyat-listesi', '/qr/bio-link'];
+
   const [qrOpen, setQrOpen] = useState(false);
+  const [qrOpen2, setQrOpen2] = useState(false);
 
   const mainItems = [
     { href: '/', label: 'Ana Sayfa', icon: Home, color: 'text-amber-400' },
   ];
 
-  const qrItems = [
+  // Auto-open the category that contains the current route
+  useEffect(() => {
+    if (basicHrefs.includes(pathname)) setQrOpen(true);
+    else if (advancedHrefs.includes(pathname)) setQrOpen2(true);
+  }, [pathname]);
+
+  const qrItemsBasic = [
     { href: '/qr/metin', label: 'Metin', icon: Type, color: 'text-blue-400' },
     { href: '/qr/metin-belge', label: 'Resim/Video/Belge', icon: ImageIcon, color: 'text-violet-400' },
+    { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-400' },
+  ];
+
+  const qrItemsAdvanced = [
     { href: '/qr/kartvizit', label: 'Kartvizit', icon: CreditCard, color: 'text-cyan-400' },
     { href: '/qr/wifi', label: 'WiFi', icon: Wifi, color: 'text-emerald-400' },
     { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2, color: 'text-pink-400' },
-    { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-400' },
     { href: '/qr/iban', label: 'IBAN', icon: Landmark, color: 'text-yellow-400' },
     { href: '/qr/fiyat-listesi', label: 'Fiyat Listesi', icon: ShoppingBag, color: 'text-rose-400' },
     { href: '/qr/bio-link', label: 'Bio Link', icon: ExternalLink, color: 'text-emerald-400' },
@@ -105,21 +118,20 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             {/* Divider */}
             <div className="border-t border-white/20 my-4"></div>
 
-            {/* QR Categories */}
-            {/* Header: clickable on mobile, static on desktop */}
+            {/* QR Category 1: Temel */}
             <button
               onClick={() => setQrOpen(o => !o)}
               className="md:cursor-default w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-1 rounded-lg hover:bg-white/5 md:hover:bg-transparent transition-all"
             >
               <div className="flex items-center gap-2">
                 <QrCode className="w-4 h-4 text-blue-400" />
-                <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">QR Kod Türleri</span>
+                <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">Temel QR Türleri</span>
               </div>
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 md:hidden ${qrOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${qrOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            <div className={`space-y-1 pl-1 overflow-hidden transition-all duration-200 ${qrOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 md:max-h-96 md:opacity-100'}`}>
-              {qrItems.map((item) => {
+            <div className={`space-y-1 pl-1 overflow-hidden transition-all duration-200 ${qrOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              {qrItemsBasic.map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link
@@ -132,6 +144,40 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         : 'text-gray-300 hover:bg-white/10 hover:text-white'
                     }`}
                     style={isActive ? { boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)' } : {}}
+                  >
+                    <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : item.color}`} />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* QR Category 2: Gelişmiş */}
+            <button
+              onClick={() => setQrOpen2(o => !o)}
+              className="md:cursor-default w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-1 mt-2 rounded-lg hover:bg-white/5 md:hover:bg-transparent transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <QrCode className="w-4 h-4 text-purple-400" />
+                <span className="text-xs text-gray-300 font-semibold uppercase tracking-wider">Gelişmiş QR Türleri</span>
+              </div>
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${qrOpen2 ? 'rotate-180' : ''}`} />
+            </button>
+
+            <div className={`space-y-1 pl-1 overflow-hidden transition-all duration-200 ${qrOpen2 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              {qrItemsAdvanced.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-400/50 text-white'
+                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                    }`}
+                    style={isActive ? { boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)' } : {}}
                   >
                     <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : item.color}`} />
                     <span className="font-medium text-sm">{item.label}</span>

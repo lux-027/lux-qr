@@ -929,44 +929,34 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400/50" />
               <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
-              <Link href="/qr/metin" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Type className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
-                <span>Metin</span>
-              </Link>
-              <Link href="/qr/metin-belge" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <FileText className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
-                <span>Resim / Video / Belge</span>
-              </Link>
-              <Link href="/qr/wifi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Wifi className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-400 flex-shrink-0" />
-                <span>WiFi</span>
-              </Link>
-              <Link href="/qr/kartvizit" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Building2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-purple-400 flex-shrink-0" />
-                <span>Kartvizit</span>
-              </Link>
-              <Link href="/qr/sosyal-medya" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Share2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-pink-400 flex-shrink-0" />
-                <span>Sosyal Medya</span>
-              </Link>
-              <Link href="/qr/ses-dosyasi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Mic className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 flex-shrink-0" />
-                <span>Ses Dosyası</span>
-              </Link>
-              <Link href="/qr/iban" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <Landmark className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-400 flex-shrink-0" />
-                <span>IBAN</span>
-              </Link>
-              <Link href="/qr/fiyat-listesi" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <ShoppingBag className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 flex-shrink-0" />
-                <span>Fiyat Listesi</span>
-              </Link>
-              <Link href="/qr/bio-link" className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
-                <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400 flex-shrink-0" />
-                <span>Bio Link</span>
-              </Link>
-            </div>
+            {(() => {
+                const basicTypes = ['text', 'media', 'audio'];
+                const isBasic = basicTypes.includes(qrData?.contentType);
+                const basicLinks = [
+                  { href: '/qr/metin', label: 'Metin', icon: Type, color: 'text-blue-400' },
+                  { href: '/qr/metin-belge', label: 'Resim / Video / Belge', icon: FileText, color: 'text-violet-400' },
+                  { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-400' },
+                ];
+                const advancedLinks = [
+                  { href: '/qr/kartvizit', label: 'Kartvizit', icon: Building2, color: 'text-cyan-400' },
+                  { href: '/qr/wifi', label: 'WiFi', icon: Wifi, color: 'text-emerald-400' },
+                  { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2, color: 'text-pink-400' },
+                  { href: '/qr/iban', label: 'IBAN', icon: Landmark, color: 'text-yellow-400' },
+                  { href: '/qr/fiyat-listesi', label: 'Fiyat Listesi', icon: ShoppingBag, color: 'text-rose-400' },
+                  { href: '/qr/bio-link', label: 'Bio Link', icon: ExternalLink, color: 'text-emerald-400' },
+                ];
+                const links = isBasic ? basicLinks : advancedLinks;
+                return (
+                  <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
+                    {links.map((item) => (
+                      <Link key={item.href} href={item.href} className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                        <item.icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${item.color} flex-shrink-0`} />
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })()}
             <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-white/10 flex flex-col items-center hidden md:flex">
               <QrCode className="w-16 h-16 text-white/10 mb-2" />
               <p className="text-xs text-gray-400 text-center">
@@ -1037,27 +1027,43 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                   </div>
 
                   {/* Color Palette */}
-                  <div className="flex flex-wrap justify-center gap-2 mt-4">
-                    {[
-                      { key: 'black', label: 'Siyah', bg: 'from-gray-900 via-gray-700 to-gray-900' },
-                      { key: 'neon', label: 'Neon', bg: 'from-lime-300 via-green-500 to-emerald-600' },
-                      { key: 'sunset', label: 'Sunset', bg: 'from-amber-300 via-orange-500 to-red-600' },
-                      { key: 'arctic', label: 'Arctic', bg: 'from-cyan-300 via-sky-500 to-blue-600' },
-                      { key: 'berry', label: 'Berry', bg: 'from-violet-400 via-pink-500 to-rose-500' },
-                    ].map((c) => (
-                      <button
-                        key={c.key}
-                        onClick={() => setQrColor(c.key as typeof qrColor)}
-                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                          qrColor === c.key
-                            ? 'border-gray-800 shadow-md bg-white'
-                            : 'border-gray-200 hover:border-gray-400 bg-white/70'
-                        }`}
-                      >
-                        <span className={`w-3.5 h-3.5 rounded-full bg-gradient-to-br ${c.bg}`} />
-                        {c.label}
-                      </button>
-                    ))}
+                  <div className="mt-4 px-1">
+                    <p className="text-[10px] text-gray-400 uppercase tracking-widest text-center mb-2 font-semibold">Renk Teması</p>
+                    <div className="flex justify-center gap-2">
+                      {[
+                        { key: 'black', label: 'Siyah', from: '#111827', to: '#374151' },
+                        { key: 'neon', label: 'Neon', from: '#a3e635', to: '#10b981' },
+                        { key: 'sunset', label: 'Sunset', from: '#fbbf24', to: '#dc2626' },
+                        { key: 'arctic', label: 'Arctic', from: '#67e8f9', to: '#2563eb' },
+                        { key: 'berry', label: 'Berry', from: '#c084fc', to: '#f43f5e' },
+                      ].map((c) => (
+                        <button
+                          key={c.key}
+                          onClick={() => setQrColor(c.key as typeof qrColor)}
+                          title={c.label}
+                          className={`relative w-9 h-9 rounded-xl transition-all duration-200 ${
+                            qrColor === c.key
+                              ? 'ring-2 ring-white ring-offset-2 ring-offset-gray-100 scale-110 shadow-lg'
+                              : 'hover:scale-105 opacity-70 hover:opacity-100'
+                          }`}
+                          style={{ background: `linear-gradient(135deg, ${c.from}, ${c.to})` }}
+                        >
+                          {qrColor === c.key && (
+                            <span className="absolute inset-0 flex items-center justify-center">
+                              <svg className="w-4 h-4 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-gray-400 text-center mt-1.5">{
+                      qrColor === 'black' ? 'Siyah' :
+                      qrColor === 'neon' ? 'Neon' :
+                      qrColor === 'sunset' ? 'Sunset' :
+                      qrColor === 'arctic' ? 'Arctic' : 'Berry'
+                    }</p>
                   </div>
 
                   <div className="mt-3 text-center">
