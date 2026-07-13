@@ -189,7 +189,8 @@ export async function incrementGlobalCounter(): Promise<number> {
 // Get all published posts
 export async function getAllPosts(): Promise<Post[]> {
   try {
-    const postIds = await kv.smembers(POST_LIST_KEY);
+    const rawIds = await kv.smembers(POST_LIST_KEY);
+    const postIds = rawIds.map((id: any) => String(id));
     const posts: Post[] = [];
     
     for (const id of postIds) {
