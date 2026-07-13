@@ -11,19 +11,33 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        surface: {
+          1: "#1c1c1c",
+          2: "#242424",
+          3: "#2e2e2e",
+        },
+        anthracite: {
+          50:  "#f0f0f0",
+          100: "#d4d4d4",
+          200: "#a8a8a8",
+          300: "#7a7a7a",
+          400: "#525252",
+          500: "#3a3a3a",
+          600: "#2e2e2e",
+          700: "#242424",
+          800: "#1c1c1c",
+          900: "#141414",
+          950: "#0a0a0a",
+        },
         gold: {
           400: "#FFD700",
           500: "#FFC700",
           600: "#E6B800",
         },
-        midnight: {
-          800: "#1a1a2e",
-          900: "#16213e",
-          950: "#0f0f23",
-        },
         neon: {
-          purple: "#a855f7",
-          blue: "#3b82f6",
+          blue:   "#63b3ed",
+          purple: "#b794f4",
+          cyan:   "#76e4f7",
         },
       },
       backgroundImage: {
