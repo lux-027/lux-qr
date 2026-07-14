@@ -3,8 +3,37 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Instagram } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+interface Star {
+  id: number;
+  left: number;
+  top: number;
+  size: number;
+  opacity: number;
+  duration: number;
+  delay: number;
+}
+
+function generateStars(count: number): Star[] {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    size: Math.random() * 2.5 + 0.5,
+    opacity: Math.random() * 0.7 + 0.3,
+    duration: Math.random() * 3 + 2,
+    delay: Math.random() * 5,
+  }));
+}
 
 export default function LuxStudioPage() {
+  const [stars, setStars] = useState<Star[]>([]);
+
+  useEffect(() => {
+    setStars(generateStars(140));
+  }, []);
+
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-12">
       {/* deep space gradient */}
@@ -16,13 +45,24 @@ export default function LuxStudioPage() {
       />
 
       {/* starfield */}
-      <div
-        className="absolute inset-0 z-0 opacity-40 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {stars.map(star => (
+          <div
+            key={star.id}
+            className="absolute rounded-full bg-white"
+            style={{
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              boxShadow: `0 0 ${star.size * 2}px rgba(255,255,255,${star.opacity})`,
+              animation: `twinkle ${star.duration}s ease-in-out infinite alternate`,
+              animationDelay: `${star.delay}s`,
+              '--star-opacity': star.opacity,
+            } as React.CSSProperties}
+          />
+        ))}
+      </div>
 
       {/* nebula glows */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px] pointer-events-none z-0" />

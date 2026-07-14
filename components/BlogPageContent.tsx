@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, ArrowRight, QrCode, Home, FileText, Zap, Shield, Users, CheckCircle, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, ArrowRight, QrCode, FileText, Users, CheckCircle, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
@@ -16,29 +16,25 @@ interface BlogPageContentProps {
   posts: any[];
 }
 
+const allQrTypes = [
+  { title: 'Metin', desc: 'Metin içeriğinizi QR koda dönüştürün', link: '/qr/metin', image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80&fm=webp' },
+  { title: 'Resim / Video / Belge', desc: 'PDF, fotoğraf ve video dosyalarınıza QR ile ulaşım', link: '/qr/metin-belge', image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&q=80&fm=webp' },
+  { title: 'Kartvizit', desc: 'Dijital vCard ile profesyonel bağlantılar', link: '/qr/kartvizit', image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80&fm=webp' },
+  { title: 'WiFi', desc: 'Ağ şifresini tek tarama ile paylaşın', link: '/qr/wifi', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fm=webp' },
+  { title: 'Sosyal Medya', desc: 'Takipçilerinizi tek linke yönlendirin', link: '/qr/sosyal-medya', image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80&fm=webp' },
+  { title: 'Ses Dosyası', desc: 'Müzik, podcast ve sesli rehberleri paylaşın', link: '/qr/ses-dosyasi', image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80&fm=webp' },
+  { title: 'IBAN', desc: 'Hızlı ve hatasız havale QR kodu', link: '/qr/iban', image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80&fm=webp' },
+  { title: 'Fiyat Listesi', desc: 'Ürün ve hizmet fiyatlarınızı listeleyin', link: '/qr/fiyat-listesi', image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fm=webp' },
+  { title: 'Bio Link', desc: 'Tüm sosyal medya linkleriniz tek sayfada', link: '/qr/bio-link', image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&q=80&fm=webp' },
+];
+
 export default function BlogPageContent({ posts }: BlogPageContentProps) {
-  const [qrIndex, setQrIndex] = useState(0);
-  const [qrPerPage, setQrPerPage] = useState(3);
+  const [recommended, setRecommended] = useState(allQrTypes.slice(0, 3));
 
   useEffect(() => {
-    const onResize = () => setQrPerPage(window.innerWidth < 768 ? 1 : 3);
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    const shuffled = [...allQrTypes].sort(() => 0.5 - Math.random());
+    setRecommended(shuffled.slice(0, 3));
   }, []);
-
-  const qrTypes = [
-    { icon: FileText, title: 'Metin & Belge', desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge' },
-    { icon: Users, title: 'Kartvizit', desc: 'Dijital vCard', link: '/qr/kartvizit' },
-    { icon: Zap, title: 'WiFi', desc: 'Ağ paylaşımı', link: '/qr/wifi' },
-    { icon: Shield, title: 'Sosyal Medya', desc: 'Link-in-bio', link: '/qr/sosyal-medya' },
-  ];
-
-  const maxQrIndex = Math.max(0, qrTypes.length - qrPerPage);
-
-  useEffect(() => {
-    if (qrIndex > maxQrIndex) setQrIndex(maxQrIndex);
-  }, [qrIndex, maxQrIndex]);
 
   return (
     <main className="min-h-screen">
@@ -174,51 +170,51 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
           className="mb-16"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-8 text-center text-gradient">
-            QR Kod Türleri
+            Önerilen QR
           </h2>
 
-          <div className="relative">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${qrIndex * (100 / qrTypes.length)}%)` }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
+            {recommended.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 * index, duration: 0.3 }}
               >
-                {qrTypes.map((item, index) => (
-                  <div key={index} className="flex-shrink-0 w-full md:w-1/3 px-1.5 md:px-3">
-                    <Link href={item.link}>
-                      <div className="card-premium overflow-hidden h-full flex flex-col group">
-                        <div className="relative h-32 md:h-40 flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-500 to-cyan-500">
-                          <item.icon className="w-12 h-12 md:w-16 md:h-16 text-white drop-shadow-lg transition-transform duration-300 group-hover:scale-110" />
-                        </div>
-                        <div className="p-3 md:p-4 flex-1 flex flex-col">
-                          <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
-                          <p className="text-gray-500 text-xs md:text-sm">{item.desc}</p>
-                        </div>
+                <Link href={item.link}>
+                  <div className="card-premium overflow-hidden h-full flex flex-col group">
+                    <div className="relative h-44 md:h-52 overflow-hidden">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-4 md:p-5 flex-1 flex flex-col">
+                      <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
+                      <p className="text-gray-500 text-xs md:text-sm mb-3 md:mb-4 flex-1">{item.desc}</p>
+                      <div className="flex items-center text-blue-400 font-semibold text-xs md:text-sm group-hover:translate-x-2 transition-transform">
+                        <span>Oluştur</span>
+                        <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-1" />
                       </div>
-                    </Link>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
 
-            <div className="flex justify-center gap-2 mt-4 md:mt-6">
-              <button
-                onClick={() => setQrIndex(i => Math.max(0, i - 1))}
-                disabled={qrIndex === 0}
-                className="p-2 rounded-full btn-secondary disabled:opacity-40"
-                aria-label="Önceki"
-              >
-                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button
-                onClick={() => setQrIndex(i => Math.min(maxQrIndex, i + 1))}
-                disabled={qrIndex >= maxQrIndex}
-                className="p-2 rounded-full btn-secondary disabled:opacity-40"
-                aria-label="Sonraki"
-              >
-                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-            </div>
+          <div className="text-center">
+            <Link
+              href="/#kategoriler"
+              className="btn-primary text-sm md:text-base group"
+            >
+              Tüm QR Çeşitlerini Gör
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </motion.div>
 
