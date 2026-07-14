@@ -192,10 +192,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <main className="min-h-screen  flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-white text-xl">Yükleniyor...</p>
+          <p className="text-gray-900 text-xl">Yükleniyor...</p>
         </div>
       </main>
     );
@@ -203,10 +203,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 max-w-md w-full text-center">
+      <main className="min-h-screen  flex items-center justify-center p-4">
+        <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-2xl p-8 max-w-md w-full text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Hata</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Hata</h2>
           <p className="text-gray-400">{error}</p>
         </div>
       </main>
@@ -215,14 +215,14 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
   if (expired) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <main className="min-h-screen  flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-10 max-w-md w-full text-center"
+          className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-3xl p-10 max-w-md w-full text-center"
         >
           <Clock className="w-20 h-20 text-red-500 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-white mb-3">Süre Doldu</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">Süre Doldu</h2>
           <p className="text-gray-400 mb-8 text-lg">
             Bu QR kodun geçerlilik süresi dolmuştur.
           </p>
@@ -286,15 +286,15 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           };
           
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+            <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{contentTitle}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{contentTitle}</h3>
                   <p className="text-sm text-gray-400">Sosyal Medya Hesabı</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-6">
+              <div className="bg-gray-100 rounded-lg p-6">
                 <div className="flex items-center gap-6">
                   {profilePic ? (
                     <img 
@@ -307,15 +307,15 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                     />
                   ) : (
                     <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                      <User className="w-10 h-10 text-white" />
+                      <User className="w-10 h-10 text-gray-900" />
                     </div>
                   )}
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       {platformIcons[socialData.platform as keyof typeof platformIcons] || <Share2 className="w-6 h-6 text-pink-400" />}
-                      <h4 className="text-xl font-bold text-white">{socialData.platform}</h4>
+                      <h4 className="text-xl font-bold text-gray-900">{socialData.platform}</h4>
                     </div>
-                    <p className="text-2xl font-semibold text-white mb-1">@{socialData.username}</p>
+                    <p className="text-2xl font-semibold text-gray-900 mb-1">@{socialData.username}</p>
                     <a 
                       href={socialData.profileUrl} 
                       target="_blank" 
@@ -360,22 +360,22 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           };
 
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+            <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{wifiData.ssid || 'WiFi Ağı'}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{wifiData.ssid || 'WiFi Ağı'}</h3>
                   <p className="text-sm text-gray-400">WiFi Ağ Bilgisi</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-6">
+              <div className="bg-gray-100 rounded-lg p-6">
                 <div className="flex flex-wrap gap-6">
                   {wifiData.ssid && (
                     <div className="flex items-center gap-3">
                       <Wifi className="w-5 h-5 text-cyan-400" />
                       <div>
                         <p className="text-gray-400 text-sm">Ağ Adı (SSID)</p>
-                        <p className="text-white font-medium">{wifiData.ssid}</p>
+                        <p className="text-gray-900 font-medium">{wifiData.ssid}</p>
                       </div>
                     </div>
                   )}
@@ -384,7 +384,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                       <Lock className="w-5 h-5 text-green-400" />
                       <div>
                         <p className="text-gray-400 text-sm">Güvenlik Türü</p>
-                        <p className="text-white font-medium">{wifiData.security}</p>
+                        <p className="text-gray-900 font-medium">{wifiData.security}</p>
                       </div>
                     </div>
                   )}
@@ -393,14 +393,14 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                       <Key className="w-5 h-5 text-purple-400" />
                       <div>
                         <p className="text-gray-400 text-sm">Şifre</p>
-                        <p className="text-white font-medium">{wifiData.password}</p>
+                        <p className="text-gray-900 font-medium">{wifiData.password}</p>
                       </div>
                       <button
                         onClick={handleCopyWifiInfo}
-                        className="ml-2 p-2 rounded-lg hover:bg-white/10 transition-colors"
+                        className="ml-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
                         title="WiFi bilgilerini kopyala"
                       >
-                        <Download className="w-4 h-4 text-gray-400 hover:text-white" />
+                        <Download className="w-4 h-4 text-gray-400 hover:text-gray-900" />
                       </button>
                     </div>
                   )}
@@ -409,7 +409,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                       <EyeOff className="w-5 h-5 text-orange-400" />
                       <div>
                         <p className="text-gray-400 text-sm">Gizli Ağ</p>
-                        <p className="text-white font-medium">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
+                        <p className="text-gray-900 font-medium">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
                       </div>
                     </div>
                   )}
@@ -420,7 +420,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
               <div className="mt-6">
                 <button
                   onClick={handleWifiConnect}
-                  className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-6 py-3 rounded-2xl transition-all hover:scale-105 hover:shadow-lg w-full justify-center"
+                  className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-gray-900 px-6 py-3 rounded-2xl transition-all hover:scale-105 hover:shadow-lg w-full justify-center"
                 >
                   <Wifi className="w-5 h-5" />
                   <span className="font-medium">WiFi'ye Bağlan</span>
@@ -436,7 +436,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           return (
             <div className="max-w-sm mx-auto">
               {/* ── Kart Gövdesi ── */}
-              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10">
+              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-gray-200">
 
                 {/* HEADER — gradient banner */}
                 <div className="relative bg-gradient-to-br from-slate-800 via-blue-950 to-slate-900 px-6 pt-8 pb-16">
@@ -449,7 +449,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                     <div>
                       <p className="text-blue-300/70 text-[10px] font-semibold uppercase tracking-widest mb-1">Dijital Kartvizit</p>
                       {vcardData.company && (
-                        <p className="text-white/80 text-sm font-medium">{vcardData.company}</p>
+                        <p className="text-gray-900/80 text-sm font-medium">{vcardData.company}</p>
                       )}
                     </div>
                     {vcardData.photo && (
@@ -463,7 +463,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 </div>
 
                 {/* AVATAR — banner üstüne taşan */}
-                <div className="relative bg-slate-900 px-6 pt-0 pb-5">
+                <div className="relative bg-white px-6 pt-0 pb-5">
                   <div className="flex items-end gap-4 -mt-10 mb-4">
                     {vcardData.photo ? (
                       <div className="w-20 h-20 rounded-2xl border-4 border-slate-900 shadow-xl overflow-hidden flex-shrink-0 bg-white">
@@ -471,11 +471,11 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                       </div>
                     ) : (
                       <div className="w-20 h-20 rounded-2xl border-4 border-slate-900 shadow-xl flex-shrink-0 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                        <span className="text-white text-2xl font-bold">{initials || <User className="w-8 h-8 text-white" />}</span>
+                        <span className="text-gray-900 text-2xl font-bold">{initials || <User className="w-8 h-8 text-gray-900" />}</span>
                       </div>
                     )}
                     <div className="pb-1">
-                      <h2 className="text-xl font-bold text-white leading-tight">{fullName}</h2>
+                      <h2 className="text-xl font-bold text-gray-900 leading-tight">{fullName}</h2>
                       {vcardData.title && (
                         <span className="inline-block mt-1 text-xs font-semibold text-blue-300 bg-blue-500/15 border border-blue-500/20 px-2 py-0.5 rounded-full">
                           {vcardData.title}
@@ -496,7 +496,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                         </div>
                         <div>
                           <p className="text-[10px] text-slate-500 uppercase tracking-wider">Telefon</p>
-                          <p className="text-white text-sm font-medium group-hover:text-blue-300 transition-colors">{vcardData.phone}</p>
+                          <p className="text-gray-900 text-sm font-medium group-hover:text-blue-300 transition-colors">{vcardData.phone}</p>
                         </div>
                       </a>
                     )}
@@ -507,7 +507,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                         </div>
                         <div>
                           <p className="text-[10px] text-slate-500 uppercase tracking-wider">E-posta</p>
-                          <p className="text-white text-sm font-medium group-hover:text-purple-300 transition-colors">{vcardData.email}</p>
+                          <p className="text-gray-900 text-sm font-medium group-hover:text-purple-300 transition-colors">{vcardData.email}</p>
                         </div>
                       </a>
                     )}
@@ -518,7 +518,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                         </div>
                         <div>
                           <p className="text-[10px] text-slate-500 uppercase tracking-wider">Web Sitesi</p>
-                          <p className="text-white text-sm font-medium group-hover:text-cyan-300 transition-colors">{vcardData.website.replace(/^https?:\/\//, '')}</p>
+                          <p className="text-gray-900 text-sm font-medium group-hover:text-cyan-300 transition-colors">{vcardData.website.replace(/^https?:\/\//, '')}</p>
                         </div>
                       </a>
                     )}
@@ -529,7 +529,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                         </div>
                         <div>
                           <p className="text-[10px] text-slate-500 uppercase tracking-wider">Adres</p>
-                          <p className="text-white text-sm font-medium">{vcardData.address}</p>
+                          <p className="text-gray-900 text-sm font-medium">{vcardData.address}</p>
                         </div>
                       </div>
                     )}
@@ -539,7 +539,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   <a
                     href={`data:text/vcard;charset=utf-8,${encodeURIComponent(data.content)}`}
                     download={`${fullName.replace(/\s+/g, '_')}.vcf`}
-                    className="mt-5 flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-[1.02]"
+                    className="mt-5 flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-gray-900 font-semibold text-sm transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-[1.02]"
                   >
                     <User className="w-4 h-4" />
                     Rehbere Ekle
@@ -550,29 +550,29 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           );
         }
         return (
-          <div className="p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+          <div className="p-8 rounded-2xl bg-gray-50 backdrop-blur-sm border border-gray-200">
             {data.fileName ? (
               <>
                 <FileText className="w-20 h-20 text-blue-500 mx-auto mb-6" />
-                <p className="text-white font-medium mb-2 text-xl text-center">{data.fileName}</p>
+                <p className="text-gray-900 font-medium mb-2 text-xl text-center">{data.fileName}</p>
                 <p className="text-gray-400 text-sm mb-6 text-center">Belge</p>
                 <a 
                   href={data.content} 
                   download={data.fileName || 'belge'}
-                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors mx-auto"
+                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-gray-900 px-6 py-3 rounded-lg transition-colors mx-auto"
                 >
                   <Download className="w-5 h-5" />
                   Dosyayı İndir
                 </a>
               </>
             ) : (
-              <p className="text-white whitespace-pre-wrap text-lg leading-relaxed">{displayContent}</p>
+              <p className="text-gray-900 whitespace-pre-wrap text-lg leading-relaxed">{displayContent}</p>
             )}
           </div>
         );
       case 'image':
         return (
-          <div className="rounded-2xl overflow-hidden border-2 border-white/10 backdrop-blur-sm">
+          <div className="rounded-2xl overflow-hidden border-2 border-gray-200 backdrop-blur-sm">
             <img
               src={data.filePath || data.content}
               alt={data.fileName || 'Image'}
@@ -586,7 +586,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         );
       case 'video':
         return (
-          <div className="rounded-2xl overflow-hidden border-2 border-white/10 backdrop-blur-sm">
+          <div className="rounded-2xl overflow-hidden border-2 border-gray-200 backdrop-blur-sm">
             <video
               src={data.filePath || data.content}
               controls
@@ -601,9 +601,9 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         );
       case 'file':
         return (
-          <div className="p-10 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 text-center">
+          <div className="p-10 rounded-2xl bg-gray-50 backdrop-blur-sm border border-gray-200 text-center">
             <FileText className="w-20 h-20 text-blue-500 mx-auto mb-6" />
-            <p className="text-white font-medium mb-2 text-xl">{data.fileName}</p>
+            <p className="text-gray-900 font-medium mb-2 text-xl">{data.fileName}</p>
             <p className="text-gray-400 text-sm mb-6">Belge Dosyası</p>
             <div className="bg-black/20 rounded-lg p-6 mb-6">
               <p className="text-gray-300 text-sm mb-4">
@@ -614,7 +614,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   href={data.filePath} 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-white px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
+                  className="inline-flex items-center gap-2 bg-blue-500/80 hover:bg-blue-500 text-gray-900 px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
                 >
                   Dosyayı Görüntüle
                 </a>
@@ -659,26 +659,26 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         }
         
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               <Landmark className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
-              <h3 className="text-base md:text-lg font-semibold text-white">IBAN</h3>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900">IBAN</h3>
             </div>
             <div className="bg-black/20 rounded-lg p-3 md:p-4 space-y-2">
               {bankName !== 'Bilinmiyor' && (
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Banka Adı</p>
-                  <p className="text-white text-sm md:text-base">{bankName}</p>
+                  <p className="text-gray-900 text-sm md:text-base">{bankName}</p>
                 </div>
               )}
               <div>
                 <p className="text-gray-400 text-xs mb-1">IBAN Numarası</p>
-                <p className="text-white text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
+                <p className="text-gray-900 text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
               </div>
               {accountHolder !== 'Bilinmiyor' && (
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Hesap Sahibi</p>
-                  <p className="text-white text-sm md:text-base">{accountHolder}</p>
+                  <p className="text-gray-900 text-sm md:text-base">{accountHolder}</p>
                 </div>
               )}
             </div>
@@ -690,11 +690,11 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       case 'bio-link': {
         let bio: any = null;
         try { bio = JSON.parse(data.content); } catch {}
-        if (!bio) return <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"><p className="text-gray-400">Bio link yüklenemedi.</p></div>;
+        if (!bio) return <div className="p-8 rounded-2xl bg-gray-50 border border-gray-200 text-center"><p className="text-gray-400">Bio link yüklenemedi.</p></div>;
         return (
           <div className="max-w-md mx-auto">
             <div
-              className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
+              className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-gray-200"
               style={{ minHeight: '560px' }}
             >
               <div
@@ -715,12 +715,12 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                     className="w-24 h-24 rounded-3xl object-cover border-4 border-white/20 shadow-2xl mb-5"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-3xl bg-white/10 border-4 border-white/20 flex items-center justify-center mb-5">
-                    <User className="w-12 h-12 text-white/60" />
+                  <div className="w-24 h-24 rounded-3xl bg-gray-100 border-4 border-white/20 flex items-center justify-center mb-5">
+                    <User className="w-12 h-12 text-gray-900/60" />
                   </div>
                 )}
-                <h2 className="text-2xl font-bold text-white mb-1">{bio.title}</h2>
-                {bio.username && <p className="text-white/60 text-sm mb-8">@{bio.username}</p>}
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">{bio.title}</h2>
+                {bio.username && <p className="text-gray-900/60 text-sm mb-8">@{bio.username}</p>}
                 <div className="w-full max-w-xs space-y-3">
                   {(bio.links || []).map((link: any, idx: number) => (
                     <motion.a
@@ -731,7 +731,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="flex items-center justify-center gap-2 w-full py-3.5 px-5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white font-medium transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-3.5 px-5 rounded-2xl bg-gray-100 hover:bg-white/20 border border-gray-200 backdrop-blur-md text-gray-900 font-medium transition-all"
                     >
                       <ExternalLink className="w-4 h-4" />
                       {link.title}
@@ -740,7 +740,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 </div>
                 {bio.username && (
                   <div className="mt-auto pt-8">
-                    <p className="text-white/40 text-xs flex items-center gap-1">
+                    <p className="text-gray-900/40 text-xs flex items-center gap-1">
                       <LinkIcon className="w-3 h-3" />
                       {bio.username}.xxx
                     </p>
@@ -753,8 +753,8 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       }
       default:
         return (
-          <div className="p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-            <p className="text-white whitespace-pre-wrap text-lg leading-relaxed">{displayContent}</p>
+          <div className="p-8 rounded-2xl bg-gray-50 backdrop-blur-sm border border-gray-200">
+            <p className="text-gray-900 whitespace-pre-wrap text-lg leading-relaxed">{displayContent}</p>
           </div>
         );
     }
@@ -781,31 +781,31 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+        className="min-h-screen "
       >
         {/* Site Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-xl border-b border-white/10">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-200">
           <div className="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
             <Link href="/" className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-400 shadow-lg flex items-center justify-center">
-                <QrCode className="w-6 h-6 text-white" />
+                <QrCode className="w-6 h-6 text-gray-900" />
               </div>
-              <span className="text-2xl font-bold text-white">LuxQr</span>
+              <span className="text-2xl font-bold text-gray-900">LuxQr</span>
             </Link>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+              className="p-2.5 rounded-xl bg-gray-100 hover:bg-white/20 text-gray-900 transition-all duration-200"
             >
               <Menu className="w-7 h-7" />
             </button>
           </div>
           {menuOpen && (
             <div className="max-w-lg mx-auto px-4 pb-3 border-t border-white/5 pt-2">
-              <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+              <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-gray-900 text-sm transition-all" onClick={() => setMenuOpen(false)}>
                 <QrCode className="w-4 h-4" />
                 QR Kod Oluştur
               </Link>
-              <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-white text-sm transition-all" onClick={() => setMenuOpen(false)}>
+              <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-gray-900 text-sm transition-all" onClick={() => setMenuOpen(false)}>
                 <FileText className="w-4 h-4" />
                 Blog
               </Link>
@@ -820,7 +820,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 text-center"
+            className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-3xl p-6 text-center"
           >
             <div className="flex justify-center mb-4">
               {pl?.logoUrl ? (
@@ -832,27 +832,27 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 <div className="relative">
                   <div className="absolute inset-0 bg-orange-500/20 blur-2xl rounded-full scale-150" />
                   <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-xl">
-                    <ShoppingBag className="w-8 h-8 text-white" />
+                    <ShoppingBag className="w-8 h-8 text-gray-900" />
                   </div>
                 </div>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-white mb-1">{pl?.brandName || 'Marka'}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">{pl?.brandName || 'Marka'}</h1>
             {pl?.brandDescription && (
               <p className="text-gray-400 text-sm mb-4 leading-relaxed">{pl.brandDescription}</p>
             )}
             {/* Stats */}
-            <div className="flex items-center justify-center gap-6 py-4 border-y border-white/10 mb-5">
+            <div className="flex items-center justify-center gap-6 py-4 border-y border-gray-200 mb-5">
               <div className="text-center">
-                <p className="text-xl font-bold text-white">{pl?.categories?.length || 0}</p>
+                <p className="text-xl font-bold text-gray-900">{pl?.categories?.length || 0}</p>
                 <p className="text-gray-500 text-xs mt-0.5">Kategori</p>
               </div>
-              <div className="w-px h-8 bg-white/10" />
+              <div className="w-px h-8 bg-gray-100" />
               <div className="text-center">
-                <p className="text-xl font-bold text-white">{totalItems}</p>
+                <p className="text-xl font-bold text-gray-900">{totalItems}</p>
                 <p className="text-gray-500 text-xs mt-0.5">Ürün</p>
               </div>
-              <div className="w-px h-8 bg-white/10" />
+              <div className="w-px h-8 bg-gray-100" />
               <div className="text-center">
                 <p className="text-xl font-bold text-orange-400">{sym}</p>
                 <p className="text-gray-500 text-xs mt-0.5">{pl?.currency || 'TL'}</p>
@@ -860,7 +860,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             </div>
             <Link
               href={`/menu/${data.id}`}
-              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-3.5 rounded-2xl transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-orange-500/30"
+              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-gray-900 font-semibold py-3.5 rounded-2xl transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-orange-500/30"
             >
               <ShoppingBag className="w-5 h-5" />
               <span>{pl?.brandName || 'Marka'} Fiyat Listesini Görüntüle</span>
@@ -876,7 +876,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             >
               <div className="flex items-center gap-2 mb-3 px-1">
                 <Tag className="w-4 h-4 text-orange-400" />
-                <h2 className="text-sm font-semibold text-white">Öne Çıkan Ürünler</h2>
+                <h2 className="text-sm font-semibold text-gray-900">Öne Çıkan Ürünler</h2>
                 {discounted.length > 0 && (
                   <span className="ml-auto text-[10px] text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
                     {discounted.length} indirimli
@@ -892,13 +892,13 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   return (
                     <div
                       key={i}
-                      className="flex-shrink-0 w-[calc(50%-6px)] snap-start bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+                      className="flex-shrink-0 w-[calc(50%-6px)] snap-start bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden"
                     >
                       {item.imageUrl ? (
                         <div className="relative">
                           <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
                           {hasDiscount && (
-                            <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
+                            <div className="absolute top-2 left-2 bg-red-500 text-gray-900 text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
                               %{item.discount}
                             </div>
                           )}
@@ -909,7 +909,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                         </div>
                       ) : null}
                       <div className="p-3">
-                        <p className="text-white text-xs font-semibold leading-tight line-clamp-2 mb-1">{item.name}</p>
+                        <p className="text-gray-900 text-xs font-semibold leading-tight line-clamp-2 mb-1">{item.name}</p>
                         <p className="text-gray-600 text-[10px] mb-2">{item.categoryName}</p>
                         {hasDiscount ? (
                           <div>
@@ -933,15 +933,15 @@ export default function ViewPage({ params }: { params: { id: string } }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
-              className="bg-white/5 border border-white/10 rounded-3xl p-5"
+              className="bg-gray-50 border border-gray-200 rounded-3xl p-5"
             >
               <div className="flex items-center gap-2 mb-4">
                 <Package className="w-4 h-4 text-blue-400" />
-                <h2 className="text-sm font-semibold text-white">Kategoriler</h2>
+                <h2 className="text-sm font-semibold text-gray-900">Kategoriler</h2>
               </div>
               <div className="flex flex-wrap gap-2">
                 {pl.categories.map((cat: any, i: number) => (
-                  <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs">
+                  <span key={i} className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-gray-300 text-xs">
                     {cat.name} <span className="text-gray-600">({cat.items?.length || 0})</span>
                   </span>
                 ))}
@@ -958,9 +958,9 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           >
             <div className="flex items-center justify-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                <QrCode className="w-3.5 h-3.5 text-white" />
+                <QrCode className="w-3.5 h-3.5 text-gray-900" />
               </div>
-              <span className="text-white font-semibold text-sm">LuxQr ile Oluşturuldu</span>
+              <span className="text-gray-900 font-semibold text-sm">LuxQr ile Oluşturuldu</span>
             </div>
             <p className="text-gray-500 text-xs mb-3">Siz de işletmeniz için dijital fiyat listesi, WiFi QR ve daha fazlasını ücretsiz oluşturun.</p>
             <Link
@@ -981,7 +981,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col"
+      className="min-h-screen  flex flex-col"
     >
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <div className="max-w-4xl w-full">

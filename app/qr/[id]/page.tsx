@@ -434,7 +434,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           const profilePic = getProfilePicture(socialData.platform, socialData.username);
           const platformIcons: any = {
             Instagram: <Instagram className="w-8 h-8 text-pink-500" />,
-            TikTok: <Video className="w-8 h-8 text-white" />,
+            TikTok: <Video className="w-8 h-8 text-gray-900" />,
             Facebook: <Facebook className="w-8 h-8 text-blue-600" />,
             YouTube: <Youtube className="w-8 h-8 text-red-600" />,
             Twitter: <Share2 className="w-8 h-8 text-blue-400" />,
@@ -443,15 +443,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           };
           
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
               <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-base md:text-lg font-semibold text-white">{contentTitle}</h3>
-                  <p className="text-xs md:text-sm text-gray-400">Sosyal Medya Hesabı</p>
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900">{contentTitle}</h3>
+                  <p className="text-xs md:text-sm text-gray-600">Sosyal Medya Hesabı</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-4 md:p-6">
+              <div className="bg-gray-100 rounded-lg p-4 md:p-6">
                 <div className="flex items-center gap-4 md:gap-6">
                   {profilePic ? (
                     <img 
@@ -466,20 +466,20 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     />
                   ) : (
                     <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                      <User className="w-7 h-7 md:w-10 md:h-10 text-white" />
+                      <User className="w-7 h-7 md:w-10 md:h-10 text-gray-900" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
                       {platformIcons[socialData.platform as keyof typeof platformIcons] || <Share2 className="w-5 h-5 md:w-6 md:h-6 text-pink-400" />}
-                      <h4 className="text-lg md:text-xl font-bold text-white">{socialData.platform}</h4>
+                      <h4 className="text-lg md:text-xl font-bold text-gray-900">{socialData.platform}</h4>
                     </div>
-                    <p className="text-lg md:text-2xl font-semibold text-white mb-1">@{socialData.username}</p>
+                    <p className="text-lg md:text-2xl font-semibold text-gray-900 mb-1">@{socialData.username}</p>
                     <a
                       href={socialData.profileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 md:gap-2 text-blue-400 hover:text-blue-300 transition-colors text-xs md:text-sm truncate"
+                      className="inline-flex items-center gap-1 md:gap-2 text-blue-600 hover:text-blue-700 transition-colors text-xs md:text-sm truncate"
                     >
                       <LinkIcon className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
                       <span className="truncate">Profili Görüntüle</span>
@@ -493,22 +493,22 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         if (isWifi) {
           const wifiData = parseWifi(qrData.content);
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
               <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-base md:text-lg font-semibold text-white">{wifiData.ssid || 'WiFi Ağı'}</h3>
-                  <p className="text-xs md:text-sm text-gray-400">WiFi Ağ Bilgisi</p>
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900">{wifiData.ssid || 'WiFi Ağı'}</h3>
+                  <p className="text-xs md:text-sm text-gray-600">WiFi Ağ Bilgisi</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-4 md:p-6">
+              <div className="bg-gray-100 rounded-lg p-4 md:p-6">
                 <div className="flex flex-wrap gap-3 md:gap-6">
                   {wifiData.ssid && (
                     <div className="flex items-center gap-2 md:gap-3">
                       <Wifi className="w-4 h-4 md:w-5 md:h-5 text-cyan-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-gray-400 text-xs md:text-sm">Ağ Adı (SSID)</p>
-                        <p className="text-white font-medium text-sm md:text-base truncate">{wifiData.ssid}</p>
+                        <p className="text-gray-600 text-xs md:text-sm">Ağ Adı (SSID)</p>
+                        <p className="text-gray-900 font-medium text-sm md:text-base truncate">{wifiData.ssid}</p>
                       </div>
                     </div>
                   )}
@@ -516,8 +516,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     <div className="flex items-center gap-2 md:gap-3">
                       <Lock className="w-4 h-4 md:w-5 md:h-5 text-green-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-gray-400 text-xs md:text-sm">Güvenlik Türü</p>
-                        <p className="text-white font-medium text-sm md:text-base truncate">{wifiData.security}</p>
+                        <p className="text-gray-600 text-xs md:text-sm">Güvenlik Türü</p>
+                        <p className="text-gray-900 font-medium text-sm md:text-base truncate">{wifiData.security}</p>
                       </div>
                     </div>
                   )}
@@ -525,8 +525,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     <div className="flex items-center gap-2 md:gap-3">
                       <Key className="w-4 h-4 md:w-5 md:h-5 text-purple-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-gray-400 text-xs md:text-sm">Şifre</p>
-                        <p className="text-white font-medium text-sm md:text-base truncate">{wifiData.password}</p>
+                        <p className="text-gray-600 text-xs md:text-sm">Şifre</p>
+                        <p className="text-gray-900 font-medium text-sm md:text-base truncate">{wifiData.password}</p>
                       </div>
                     </div>
                   )}
@@ -534,8 +534,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     <div className="flex items-center gap-2 md:gap-3">
                       <EyeOff className="w-4 h-4 md:w-5 md:h-5 text-orange-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-gray-400 text-xs md:text-sm">Gizli Ağ</p>
-                        <p className="text-white font-medium text-sm md:text-base">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
+                        <p className="text-gray-600 text-xs md:text-sm">Gizli Ağ</p>
+                        <p className="text-gray-900 font-medium text-sm md:text-base">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
                       </div>
                     </div>
                   )}
@@ -547,46 +547,46 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         if (isVCard) {
           const vcardData = parseVCard(qrData.content);
           return (
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+            <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
               <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 {contentIcon}
                 <div>
-                  <h3 className="text-base md:text-lg font-semibold text-white">{contentTitle}</h3>
-                  <p className="text-xs md:text-sm text-gray-400">Kartvizit Bilgisi</p>
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900">{contentTitle}</h3>
+                  <p className="text-xs md:text-sm text-gray-600">Kartvizit Bilgisi</p>
                 </div>
               </div>
-              <div className="bg-white/10 rounded-lg p-4 md:p-6">
+              <div className="bg-gray-100 rounded-lg p-4 md:p-6">
                 <div className="flex flex-col md:flex-row gap-4 md:gap-12">
                   {/* Left side - Name and title */}
                   <div className="flex-1 text-center md:text-left">
-                    <h4 className="text-lg md:text-xl font-bold text-white mb-1">{vcardData.fullName || vcardData.firstName + ' ' + vcardData.lastName}</h4>
+                    <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-1">{vcardData.fullName || vcardData.firstName + ' ' + vcardData.lastName}</h4>
                     {vcardData.title && <p className="text-blue-400 font-medium text-sm md:text-base">{vcardData.title}</p>}
-                    {vcardData.company && <p className="text-gray-400 text-xs md:text-sm mt-1">{vcardData.company}</p>}
+                    {vcardData.company && <p className="text-gray-600 text-xs md:text-sm mt-1">{vcardData.company}</p>}
                   </div>
                   
                   {/* Right side - Contact info */}
                   <div className="flex-1 space-y-2 md:space-y-3">
                     {vcardData.phone && (
-                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
-                        <Phone className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm">
+                        <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" />
                         <span className="truncate">{vcardData.phone}</span>
                       </div>
                     )}
                     {vcardData.email && (
-                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
-                        <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm">
+                        <Mail className="w-4 h-4 text-blue-500 flex-shrink-0" />
                         <span className="truncate">{vcardData.email}</span>
                       </div>
                     )}
                     {vcardData.website && (
-                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
-                        <Globe className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm">
+                        <Globe className="w-4 h-4 text-blue-500 flex-shrink-0" />
                         <span className="truncate">{vcardData.website}</span>
                       </div>
                     )}
                     {vcardData.address && (
-                      <div className="flex items-center gap-2 md:gap-3 text-gray-300 text-sm">
-                        <MapPin className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm">
+                        <MapPin className="w-4 h-4 text-blue-500 flex-shrink-0" />
                         <span className="truncate">{vcardData.address}</span>
                       </div>
                     )}
@@ -597,15 +597,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           );
         }
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               {contentIcon}
               <div>
-                <h3 className="text-base md:text-lg font-semibold text-white">{contentTitle}</h3>
+                <h3 className="text-base md:text-lg font-semibold text-gray-900">{contentTitle}</h3>
                 {isVCard && <p className="text-xs md:text-sm text-gray-400">Kartvizit Bilgisi</p>}
               </div>
             </div>
-            <p className="text-gray-300 whitespace-pre-wrap break-words text-sm md:text-base">{displayContent}</p>
+            <p className="text-gray-700 whitespace-pre-wrap break-words text-sm md:text-base">{displayContent}</p>
           </div>
         );
       
@@ -645,10 +645,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         };
         
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               <ImageIcon className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
-              <h3 className="text-base md:text-lg font-semibold text-white">Resim</h3>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900">Resim</h3>
             </div>
             <div className="bg-black rounded-lg p-3 md:p-4 flex items-center justify-center relative h-[150px] md:h-[200px] w-[300px] md:w-[400px]">
               {imageUrls.length > 1 && (
@@ -656,14 +656,14 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                   <button
                     onClick={handlePreviousImage}
                     aria-label="Önceki Resim"
-                    className="absolute left-2 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
+                    className="absolute left-2 z-10 bg-white/20 hover:bg-white/30 text-gray-900 rounded-full p-2 transition-colors"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={handleNextImage}
                     aria-label="Sonraki Resim"
-                    className="absolute right-2 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
+                    className="absolute right-2 z-10 bg-white/20 hover:bg-white/30 text-gray-900 rounded-full p-2 transition-colors"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -677,7 +677,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 className="max-w-full max-h-full object-contain rounded"
               />
               {imageUrls.length > 1 && (
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full">
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-gray-900 text-xs px-3 py-1 rounded-full">
                   {currentImageIndex + 1} / {imageUrls.length}
                 </div>
               )}
@@ -687,10 +687,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       
       case 'video':
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               <Video className="w-5 h-5 md:w-6 md:h-6 text-pink-400" />
-              <h3 className="text-base md:text-lg font-semibold text-white">Video</h3>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900">Video</h3>
             </div>
             <div className="bg-black/20 rounded-lg p-3 md:p-4">
               <video src={qrData.content} controls className="max-w-full h-auto rounded" />
@@ -700,13 +700,13 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       
       case 'file':
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               <FileIcon className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
-              <h3 className="text-base md:text-lg font-semibold text-white">Ses Dosyası</h3>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900">Ses Dosyası</h3>
             </div>
             <div className="bg-black/20 rounded-lg p-3 md:p-4">
-              <p className="text-gray-300 text-sm md:text-base truncate">Dosya Adı: {qrData.fileName || 'Bilinmiyor'}</p>
+              <p className="text-gray-700 text-sm md:text-base truncate">Dosya Adı: {qrData.fileName || 'Bilinmiyor'}</p>
             </div>
           </div>
         );
@@ -748,25 +748,25 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         }
         
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               <Landmark className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
-              <h3 className="text-base md:text-lg font-semibold text-white">IBAN</h3>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900">IBAN</h3>
             </div>
             <div className="bg-black/20 rounded-lg p-3 md:p-4 space-y-2">
               {bankName !== 'Bilinmiyor' && (
                 <div>
-                  <p className="text-gray-400 text-xs mb-1">Banka Adı</p>
-                  <p className="text-white text-sm md:text-base">{bankName}</p>
+                  <p className="text-gray-600 text-xs mb-1">Banka Adı</p>
+                  <p className="text-gray-900 text-sm md:text-base">{bankName}</p>
                 </div>
               )}
               <div>
-                <p className="text-gray-400 text-xs mb-1">IBAN Numarası</p>
-                <p className="text-white text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
+                <p className="text-gray-600 text-xs mb-1">IBAN Numarası</p>
+                <p className="text-gray-900 text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
               </div>
               <div>
-                <p className="text-gray-400 text-xs mb-1">Hesap Sahibi</p>
-                <p className="text-white text-sm md:text-base">{accountHolder}</p>
+                <p className="text-gray-600 text-xs mb-1">Hesap Sahibi</p>
+                <p className="text-gray-900 text-sm md:text-base">{accountHolder}</p>
               </div>
             </div>
           </div>
@@ -775,12 +775,12 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       case 'price-list': {
         let pl: any = null;
         try { pl = JSON.parse(qrData.content); } catch {}
-        if (!pl) return <div className="bg-white/5 border border-white/10 rounded-xl p-4"><p className="text-gray-400 text-sm">Fiyat listesi yüklenemedi.</p></div>;
+        if (!pl) return <div className="bg-gray-50 border border-gray-200 rounded-xl p-4"><p className="text-gray-400 text-sm">Fiyat listesi yüklenemedi.</p></div>;
         const totalItems = pl.categories?.reduce((acc: number, c: any) => acc + (c.items?.length || 0), 0) || 0;
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-orange-500/15 to-amber-500/10 border-b border-white/10 p-4 md:p-5">
+            <div className="bg-gradient-to-r from-orange-500/15 to-amber-500/10 border-b border-gray-200 p-4 md:p-5">
               <div className="flex items-center gap-4">
                 {pl.logoUrl ? (
                   <img
@@ -794,15 +794,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h3 className="text-white font-bold text-lg leading-tight truncate">{pl.brandName}</h3>
+                  <h3 className="text-gray-900 font-bold text-lg leading-tight truncate">{pl.brandName}</h3>
                   {pl.brandDescription && (
-                    <p className="text-gray-400 text-sm mt-0.5 leading-snug line-clamp-2">{pl.brandDescription}</p>
+                    <p className="text-gray-600 text-sm mt-0.5 leading-snug line-clamp-2">{pl.brandDescription}</p>
                   )}
                   <div className="flex items-center gap-3 mt-2">
                     <span className="text-xs text-orange-400/80 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
                       {pl.categories?.length || 0} kategori
                     </span>
-                    <span className="text-xs text-gray-500">{totalItems} ürün</span>
+                    <span className="text-xs text-gray-600">{totalItems} ürün</span>
                   </div>
                 </div>
               </div>
@@ -810,7 +810,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             {/* Category preview */}
             <div className="px-4 py-3 flex flex-wrap gap-2">
               {pl.categories?.map((c: any) => (
-                <span key={c.id} className="text-xs text-gray-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg">
+                <span key={c.id} className="text-xs text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-lg">
                   {c.name}
                 </span>
               ))}
@@ -821,9 +821,9 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       case 'bio-link': {
         let bio: any = null;
         try { bio = JSON.parse(qrData.content); } catch {}
-        if (!bio) return <div className="bg-white/5 border border-white/10 rounded-xl p-4"><p className="text-gray-400 text-sm">Bio link yüklenemedi.</p></div>;
+        if (!bio) return <div className="bg-gray-50 border border-gray-200 rounded-xl p-4"><p className="text-gray-400 text-sm">Bio link yüklenemedi.</p></div>;
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden w-full max-w-full">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl overflow-hidden w-full max-w-full">
             <div
               className="relative h-28 md:h-36 w-full"
               style={{
@@ -845,11 +845,11 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                   />
                 ) : (
                   <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 border-4 border-slate-900 flex items-center justify-center flex-shrink-0 shadow-xl">
-                    <User className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                    <User className="w-8 h-8 md:w-10 md:h-10 text-gray-900" />
                   </div>
                 )}
                 <div className="pb-1 min-w-0 flex-1 overflow-hidden">
-                  <h3 className="text-white font-bold text-sm md:text-lg truncate">{bio.title}</h3>
+                  <h3 className="text-gray-900 font-bold text-sm md:text-lg truncate">{bio.title}</h3>
                   {bio.username && <p className="text-emerald-400 text-xs truncate">@{bio.username}</p>}
                 </div>
               </div>
@@ -860,7 +860,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     href={link.url && !link.url.match(/^https?:\/\//) ? `https://${link.url}` : link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-2 md:py-2.5 px-2.5 md:px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs md:text-sm font-medium transition-all min-w-0"
+                    className="flex items-center justify-center gap-2 w-full py-2 md:py-2.5 px-2.5 md:px-3 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-900 text-xs md:text-sm font-medium transition-all min-w-0"
                   >
                     <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0" />
                     <span className="truncate">{link.title}</span>
@@ -873,12 +873,12 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       }
       default:
         return (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
             <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
               <LinkIcon className="w-5 h-5 md:w-6 md:h-6 text-cyan-400" />
-              <h3 className="text-base md:text-lg font-semibold text-white">İçerik</h3>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900">İçerik</h3>
             </div>
-            <p className="text-gray-300 whitespace-pre-wrap break-words text-sm md:text-base">{displayContent}</p>
+            <p className="text-gray-700 whitespace-pre-wrap break-words text-sm md:text-base">{displayContent}</p>
           </div>
         );
     }
@@ -886,22 +886,22 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl">QR kod yükleniyor...</div>
+      <div className="min-h-screen  flex items-center justify-center">
+        <div className="text-gray-900 text-xl">QR kod yükleniyor...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl">{error}</div>
+      <div className="min-h-screen  flex items-center justify-center">
+        <div className="text-gray-900 text-xl">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen ">
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
         <motion.div
@@ -912,7 +912,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
         >
           <div className="flex items-center justify-center gap-3">
             <QrCode className="w-12 h-12 text-blue-400" />
-            <h1 className="text-4xl font-bold text-white">LuxQr</h1>
+            <h1 className="text-4xl font-bold text-gray-900">LuxQr</h1>
           </div>
         </motion.div>
 
@@ -924,10 +924,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8"
         >
           {/* QR Modes Card - Mobile First */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 md:p-6 w-full md:w-80 order-1 md:order-2">
+          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-3 md:p-6 w-full md:w-80 order-1 md:order-2">
             <div className="flex items-center gap-2 mb-2 md:mb-4">
-              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400/50" />
-              <p className="text-xs md:text-sm text-gray-400 font-medium">QR Modları</p>
+              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-500" />
+              <p className="text-xs md:text-sm text-gray-600 font-medium">QR Modları</p>
             </div>
             {(() => {
                 const basicTypes = ['text', 'media', 'audio'];
@@ -949,7 +949,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 return (
                   <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
                     {links.map((item) => (
-                      <Link key={item.href} href={item.href} className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm transition-colors">
+                      <Link key={item.href} href={item.href} className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900 text-xs md:text-sm transition-colors">
                         <item.icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${item.color} flex-shrink-0`} />
                         <span>{item.label}</span>
                       </Link>
@@ -957,9 +957,9 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                   </div>
                 );
               })()}
-            <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-white/10 flex flex-col items-center hidden md:flex">
-              <QrCode className="w-16 h-16 text-white/10 mb-2" />
-              <p className="text-xs text-gray-400 text-center">
+            <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-gray-200 flex flex-col items-center hidden md:flex">
+              <QrCode className="w-16 h-16 text-gray-900/10 mb-2" />
+              <p className="text-xs text-gray-600 text-center">
                 Farklı QR kod türleri oluşturun ve paylaşın
               </p>
             </div>
@@ -977,7 +977,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     onClick={() => setSelectedQrType('normal')}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all ${
                       selectedQrType === 'normal' 
-                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' 
+                        ? 'bg-blue-500 text-gray-900 shadow-lg shadow-blue-500/30' 
                         : 'bg-white text-gray-600 hover:bg-gray-200'
                     }`}
                   >
@@ -985,7 +985,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     <span className="text-sm font-medium">Normal QR</span>
                     <div className="relative group">
                       <Info className="w-4 h-4 cursor-help" />
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-gray-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                         <p className="font-semibold mb-1">Normal QR</p>
                         <p>Bu QR kodu normal tarayıcılarla okutunca view sayfasına açılır. Tüm bilgileri görüntüleyebilirsiniz.</p>
                       </div>
@@ -995,7 +995,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     onClick={() => setSelectedQrType('bank')}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all ${
                       selectedQrType === 'bank' 
-                        ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' 
+                        ? 'bg-green-500 text-gray-900 shadow-lg shadow-green-500/30' 
                         : 'bg-white text-gray-600 hover:bg-gray-200'
                     }`}
                   >
@@ -1003,7 +1003,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     <span className="text-sm font-medium">Banka QR</span>
                     <div className="relative group">
                       <Info className="w-4 h-4 cursor-help" />
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-gray-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                         <p className="font-semibold mb-1">Banka QR</p>
                         <p>Bu QR kodu banka uygulamalarıyla okutunca otomatik olarak IBAN numarasını doldurur. Sadece banka uygulamaları tarafından tanınır.</p>
                       </div>
@@ -1028,7 +1028,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
                   {/* Color Palette */}
                   <div className="mt-4 px-1">
-                    <p className="text-[10px] text-gray-400 uppercase tracking-widest text-center mb-2 font-semibold">Renk Teması</p>
+                    <p className="text-[10px] text-gray-600 uppercase tracking-widest text-center mb-2 font-semibold">Renk Teması</p>
                     <div className="flex justify-center gap-2">
                       {[
                         { key: 'black', label: 'Siyah', from: '#111827', to: '#374151' },
@@ -1050,7 +1050,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                         >
                           {qrColor === c.key && (
                             <span className="absolute inset-0 flex items-center justify-center">
-                              <svg className="w-4 h-4 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <svg className="w-4 h-4 text-gray-900 drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
                             </span>
@@ -1058,7 +1058,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                         </button>
                       ))}
                     </div>
-                    <p className="text-[10px] text-gray-400 text-center mt-1.5">{
+                    <p className="text-[10px] text-gray-600 text-center mt-1.5">{
                       qrColor === 'black' ? 'Siyah' :
                       qrColor === 'neon' ? 'Neon' :
                       qrColor === 'sunset' ? 'Sunset' :
@@ -1094,7 +1094,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <div className="flex flex-wrap gap-3 md:gap-4 justify-center w-full">
                 <button
                   onClick={handleShareQR}
-                  className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/30 text-sm md:text-base"
+                  className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-gray-900 px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/30 text-sm md:text-base"
                 >
                   <QrCode className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">QR Paylaş</span>
@@ -1102,7 +1102,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
                 <button
                   onClick={() => router.push('/qr/metin-belge')}
-                  className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 text-sm md:text-base"
+                  className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-gray-900 px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 text-sm md:text-base"
                 >
                   <Plus className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Yeni QR Kod</span>
@@ -1110,7 +1110,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
                 <button
                   onClick={() => setShowOtherActions((p) => !p)}
-                  className="flex items-center gap-2 bg-slate-700/80 hover:bg-slate-600 text-white px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-slate-500/30 text-sm md:text-base"
+                  className="flex items-center gap-2 bg-slate-700/80 hover:bg-slate-600 text-gray-900 px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-slate-500/30 text-sm md:text-base"
                 >
                   <MoreHorizontal className="w-4 h-4 md:w-5 md:h-5" />
                   <span className="font-medium">Diğer İşlemler</span>
@@ -1133,13 +1133,13 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                       exit={{ opacity: 0, scale: 0.95, y: 20 }}
                       transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                       onClick={(e) => e.stopPropagation()}
-                      className="w-full max-w-sm bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+                      className="w-full max-w-sm bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl"
                     >
-                      <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-                        <h3 className="text-white font-bold text-base">Diğer İşlemler</h3>
+                      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                        <h3 className="text-gray-900 font-bold text-base">Diğer İşlemler</h3>
                         <button
                           onClick={() => setShowOtherActions(false)}
-                          className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                          className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-gray-900 hover:bg-gray-100 transition-all"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1155,7 +1155,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                           <button
                             key={item.label}
                             onClick={() => { item.onClick(); setShowOtherActions(false); }}
-                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white transition-all hover:scale-[1.02] ${item.bg}`}
+                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-gray-900 transition-all hover:scale-[1.02] ${item.bg}`}
                           >
                             <item.icon className="w-5 h-5" />
                             <span className="font-medium">{item.label}</span>
@@ -1185,12 +1185,12 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               transition={{ duration: 0.5, delay: 0.8 }}
               className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-3 md:mb-6 shadow-lg"
             >
-              <Check className="w-6 h-6 md:w-8 md:h-8 text-white" />
+              <Check className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
             </motion.div>
 
             {/* Success Text */}
-            <h2 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">QR Kod İçeriği</h2>
-            <p className="text-gray-400 mb-4 md:mb-8 text-sm md:text-base">QR kodunuz başarıyla oluşturuldu</p>
+            <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-1 md:mb-2">QR Kod İçeriği</h2>
+            <p className="text-gray-600 mb-4 md:mb-8 text-sm md:text-base">QR kodunuz başarıyla oluşturuldu</p>
 
             {/* Content */}
             {renderContent()}

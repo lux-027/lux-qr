@@ -216,7 +216,7 @@ export default function BioLinkContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 md:p-8">
+    <div className="min-h-screen p-3 md:p-8">
       <div className="max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -229,20 +229,21 @@ export default function BioLinkContent() {
               <ExternalLink className="w-7 h-7 md:w-10 md:h-10 text-white drop-shadow-lg" />
             </div>
             <div className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
-              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-white" />
+              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-900" />
             </div>
           </div>
           <div className="text-center">
-            <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">Bio Link</h1>
+            <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">Bio Link</h1>
             <p className="text-sm md:text-2xl font-semibold bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent">Link Ağacı</p>
           </div>
         </div>
-        <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto mb-5">
+        <p className="text-gray-600 text-sm md:text-base max-w-xl mx-auto mb-5">
           Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın. Tek link, tek QR kod.
         </p>
         <button
           onClick={generateDemo}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 hover:from-violet-500/30 hover:to-fuchsia-500/30 border border-violet-500/30 text-violet-300 text-sm font-medium transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:-translate-y-0.5 duration-200 shadow-lg"
+          style={{ background: 'linear-gradient(135deg,#7c3aed,#a855f7,#ec4899)', boxShadow: '0 4px 16px rgba(139,92,246,0.40), inset 0 1px 0 rgba(255,255,255,0.2)' }}
         >
           <RefreshCcw className="w-4 h-4" />
           Demo ile Doldur
@@ -259,7 +260,7 @@ export default function BioLinkContent() {
         >
           {/* Profile Card */}
           <div className="card-premium p-4 md:p-5">
-            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
               <User className="w-5 h-5 text-blue-400" />
               Profil Bilgileri
             </h2>
@@ -274,7 +275,7 @@ export default function BioLinkContent() {
               />
               <button
                 onClick={() => logoInputRef.current?.click()}
-                className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-500 hover:border-orange-400/60 flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-orange-400 transition-all flex-shrink-0 overflow-hidden"
+                className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-500 hover:border-orange-400/60 flex flex-col items-center justify-center gap-1.5 text-gray-500 hover:text-orange-400 transition-all flex-shrink-0 overflow-hidden"
               >
                 {data.logoUrl ? (
                   <img src={data.logoUrl} alt="Logo" className="w-full h-full object-cover" />
@@ -287,23 +288,23 @@ export default function BioLinkContent() {
               </button>
               <div className="flex-1 space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Sayfa Başlığı / İsim</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Sayfa Başlığı / İsim</label>
                   <input
                     type="text"
                     value={data.title}
                     onChange={(e) => setData((p) => ({ ...p, title: e.target.value }))}
                     placeholder="ör: LuxQr&apos;nin Linkleri"
-                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
+                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Kullanıcı Adı</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Kullanıcı Adı</label>
                   <input
                     type="text"
                     value={data.username}
                     onChange={(e) => setData((p) => ({ ...p, username: e.target.value.replace(/\s+/g, '') }))}
                     placeholder="luxqr"
-                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
+                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
                   />
                 </div>
               </div>
@@ -313,7 +314,7 @@ export default function BioLinkContent() {
           {/* Background + Preview */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <div className="card-premium p-2.5 md:p-5 order-2 lg:order-1">
-              <h2 className="text-sm md:text-lg font-bold text-white mb-2 flex items-center gap-2">
+              <h2 className="text-sm md:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
                 <Palette className="w-3.5 h-3.5 md:w-5 md:h-5 text-pink-400" />
                 Arka Plan
               </h2>
@@ -334,7 +335,7 @@ export default function BioLinkContent() {
                 />
               ))}
             </div>
-            <p className="text-slate-400 text-[10px] md:text-xs leading-relaxed flex items-start gap-2">
+            <p className="text-gray-600 text-[10px] md:text-xs leading-relaxed flex items-start gap-2">
               <Palette className="w-3.5 h-3.5 md:w-4 md:h-4 text-pink-400 flex-shrink-0 mt-0.5" />
               Seçtiğiniz renk, Bio Link sayfanızın arka planı ve QR sonuç ekranında otomatik olarak kullanılır. 30 farklı hazır gradyan temasından istediğinizi deneyebilirsiniz.
             </p>
@@ -348,17 +349,17 @@ export default function BioLinkContent() {
               className="card-premium p-4 md:p-5 flex flex-col order-1 lg:order-2"
             >
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider flex items-center gap-2">
                   <Eye className="w-4 h-4 text-purple-400" />
                   Önizleme
                 </h3>
-                <div className="flex items-center gap-1 p-1 rounded-full bg-slate-800/80 border border-white/10 backdrop-blur-sm">
+                <div className="flex items-center gap-1 p-1 rounded-full bg-gray-100 border border-gray-200 backdrop-blur-sm">
                   <button
                     onClick={() => setPreviewMode('phone')}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                       previewMode === 'phone'
-                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
-                        : 'text-slate-400 hover:text-white'
+                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-gray-900 shadow-lg shadow-purple-500/30'
+                        : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     Telefon
@@ -367,8 +368,8 @@ export default function BioLinkContent() {
                     onClick={() => setPreviewMode('tablet')}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                       previewMode === 'tablet'
-                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
-                        : 'text-slate-400 hover:text-white'
+                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-gray-900 shadow-lg shadow-purple-500/30'
+                        : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     Tablet
@@ -380,9 +381,9 @@ export default function BioLinkContent() {
                   previewMode === 'phone' ? 'w-[220px]' : 'w-[320px]'
                 }`}>
                   {previewMode === 'phone' ? (
-                    <div className="relative rounded-[2rem] p-1.5 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 border-[3px] border-slate-600 shadow-xl">
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3 bg-black rounded-full z-30 border border-slate-800/50" />
-                      <div className="relative rounded-[1.5rem] overflow-hidden bg-slate-950 border border-slate-800" style={{ aspectRatio: '9 / 16.2' }}>
+                    <div className="relative rounded-[2rem] p-1.5 bg-gradient-to-b  border-[3px] border-gray-300 shadow-xl">
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3 bg-black rounded-full z-30 border border-gray-200/50" />
+                      <div className="relative rounded-[1.5rem] overflow-hidden bg-gray-50 border border-gray-200" style={{ aspectRatio: '9 / 16.2' }}>
                         <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/[0.07] via-transparent to-transparent z-30 rounded-[1.5rem]" />
                         <div
                           className="absolute inset-0"
@@ -396,14 +397,14 @@ export default function BioLinkContent() {
                         />
                         <div className="relative z-10 flex flex-col items-center justify-center h-full px-3 py-4 text-center">
                           {data.logoUrl ? (
-                            <img src={data.logoUrl} alt={data.title} className="w-11 h-11 rounded-xl object-cover border-2 border-white/20 shadow-xl mb-1.5" />
+                            <img src={data.logoUrl} alt={data.title} className="w-11 h-11 rounded-xl object-cover border-2 border-gray-300 shadow-xl mb-1.5" />
                           ) : (
-                            <div className="w-11 h-11 rounded-xl bg-white/10 border-2 border-white/20 flex items-center justify-center mb-1.5">
-                              <User className="w-5 h-5 text-white/60" />
+                            <div className="w-11 h-11 rounded-xl bg-gray-100 border-2 border-gray-300 flex items-center justify-center mb-1.5">
+                              <User className="w-5 h-5 text-gray-900/60" />
                             </div>
                           )}
-                          <h2 className="text-xs font-bold text-white mb-0.5 leading-tight px-1">{data.title || 'İsminiz'}</h2>
-                          {data.username && <p className="text-white/60 text-[10px] mb-2">@{data.username}</p>}
+                          <h2 className="text-xs font-bold text-gray-900 mb-0.5 leading-tight px-1">{data.title || 'İsminiz'}</h2>
+                          {data.username && <p className="text-gray-900/60 text-[10px] mb-2">@{data.username}</p>}
                           <div className="w-full max-w-[180px] space-y-1">
                             {data.links.map((link) => (
                               <a
@@ -411,16 +412,16 @@ export default function BioLinkContent() {
                                 href={link.url || '#'}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white font-medium transition-all text-[9px] truncate"
+                                className="block w-full py-1 px-2 rounded-lg bg-gray-100 hover:bg-gray-200 border border-gray-200 backdrop-blur-md text-gray-900 font-medium transition-all text-[9px] truncate"
                               >
                                 {link.title || 'Link Başlığı'}
                               </a>
                             ))}
-                            {data.links.length === 0 && <div className="py-2 text-white/40 text-[10px]">Linkler burada görünecek</div>}
+                            {data.links.length === 0 && <div className="py-2 text-gray-900/40 text-[10px]">Linkler burada görünecek</div>}
                           </div>
                           {data.username && (
                             <div className="mt-auto pt-2 px-0.5">
-                              <p className="text-white/40 text-[8px] break-all">
+                              <p className="text-gray-900/40 text-[8px] break-all">
                                 {typeof window !== 'undefined'
                                   ? generatedUrl || `${window.location.origin}/view/${data.username}`
                                   : ''}
@@ -432,11 +433,11 @@ export default function BioLinkContent() {
                       <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-slate-500/60 rounded-full z-30" />
                     </div>
                   ) : (
-                    <div className="relative rounded-[1.2rem] p-1.5 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 border-[3px] border-slate-600 shadow-xl">
-                      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-slate-900 rounded-full z-30 border border-slate-600">
+                    <div className="relative rounded-[1.2rem] p-1.5 bg-gradient-to-b  border-[3px] border-gray-300 shadow-xl">
+                      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full z-30 border border-gray-300">
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-blue-900/70 rounded-full" />
                       </div>
-                      <div className="relative rounded-[0.8rem] overflow-hidden bg-slate-950 border border-slate-800" style={{ aspectRatio: '16 / 9' }}>
+                      <div className="relative rounded-[0.8rem] overflow-hidden bg-gray-50 border border-gray-200" style={{ aspectRatio: '16 / 9' }}>
                         <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/[0.07] via-transparent to-transparent z-30 rounded-[0.8rem]" />
                         <div
                           className="absolute inset-0"
@@ -451,14 +452,14 @@ export default function BioLinkContent() {
                         <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-2 h-full px-3 py-2 text-center md:text-left">
                           <div className="flex flex-col items-center md:items-start flex-shrink-0">
                             {data.logoUrl ? (
-                              <img src={data.logoUrl} alt={data.title} className="w-9 h-9 rounded-lg object-cover border-2 border-white/20 shadow-xl mb-1" />
+                              <img src={data.logoUrl} alt={data.title} className="w-9 h-9 rounded-lg object-cover border-2 border-gray-300 shadow-xl mb-1" />
                             ) : (
-                              <div className="w-9 h-9 rounded-lg bg-white/10 border-2 border-white/20 flex items-center justify-center mb-1">
-                                <User className="w-4 h-4 text-white/60" />
+                              <div className="w-9 h-9 rounded-lg bg-gray-100 border-2 border-gray-300 flex items-center justify-center mb-1">
+                                <User className="w-4 h-4 text-gray-900/60" />
                               </div>
                             )}
-                            <h2 className="text-[10px] font-bold text-white leading-tight">{data.title || 'İsminiz'}</h2>
-                            {data.username && <p className="text-white/60 text-[9px]">@{data.username}</p>}
+                            <h2 className="text-[10px] font-bold text-gray-900 leading-tight">{data.title || 'İsminiz'}</h2>
+                            {data.username && <p className="text-gray-900/60 text-[9px]">@{data.username}</p>}
                           </div>
                           <div className="w-full max-w-[160px] space-y-0.5">
                             {data.links.map((link) => (
@@ -467,16 +468,16 @@ export default function BioLinkContent() {
                                 href={link.url || '#'}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white font-medium transition-all text-[9px] truncate"
+                                className="block w-full py-1 px-2 rounded-lg bg-gray-100 hover:bg-gray-200 border border-gray-200 backdrop-blur-md text-gray-900 font-medium transition-all text-[9px] truncate"
                               >
                                 {link.title || 'Link Başlığı'}
                               </a>
                             ))}
-                            {data.links.length === 0 && <div className="py-2 text-white/40 text-[10px]">Linkler burada görünecek</div>}
+                            {data.links.length === 0 && <div className="py-2 text-gray-900/40 text-[10px]">Linkler burada görünecek</div>}
                           </div>
                           {data.username && (
                             <div className="px-0.5 w-full text-center md:text-left">
-                              <p className="text-white/40 text-[8px] break-all">
+                              <p className="text-gray-900/40 text-[8px] break-all">
                                 {typeof window !== 'undefined'
                                   ? generatedUrl || `${window.location.origin}/view/${data.username}`
                                   : ''}
@@ -495,7 +496,7 @@ export default function BioLinkContent() {
           {/* Links */}
           <div className="card-premium p-4 md:p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <LinkIcon className="w-5 h-5 text-emerald-400" />
                 Linkler
               </h2>
@@ -518,7 +519,7 @@ export default function BioLinkContent() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60"
+                    className="p-3 rounded-xl bg-gray-100 border border-gray-200/60"
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <input
@@ -526,7 +527,7 @@ export default function BioLinkContent() {
                         value={link.title}
                         onChange={(e) => updateLink(link.id, 'title', e.target.value)}
                         placeholder="Başlık (ör: Instagram)"
-                        className="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
+                        className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
                       />
                       <input
                         type="text"
@@ -537,12 +538,12 @@ export default function BioLinkContent() {
                           if (v && !v.match(/^https?:\/\//)) updateLink(link.id, 'url', `https://${v}`);
                         }}
                         placeholder="https://..."
-                        className="bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
+                        className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
                       />
                     </div>
                     <button
                       onClick={() => removeLink(link.id)}
-                      className="mt-2 flex items-center gap-1 text-slate-500 hover:text-red-400 text-xs transition-colors"
+                      className="mt-2 flex items-center gap-1 text-gray-600 hover:text-red-400 text-xs transition-colors"
                     >
                       <Trash2 className="w-3 h-3" />
                       Sil
@@ -555,7 +556,7 @@ export default function BioLinkContent() {
                   <div className="flex justify-center mb-5">
                     <button
                       onClick={addLink}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-105 text-sm font-medium"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-gray-900 rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-105 text-sm font-medium"
                     >
                       <Plus className="w-4 h-4" />
                       Link Ekle
@@ -566,47 +567,47 @@ export default function BioLinkContent() {
                       initial={{ opacity: 0, y: 20, rotateY: -8 }}
                       animate={{ opacity: 1, y: 0, rotateY: -8 }}
                       transition={{ duration: 0.6 }}
-                      className="w-full max-w-[280px] sm:max-w-[320px] rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 shadow-2xl shadow-black/50 overflow-hidden"
+                      className="w-full max-w-[280px] sm:max-w-[320px] rounded-2xl bg-gray-100 backdrop-blur-sm border border-gray-200 shadow-2xl shadow-black/50 overflow-hidden"
                       style={{ transform: 'rotateY(-8deg) translateZ(10px)', transformStyle: 'preserve-3d' }}
                     >
                       {/* Browser top bar */}
-                      <div className="bg-slate-900/80 px-3 py-2 flex items-center gap-2 border-b border-white/10">
+                      <div className="bg-white/90 px-3 py-2 flex items-center gap-2 border-b border-gray-200">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
                           <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
                           <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
                         </div>
-                        <div className="flex-1 mx-2 h-5 bg-slate-800 rounded-md flex items-center px-2">
+                        <div className="flex-1 mx-2 h-5 bg-gray-100 rounded-md flex items-center px-2">
                           <div className="w-2 h-2 rounded-full bg-emerald-400/60 mr-2" />
-                          <span className="text-[10px] text-slate-500 truncate">luxqrpro.site/view/@kullanici</span>
+                          <span className="text-[10px] text-gray-600 truncate">luxqrpro.site/view/@kullanici</span>
                         </div>
                       </div>
 
                       {/* Page preview */}
-                      <div className="p-4 bg-gradient-to-br from-slate-900 to-slate-950">
+                      <div className="p-4 bg-gradient-to-br ">
                         <div className="flex flex-col items-center mb-4">
                           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 shadow-lg" />
-                          <div className="h-3 bg-white/20 rounded w-32 mb-1.5" />
-                          <div className="h-2.5 bg-white/10 rounded w-20" />
+                          <div className="h-3 bg-gray-200 rounded w-32 mb-1.5" />
+                          <div className="h-2.5 bg-gray-100 rounded w-20" />
                         </div>
                         <div className="space-y-2">
-                          <div className="h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2">
+                          <div className="h-9 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center gap-2">
                             <div className="w-4 h-4 rounded-full bg-pink-500/40" />
-                            <div className="h-2 bg-white/20 rounded w-20" />
+                            <div className="h-2 bg-gray-200 rounded w-20" />
                           </div>
-                          <div className="h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2">
+                          <div className="h-9 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center gap-2">
                             <div className="w-4 h-4 rounded-full bg-sky-500/40" />
-                            <div className="h-2 bg-white/20 rounded w-24" />
+                            <div className="h-2 bg-gray-200 rounded w-24" />
                           </div>
-                          <div className="h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2">
+                          <div className="h-9 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center gap-2">
                             <div className="w-4 h-4 rounded-full bg-red-500/40" />
-                            <div className="h-2 bg-white/20 rounded w-16" />
+                            <div className="h-2 bg-gray-200 rounded w-16" />
                           </div>
                         </div>
                       </div>
                     </motion.div>
                   </div>
-                  <p className="text-slate-400 text-xs md:text-sm text-center mt-5">Link ekleyerek tüm sosyal medya ve web sayfalarınızı tek bir Bio Link sayfasında toplayın.</p>
+                  <p className="text-gray-600 text-xs md:text-sm text-center mt-5">Link ekleyerek tüm sosyal medya ve web sayfalarınızı tek bir Bio Link sayfasında toplayın.</p>
                 </div>
               )}
             </div>
@@ -614,7 +615,7 @@ export default function BioLinkContent() {
 
           {/* Expiration */}
           <div className="card-premium p-4 md:p-5">
-            <label className="flex items-center gap-2 text-white font-semibold mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-3">
               <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               QR Geçerlilik Süresi
             </label>
@@ -631,7 +632,7 @@ export default function BioLinkContent() {
                   key={option.value}
                   onClick={() => setExpiration(option.value as typeof expiration)}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-xl border transition-all ${
-                    expiration === option.value ? option.activeColor : 'border-white/10 text-gray-400 hover:border-white/20'
+                    expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >
                   <option.icon className={`w-4 h-4 md:w-5 md:h-5 ${expiration === option.value ? option.color : 'text-gray-500'}`} />
@@ -645,7 +646,7 @@ export default function BioLinkContent() {
           <button
             onClick={handleGenerate}
             disabled={!isValid || isGenerating || logoUploading}
-            className={`btn-primary w-full py-3.5 rounded-2xl font-bold text-white flex items-center justify-center gap-2 transition-all ${
+            className={`btn-primary w-full py-3.5 rounded-2xl font-bold text-gray-900 flex items-center justify-center gap-2 transition-all ${
               !isValid || isGenerating || logoUploading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
@@ -662,7 +663,7 @@ export default function BioLinkContent() {
             )}
           </button>
           {!isValid && (
-            <p className="text-center text-gray-500 text-sm">Başlık, link adı ve en az bir geçerli link giriniz.</p>
+            <p className="text-center text-gray-600 text-sm">Başlık, link adı ve en az bir geçerli link giriniz.</p>
           )}
 
           {generatedUrl && (
@@ -676,8 +677,8 @@ export default function BioLinkContent() {
                   <QrCode className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold">Bio Link Hazır!</h3>
-                  <p className="text-slate-400 text-xs">QR kodunuzu indirin veya linki paylaşın.</p>
+                  <h3 className="text-gray-900 font-bold">Bio Link Hazır!</h3>
+                  <p className="text-gray-600 text-xs">QR kodunuzu indirin veya linki paylaşın.</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 mb-3">
@@ -685,7 +686,7 @@ export default function BioLinkContent() {
                   type="text"
                   readOnly
                   value={generatedUrl}
-                  className="flex-1 bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm"
+                  className="flex-1 bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 text-sm"
                 />
                 <button
                   onClick={handleCopy}
@@ -698,7 +699,7 @@ export default function BioLinkContent() {
                 href={generatedUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium transition-all"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gray-200 hover:bg-slate-600 text-gray-900 text-sm font-medium transition-all"
               >
                 <ExternalLink className="w-4 h-4" />
                 Sayfayı Görüntüle
@@ -716,7 +717,7 @@ export default function BioLinkContent() {
         >
           {/* How it works */}
           <div className="card-premium p-4 md:p-6">
-            <h2 className="text-base md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+            <h2 className="text-base md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
               <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-400" />
               Nasıl Çalışır?
             </h2>
@@ -728,17 +729,17 @@ export default function BioLinkContent() {
               ].map((item) => (
                 <div
                   key={item.step}
-                  className="group relative p-4 md:p-5 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
+                  className="group relative p-4 md:p-5 rounded-2xl bg-gray-100 backdrop-blur-sm border border-gray-200 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
                   style={{ perspective: '1000px' }}
                 >
                   <div className={`absolute -top-2.5 md:-top-3 w-7 h-7 md:w-9 md:h-9 rounded-full bg-gradient-to-br ${item.from} ${item.to} ring-2 ring-white/20 flex items-center justify-center shadow-lg shadow-black/40`}>
-                    <span className="text-white font-black text-xs md:text-sm">{item.step}</span>
+                    <span className="text-gray-900 font-black text-xs md:text-sm">{item.step}</span>
                   </div>
                   <div className={`w-9 h-9 md:w-11 md:h-11 mt-3 md:mt-4 mb-2 md:mb-3 rounded-xl bg-gradient-to-br ${item.from} ${item.to} shadow-lg shadow-black/30 flex items-center justify-center`}>
-                    <item.icon className="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow" />
+                    <item.icon className="w-4 h-4 md:w-5 md:h-5 text-gray-900 drop-shadow" />
                   </div>
-                  <h3 className="text-white font-bold text-xs md:text-sm mb-1">{item.title}</h3>
-                  <p className="text-slate-400 text-[11px] md:text-xs leading-relaxed">{item.desc}</p>
+                  <h3 className="text-gray-900 font-bold text-xs md:text-sm mb-1">{item.title}</h3>
+                  <p className="text-gray-600 text-[11px] md:text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -752,21 +753,21 @@ export default function BioLinkContent() {
               { title: 'Sınırsız Link', desc: 'Tüm sosyal medya ve web linklerinizi tek ekranda toplayın.', icon: ExternalLink, color: 'from-emerald-500 to-teal-500' },
               { title: 'QR Kod', desc: 'Bio Link sayfanıza yönlendiren QR kodu saniyeler içinde oluşturun.', icon: QrCode, color: 'from-orange-500 to-amber-500' },
             ].map((f) => (
-              <div key={f.title} className="group relative p-4 md:p-5 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-white/10 flex items-start gap-3 md:gap-4 hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
+              <div key={f.title} className="group relative p-4 md:p-5 rounded-2xl bg-gray-100 backdrop-blur-sm border border-gray-200 flex items-start gap-3 md:gap-4 hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
                 <div className={`w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/30 ring-1 ring-white/20`}>
-                  <f.icon className="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow" />
+                  <f.icon className="w-4 h-4 md:w-5 md:h-5 text-gray-900 drop-shadow" />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-xs md:text-base mb-1">{f.title}</h3>
-                  <p className="text-slate-400 text-[11px] md:text-sm leading-relaxed">{f.desc}</p>
+                  <h3 className="text-gray-900 font-bold text-xs md:text-base mb-1">{f.title}</h3>
+                  <p className="text-gray-600 text-[11px] md:text-sm leading-relaxed">{f.desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Use cases */}
-          <div className="relative p-4 md:p-8 rounded-3xl bg-slate-800/70 backdrop-blur-sm border border-white/10">
-            <h2 className="text-base md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+          <div className="relative p-4 md:p-8 rounded-3xl bg-gray-100 backdrop-blur-sm border border-gray-200">
+            <h2 className="text-base md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
               <Heart className="w-4 h-4 md:w-6 md:h-6 text-rose-400" />
               Bio Link Kimler İçin?
             </h2>
@@ -777,12 +778,12 @@ export default function BioLinkContent() {
                 { title: 'Freelancer', desc: 'Portfolyo, blog ve sosyal medya hesaplarınızı sergileyin.', icon: Briefcase, color: 'from-emerald-500 to-teal-500' },
                 { title: 'İçerik Üreticileri', desc: 'Tüm platformları takipçilerinize tek linkle ulaştırın.', icon: Share2, color: 'from-orange-500 to-amber-500' },
               ].map((u) => (
-                <div key={u.title} className="group p-3 md:p-5 rounded-2xl bg-slate-900/40 border border-white/10 text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
+                <div key={u.title} className="group p-3 md:p-5 rounded-2xl bg-white/40 border border-gray-200 text-center hover:-translate-y-2 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300">
                   <div className={`w-9 h-9 md:w-11 md:h-11 mx-auto mb-2 md:mb-3 rounded-xl bg-gradient-to-br ${u.color} flex items-center justify-center shadow-lg shadow-black/30 ring-1 ring-white/20`}>
-                    <u.icon className="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow" />
+                    <u.icon className="w-4 h-4 md:w-5 md:h-5 text-gray-900 drop-shadow" />
                   </div>
-                  <h3 className="text-white font-bold text-xs md:text-sm mb-1">{u.title}</h3>
-                  <p className="text-slate-400 text-[10px] md:text-xs leading-relaxed">{u.desc}</p>
+                  <h3 className="text-gray-900 font-bold text-xs md:text-sm mb-1">{u.title}</h3>
+                  <p className="text-gray-600 text-[10px] md:text-xs leading-relaxed">{u.desc}</p>
                 </div>
               ))}
             </div>

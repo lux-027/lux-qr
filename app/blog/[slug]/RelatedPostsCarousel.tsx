@@ -143,10 +143,10 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
   if (loading) {
     return (
       <div className="mt-12">
-        <h2 className="text-2xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Diğer Yazılar
         </h2>
-        <div className="h-64 bg-white/10 rounded-2xl animate-pulse" />
+        <div className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
       </div>
     );
   }
@@ -158,12 +158,12 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
   return (
     <div className="mt-12">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Diğer Yazılar
         </h2>
         <Link
           href="/blog"
-          className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/30 rounded-xl text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-500/30 rounded-xl text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm font-medium"
         >
           Tümünü Gör
           <ArrowRight className="w-4 h-4" />
@@ -190,7 +190,7 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
               className="flex-shrink-0 w-full snap-center"
             >
               <Link href={`/blog/${blog.slug}`}>
-                <div className="group/card bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 h-full flex flex-col">
+                <div className="group/card bg-gray-50 backdrop-blur-sm border border-gray-200 hover:border-blue-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 h-full flex flex-col">
                   {blog.mainImage && (
                     <div className="relative h-56 overflow-hidden flex-shrink-0">
                       <Image
@@ -202,7 +202,7 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
                       <div className="absolute top-3 right-3">
-                        <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-semibold rounded-full shadow-lg">
+                        <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-gray-900 text-xs font-semibold rounded-full shadow-lg">
                           Blog
                         </span>
                       </div>
@@ -210,13 +210,13 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
                   )}
 
                   <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-snug group-hover/card:text-blue-400 transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 leading-snug group-hover/card:text-blue-400 transition-colors">
                       {blog.title}
                     </h3>
                     <p className="text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed flex-1">
                       {blog.description}
                     </p>
-                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div className="flex items-center gap-2 text-xs text-gray-500">
                         <Clock className="w-3.5 h-3.5" />
                         {format(new Date(blog.createdAt), 'dd MMM yyyy', { locale: tr })}
@@ -240,13 +240,13 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
           <button
             onClick={() => scroll('left')}
             aria-label="Önceki"
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/30 flex items-center justify-center text-white transition-all"
+            className="w-8 h-8 rounded-full bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-500/30 flex items-center justify-center text-gray-900 transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
           <div className="flex items-center gap-3">
-            <span className="text-white font-semibold">{activeDot + 1}</span>
+            <span className="text-gray-900 font-semibold">{activeDot + 1}</span>
             <span className="text-gray-500">/</span>
             <span className="text-gray-400">{blogs.length}</span>
           </div>
@@ -254,7 +254,7 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
           <button
             onClick={() => scroll('right')}
             aria-label="Sonraki"
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/30 flex items-center justify-center text-white transition-all"
+            className="w-8 h-8 rounded-full bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-500/30 flex items-center justify-center text-gray-900 transition-all"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calendar, QrCode, Clock } from 'lucide-react';
+import { Calendar, QrCode, Clock, ArrowLeft } from 'lucide-react';
 import { getPostBySlug } from '@/lib/db';
 import ShareButton from './ShareButton';
 import RelatedPostsCarousel from './RelatedPostsCarousel';
@@ -69,9 +69,9 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   if (!post) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl text-white mb-4">Yazı Bulunamadı</h1>
+          <h1 className="text-2xl text-gray-900 mb-4">Yazı Bulunamadı</h1>
           <Link href="/blog" className="text-blue-400 hover:text-blue-300">
             Blog'a Dön
           </Link>
@@ -102,28 +102,38 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <main className="min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-4xl mx-auto mb-4 md:mb-6">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Blog&apos;a Dön
+          </Link>
+        </div>
+
         {/* Article */}
         <article className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-8">
             {/* Info Bar */}
-            <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+            <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-gray-50 backdrop-blur-sm rounded-xl border border-gray-200">
               <span className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold text-blue-400 bg-blue-500/10 rounded-full border border-blue-500/20">
                 <QrCode className="w-4 h-4" />
                 {post.category}
               </span>
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
                 <Clock className="w-4 h-4 text-blue-400" />
                 <span>{Math.ceil((post.content?.split(' ')?.length || 0) / 200)} dk okuma</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
                 <Calendar className="w-4 h-4 text-blue-400" />
                 {new Date(post.createdAt).toLocaleDateString('tr-TR', {
                   day: 'numeric',
@@ -133,11 +143,11 @@ export default async function BlogPostPage({ params }: PageProps) {
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
               {post.title}
             </h1>
 
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-gray-600">
               {post.description}
             </p>
           </div>
@@ -158,18 +168,16 @@ export default async function BlogPostPage({ params }: PageProps) {
             )}
 
             {/* Content Container */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 md:p-10 max-w-3xl mx-auto">
-              <div className="prose prose-invert prose-lg max-w-prose prose-slate prose-headings:text-white prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-blue-400 prose-h3:text-2xl prose-h3:font-bold prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-blue-400 prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-lg prose-p:mb-6 prose-strong:text-white prose-strong:font-bold prose-strong:text-blue-400 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-ul:text-gray-300 prose-ol:text-gray-300 prose-li:mb-3 prose-li:text-lg prose-li:leading-relaxed prose-code:text-blue-300 prose-code:bg-blue-500/10 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-700 prose-blockquote:bg-slate-900 prose-blockquote:border-l-4 prose-blockquote:border-green-500 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-gray-300">
-                <BlogContent content={post.content} />
-              </div>
+            <div className="max-w-4xl mx-auto">
+              <BlogContent content={post.content} category={post.category} />
             </div>
           </div>
 
           {/* Share Section */}
-          <div className="mt-8 flex items-center justify-between p-6 bg-white/5 backdrop-blur-sm glow-border rounded-2xl">
+          <div className="mt-8 flex items-center justify-between p-6 bg-gray-50 border border-gray-200 rounded-2xl">
             <div className="flex items-center gap-3">
-              <QrCode className="w-5 h-5 text-blue-400" />
-              <span className="text-gray-300">Bu yazıyı paylaş</span>
+              <QrCode className="w-5 h-5 text-blue-500" />
+              <span className="text-gray-600">Bu yazıyı paylaş</span>
             </div>
             <ShareButton
               title={post.title}

@@ -166,35 +166,52 @@ export default function SesDosyasiContent() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8"
+      className="min-h-screen p-4 md:p-8"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-12 md:mb-16"
+          className="mb-8 md:mb-12"
         >
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-orange-500/20 blur-3xl rounded-full" />
-            <div className="relative flex items-center justify-center gap-3 mb-4">
-              <div className="relative">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/40 -rotate-3 hover:rotate-3 transition-transform duration-300">
-                  <Mic className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
-                </div>
-                <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
-                  <QrCode className="w-4 h-4 text-white" />
+          <motion.div
+            whileHover={{ y: -4, rotateX: 3, rotateY: -3 }}
+            style={{
+              transformStyle: 'preserve-3d',
+              perspective: '800px',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,237,213,0.8) 100%)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(249,115,22,0.25)',
+              boxShadow: '0 8px 32px rgba(249,115,22,0.15), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+            }}
+            className="relative rounded-3xl overflow-hidden p-6 md:p-8 max-w-2xl mx-auto"
+          >
+            <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-3xl pointer-events-none"
+              style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.55) 0%, transparent 100%)' }} />
+            <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.2) 0%, transparent 70%)' }} />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-5 md:gap-8">
+              <div className="flex-shrink-0">
+                <div className="relative">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center -rotate-3 hover:rotate-3 transition-transform duration-300"
+                    style={{ background: 'linear-gradient(135deg, #f97316, #dc2626)', boxShadow: '0 8px 24px rgba(249,115,22,0.45)' }}>
+                    <Mic className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-xl flex items-center justify-center shadow-lg -rotate-12"
+                    style={{ background: 'linear-gradient(135deg, #eab308, #f97316)', boxShadow: '0 4px 12px rgba(234,179,8,0.4)' }}>
+                    <QrCode className="w-4 h-4 text-white" />
+                  </div>
                 </div>
               </div>
-              <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
+              <div className="text-center md:text-left">
+                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1">
+                  Ses Dosyası <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">QR Kodu</span>
+                </h1>
+                <p className="text-gray-600 text-sm md:text-base">Ses dosyalarınızı yükleyerek QR kod oluşturun ve paylaşın</p>
+              </div>
             </div>
-          </div>
-          <p className="text-base md:text-3xl lg:text-4xl font-semibold text-gray-300 mb-3">
-            Modern <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">QR Kod Oluşturma</span>
-          </p>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Ses dosyalarınız yükleyerek QR kod oluşturun
-          </p>
+          </motion.div>
         </motion.div>
 
         {/* Form Section */}
@@ -205,7 +222,7 @@ export default function SesDosyasiContent() {
           className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
           <div>
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <Upload className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Ses Dosyası Yükle
             </label>
@@ -218,7 +235,7 @@ export default function SesDosyasiContent() {
                     setPreviewUrl(null);
                     setShowError(false);
                   }}
-                  className="absolute top-2 right-2 z-10 bg-gray-500/60 hover:bg-gray-500/80 text-white rounded-full p-1 md:p-2 transition-colors backdrop-blur-sm"
+                  className="absolute top-2 right-2 z-10 bg-gray-500/60 hover:bg-gray-500/80 text-gray-900 rounded-full p-1 md:p-2 transition-colors backdrop-blur-sm"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -230,7 +247,7 @@ export default function SesDosyasiContent() {
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   className={`flex-1 border-2 border-dashed rounded-xl p-4 md:p-8 text-center cursor-pointer transition-colors ${
-                    showError ? 'border-red-500' : 'border-white/20 hover:border-blue-500/50'
+                    showError ? 'border-red-500' : 'border-gray-300 hover:border-blue-500/50'
                   }`}
                 >
                   {previewUrl ? (
@@ -240,40 +257,55 @@ export default function SesDosyasiContent() {
                   ) : (
                     <Upload className="w-8 h-8 md:w-12 md:h-12 text-orange-400 mx-auto mb-2 md:mb-4" />
                   )}
-                  <p className="text-gray-400 mb-1 md:mb-2 text-sm md:text-base">
+                  <p className="text-gray-600 mb-1 md:mb-2 text-sm md:text-base">
                     {file ? file.name : 'Dosya seçmek için tıklayın veya ses kaydedin'}
                   </p>
-                  <p className="text-gray-500 text-xs md:text-sm">
+                  <p className="text-gray-600 text-xs md:text-sm">
                     MP3, WAV, M4A (max 50MB) veya ses kaydı
                   </p>
                 </div>
-                <div className="flex flex-col justify-center">
-                  <button
-                    onClick={isRecording ? stopRecording : startRecording}
-                    disabled={uploading || loading}
-                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${
-                      isRecording
-                        ? 'bg-red-500 hover:bg-red-600 text-white'
-                        : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white'
-                    } disabled:opacity-50`}
-                  >
-                    {isRecording ? (
+                <div className="flex flex-col items-center justify-center gap-3">
+                  {/* Record button */}
+                  <div className="relative">
+                    {/* Pulsing rings when recording */}
+                    {isRecording && (
                       <>
-                        <Square className="w-4 h-4 md:w-5 md:h-5" />
-                        <span className="text-sm md:text-base">Durdur</span>
-                      </>
-                    ) : (
-                      <>
-                        <Mic className="w-4 h-4 md:w-5 md:h-5" />
-                        <span className="text-sm md:text-base">Ses Kaydı</span>
+                        <span className="absolute inset-0 rounded-full bg-red-500/30 animate-ping" />
+                        <span className="absolute -inset-2 rounded-full bg-red-500/15 animate-ping" style={{ animationDelay: '0.3s' }} />
                       </>
                     )}
-                  </button>
-                  {isRecording && (
-                    <div className="flex items-center justify-center gap-2 mt-2 text-red-400">
-                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                      <span className="text-xs font-medium">{formatRecordingTime(recordingTime)}</span>
+                    <button
+                      onClick={isRecording ? stopRecording : startRecording}
+                      disabled={uploading || loading}
+                      className={`relative w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed ${
+                        isRecording
+                          ? 'bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.25),0_8px_24px_rgba(239,68,68,0.4)] scale-110'
+                          : 'shadow-[0_4px_20px_rgba(59,130,246,0.35),0_0_0_3px_rgba(59,130,246,0.15)] hover:scale-110 hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_0_0_4px_rgba(59,130,246,0.2)]'
+                      }`}
+                      style={!isRecording ? {
+                        background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+                      } : {}}
+                    >
+                      {/* Inner glass highlight */}
+                      <span className="absolute inset-0 rounded-full pointer-events-none"
+                        style={{ background: 'linear-gradient(160deg, rgba(255,255,255,0.35) 0%, transparent 60%)' }} />
+                      {isRecording ? (
+                        <Square className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow" fill="white" />
+                      ) : (
+                        <Mic className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Label + timer */}
+                  {isRecording ? (
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                      <span className="text-red-600 text-xs font-bold tabular-nums">{formatRecordingTime(recordingTime)}</span>
+                      <span className="text-red-400 text-xs">Kaydediliyor</span>
                     </div>
+                  ) : (
+                    <span className="text-xs font-semibold text-gray-600 tracking-wide uppercase">Ses Kaydı</span>
                   )}
                 </div>
               </div>
@@ -292,7 +324,7 @@ export default function SesDosyasiContent() {
 
           {/* Note/Description Field */}
           <div className="mt-4 md:mt-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <FileText className="w-4 h-4 md:w-5 md:h-5 text-violet-400" />
               Not / Açıklama
             </label>
@@ -300,13 +332,13 @@ export default function SesDosyasiContent() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="QR ses dosyası hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-20 md:h-24 bg-slate-800/50 border border-white/10 rounded-xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
             />
           </div>
 
           {/* Expiration Selection */}
           <div className="mt-4 md:mt-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Geçerlilik Süresi
             </label>
@@ -323,7 +355,7 @@ export default function SesDosyasiContent() {
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
-                    expiration === option.value ? option.activeColor : 'border-white/10 text-gray-400 hover:border-white/20'
+                    expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >
                   <option.icon className={`w-4 h-4 md:w-5 md:h-5 ${expiration === option.value ? option.color : 'text-gray-500'}`} />
@@ -354,30 +386,30 @@ export default function SesDosyasiContent() {
         >
           <div className="card-premium p-3 md:p-6">
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
-              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı Paylaşım</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Hızlı Paylaşım</h3>
+            <p className="text-gray-600 text-xs md:text-sm hidden md:block">
               Ses dosyalarınızı saniyeler içinde paylaşın.
             </p>
           </div>
 
           <div className="card-premium p-3 md:p-6">
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
-              <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Shield className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Güvenli</h3>
+            <p className="text-gray-600 text-xs md:text-sm hidden md:block">
               Dosyalarınız güvende. Şifreli ve güvenli yükleme.
             </p>
           </div>
 
           <div className="card-premium p-3 md:p-6 col-span-2 md:col-span-1">
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-lg">
-              <Mic className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Mic className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Çoklu Format</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Çoklu Format</h3>
+            <p className="text-gray-600 text-xs md:text-sm hidden md:block">
               MP3, WAV, M4A format desteği.
             </p>
           </div>
@@ -391,16 +423,16 @@ export default function SesDosyasiContent() {
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
         >
           <div className="card-premium p-4 md:p-6">
-            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Podcast Yayınları</h3>
-            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 text-gradient">Podcast Yayınları</h3>
+            <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
               Podcast bölümlerinizi QR kod ile fiziksel olarak paylaşın. 
               Etkinliklerde, konferanslarda ve tanıtımlarda dinleyicilerinize kolay erişim sağlayın.
             </p>
           </div>
 
           <div className="card-premium p-4 md:p-6">
-            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Sesli Rehberler</h3>
-            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 text-gradient">Sesli Rehberler</h3>
+            <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
               Müze sergileri, sanat galerileri ve turistik yerlerde sesli rehberler oluşturun. 
               Ziyaretçileriniz QR kod ile tesisat gereksinimi olmadan sesli içeriklere ulaşabilir.
             </p>
@@ -414,17 +446,17 @@ export default function SesDosyasiContent() {
           transition={{ delay: 0.6 }}
           className="card-premium p-4 md:p-8 md:p-12"
         >
-          <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 text-gradient">Podcast ve Sesli Notları QR Kod ile Menülere veya Sergilere Entegre Etme Rehberi</h2>
-          <p className="text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
+          <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 text-gradient">Podcast ve Sesli Notları QR Kod ile Menülere veya Sergilere Entegre Etme Rehberi</h2>
+          <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
             Podcast bölümleri, sesli notlar ve müzik dosyalarınızı QR kod ile fiziksel mekanlara entegre ederek, kullanıcı deneyimini zenginleştirebilirsiniz.
             Restoran menüleri, müze sergileri ve etkinlik alanlarında sesli içeriklere kolayca erişim sağlayın.
           </p>
 
-          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Kullanım Alanları</h3>
-          <p className="text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
+          <h3 className="text-base md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Kullanım Alanları</h3>
+          <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
             Ses dosyası QR kodları ile:
           </p>
-          <ul className="text-gray-400 space-y-2 mb-6">
+          <ul className="text-gray-600 space-y-2 mb-6">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>Restoran menülerinde sesli açıklamalar sunun</span>
@@ -443,8 +475,8 @@ export default function SesDosyasiContent() {
             </li>
           </ul>
 
-          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Nasıl Kullanılır?</h3>
-          <ul className="text-gray-400 space-y-2 md:space-y-2 mb-4 md:mb-6 text-sm md:text-base">
+          <h3 className="text-base md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Nasıl Kullanılır?</h3>
+          <ul className="text-gray-600 space-y-2 md:space-y-2 mb-4 md:mb-6 text-sm md:text-base">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>Ses dosyanızı seçin (MP3, WAV, M4A)</span>
@@ -463,8 +495,8 @@ export default function SesDosyasiContent() {
             </li>
           </ul>
 
-          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Avantajları</h3>
-          <ul className="text-gray-400 space-y-2 md:space-y-2 text-sm md:text-base">
+          <h3 className="text-base md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Avantajları</h3>
+          <ul className="text-gray-600 space-y-2 md:space-y-2 text-sm md:text-base">
             <li className="flex items-start gap-2">
               <span className="text-blue-400">•</span>
               <span>İnteraktif deneyim</span>

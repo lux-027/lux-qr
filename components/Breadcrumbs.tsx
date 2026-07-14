@@ -20,7 +20,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
 
   return (
     <nav className="flex items-center gap-2 text-sm mb-4" aria-label="Breadcrumb">
-      <Link href="/" className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors">
+      <Link href="/" className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors">
         <Home className="w-4 h-4" />
       </Link>
       {allItems.slice(1).map((item, index) => (
@@ -29,12 +29,12 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
           {item.href ? (
             <Link 
               href={item.href} 
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-white font-medium">{item.label}</span>
+            <span className="text-gray-900 font-medium">{item.label}</span>
           )}
         </div>
       ))}

@@ -453,7 +453,7 @@ export default function FiyatListesiContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 md:p-8">
+    <div className="min-h-screen p-3 md:p-8">
       <div className="max-w-6xl mx-auto">
 
       {/* Page Title */}
@@ -469,15 +469,15 @@ export default function FiyatListesiContent() {
               <ShoppingBag className="w-7 h-7 md:w-10 md:h-10 text-white drop-shadow-lg" />
             </div>
             <div className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
-              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-white" />
+              <QrCode className="w-3 h-3 md:w-4 md:h-4 text-gray-900" />
             </div>
           </div>
           <div className="text-left">
-            <h1 className="text-xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">Fiyat Listesi</h1>
+            <h1 className="text-xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">Fiyat Listesi</h1>
             <p className="text-sm md:text-2xl font-semibold bg-gradient-to-r from-orange-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">QR Kod</p>
           </div>
         </div>
-        <p className="text-gray-400 text-xs md:text-lg max-w-2xl mx-auto text-center mt-1">
+        <p className="text-gray-600 text-xs md:text-lg max-w-2xl mx-auto text-center mt-1">
           Restoran menüsü, hizmet veya ürün fiyat listenizi QR koda dönüştürün
         </p>
       </motion.div>
@@ -489,26 +489,27 @@ export default function FiyatListesiContent() {
           <div className="flex items-center justify-between mb-4 md:mb-6">
             <div className="flex items-center gap-2 md:gap-3">
               <div className="p-2 md:p-3 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg">
-                <ShoppingBag className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                <ShoppingBag className="w-4 h-4 md:w-6 md:h-6 text-gray-900" />
               </div>
               <div>
-                <h2 className="text-base md:text-xl font-bold text-white">Marka Bilgileri</h2>
-                <p className="text-gray-500 text-xs hidden md:block">Marka, kategori ve ürünlerinizi ekleyin</p>
+                <h2 className="text-base md:text-xl font-bold text-gray-900">Marka Bilgileri</h2>
+                <p className="text-gray-600 text-xs hidden md:block">Marka, kategori ve ürünlerinizi ekleyin</p>
               </div>
             </div>
             <button
               onClick={fillDemo}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-400 hover:text-gray-200 text-xs transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-white text-xs font-bold transition-all hover:-translate-y-0.5 duration-200"
+              style={{ background: 'linear-gradient(135deg,#f59e0b,#f97316,#ef4444)', boxShadow: '0 4px 14px rgba(249,115,22,0.40), inset 0 1px 0 rgba(255,255,255,0.2)' }}
             >
-              <Wand2 className="w-3 h-3" />
-              Demo
+              <Wand2 className="w-3.5 h-3.5" />
+              Demo ile Doldur
             </button>
           </div>
 
           {/* Brand Info */}
           <div className="space-y-4">
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
                 <Store className="w-4 h-4 text-amber-400" />
                 Marka / İşletme Adı *
               </label>
@@ -517,12 +518,12 @@ export default function FiyatListesiContent() {
                 value={priceList.brandName}
                 onChange={(e) => setPriceList((p) => ({ ...p, brandName: e.target.value }))}
                 placeholder="Örn: Cafe Lux, Berber Mehmet..."
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
               />
             </div>
             {/* Logo Upload */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
                 <ImagePlus className="w-4 h-4 text-pink-400" />
                 İşletme Logosu (İsteğe Bağlı)
               </label>
@@ -532,11 +533,11 @@ export default function FiyatListesiContent() {
                     <img
                       src={priceList.logoUrl || logoPreview}
                       alt="Logo"
-                      className="w-20 h-20 rounded-xl object-cover border border-white/10"
+                      className="w-20 h-20 rounded-xl object-cover border border-gray-200"
                     />
                     {logoUploading && (
                       <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
-                        <Loader2 className="w-5 h-5 text-white animate-spin" />
+                        <Loader2 className="w-5 h-5 text-gray-900 animate-spin" />
                       </div>
                     )}
                     {!logoUploading && (
@@ -552,13 +553,13 @@ export default function FiyatListesiContent() {
                   <button
                     onClick={() => logoInputRef.current?.click()}
                     disabled={logoUploading}
-                    className="flex flex-col items-center justify-center w-20 h-20 border-2 border-dashed border-white/20 hover:border-orange-500/50 rounded-xl text-gray-400 hover:text-orange-400 transition-all flex-shrink-0"
+                    className="flex flex-col items-center justify-center w-20 h-20 border-2 border-dashed border-gray-300 hover:border-orange-500/50 rounded-xl text-gray-400 hover:text-orange-400 transition-all flex-shrink-0"
                   >
                     <ImagePlus className="w-5 h-5 mb-1" />
                     <span className="text-xs">Yükle</span>
                   </button>
                 )}
-                <p className="text-gray-500 text-xs leading-relaxed">
+                <p className="text-gray-600 text-xs leading-relaxed">
                   PNG, JPG veya WebP formatında logo yükleyin. QR tarandığında marka başlığının yanında görünür.
                 </p>
                 <input
@@ -572,7 +573,7 @@ export default function FiyatListesiContent() {
             </div>
 
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
                 <FileText className="w-4 h-4 text-violet-400" />
                 Kısa Açıklama (İsteğe Bağlı)
               </label>
@@ -581,18 +582,18 @@ export default function FiyatListesiContent() {
                 value={priceList.brandDescription}
                 onChange={(e) => setPriceList((p) => ({ ...p, brandDescription: e.target.value }))}
                 placeholder="Örn: Taze malzemelerle hazırlanan lezzetler"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
               />
             </div>
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
                 <DollarSign className="w-4 h-4 text-emerald-400" />
                 Para Birimi
               </label>
               <select
                 value={priceList.currency}
                 onChange={(e) => setPriceList((p) => ({ ...p, currency: e.target.value }))}
-                className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-blue-500/50 transition-all"
               >
                 {currencyOptions.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
@@ -606,43 +607,46 @@ export default function FiyatListesiContent() {
       {/* Categories */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <div className="card-premium p-4 md:p-10">
-          <div className="mb-6 rounded-2xl bg-slate-800/40 border border-slate-700/50 overflow-hidden">
-            <div className="px-5 py-3.5 bg-gradient-to-r from-orange-500/10 to-amber-500/10 border-b border-slate-700/50 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-xs font-bold">?</span>
+          {/* How to use — 3D step cards */}
+          <div className="mb-7">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-xl flex items-center justify-center shadow-lg"
+                style={{ background: 'linear-gradient(135deg,#f97316,#f59e0b)', boxShadow: '0 4px 12px rgba(249,115,22,0.4)' }}>
+                <span className="text-white text-xs font-black">?</span>
               </div>
-              <span className="text-sm font-bold text-white">Nasıl Kullanılır?</span>
+              <span className="text-sm font-bold text-gray-900 tracking-wide">Nasıl Kullanılır?</span>
             </div>
-            <div className="p-2.5 sm:p-4 flex flex-row sm:flex-row items-stretch gap-2 sm:gap-3">
-              <div className="flex-1 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3.5 rounded-lg sm:rounded-xl bg-blue-500/10 border border-blue-500/20">
-                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-blue-500/25 border-2 border-blue-500/50 flex items-center justify-center flex-shrink-0">
-                  <span className="text-blue-400 text-xs sm:text-sm font-black">1</span>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { step: '1', title: 'Kategori Oluştur', desc: 'Kategori Ekle butonuna bas, isim gir', from: '#3b82f6', to: '#06b6d4', glow: 'rgba(59,130,246,0.35)', accent: '#3b82f6' },
+                { step: '2', title: 'Kategoriyi Aç', desc: 'Satıra tıkla, + Ürün Ekle çıkar', from: '#f97316', to: '#f59e0b', glow: 'rgba(249,115,22,0.35)', accent: '#f97316' },
+                { step: '3', title: 'Ürün Ekle', desc: 'Ad, fiyat, resim ve indirim gir', from: '#10b981', to: '#06b6d4', glow: 'rgba(16,185,129,0.35)', accent: '#10b981' },
+              ].map(({ step, title, desc, from, to, glow, accent }) => (
+                <div key={step} className="relative flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl overflow-hidden"
+                  style={{
+                    background: 'rgba(255,255,255,0.85)',
+                    border: `1.5px solid ${accent}33`,
+                    boxShadow: `0 8px 24px ${glow}, 0 2px 6px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)`,
+                    backdropFilter: 'blur(10px)',
+                  }}>
+                  {/* top shine */}
+                  <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-2xl pointer-events-none"
+                    style={{ background: 'linear-gradient(180deg,rgba(255,255,255,0.5) 0%,transparent 100%)' }} />
+                  {/* top border accent */}
+                  <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
+                    style={{ background: `linear-gradient(90deg,${from},${to})` }} />
+                  {/* glow number badge */}
+                  <div className="relative z-10 w-9 h-9 rounded-2xl flex items-center justify-center mb-2 shadow-lg"
+                    style={{
+                      background: `linear-gradient(135deg,${from},${to})`,
+                      boxShadow: `0 6px 16px ${glow}, inset 0 1px 0 rgba(255,255,255,0.3)`,
+                    }}>
+                    <span className="text-white font-black text-sm drop-shadow">{step}</span>
+                  </div>
+                  <p className="relative z-10 text-gray-900 text-[11px] sm:text-xs font-bold leading-tight mb-1">{title}</p>
+                  <p className="relative z-10 text-gray-500 text-[9px] sm:text-[10px] leading-snug">{desc}</p>
                 </div>
-                <div className="text-center sm:text-left">
-                  <p className="text-white text-[11px] sm:text-sm font-bold leading-none mb-0.5">Kategori Oluştur</p>
-                  <p className="text-slate-500 text-[10px] sm:text-xs leading-snug"><span className="text-blue-400 font-medium">Kategori Ekle</span> butonuna bas, isim gir</p>
-                </div>
-              </div>
-              <div className="flex items-center text-slate-700"><ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 -rotate-90" /></div>
-              <div className="flex-1 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3.5 rounded-lg sm:rounded-xl bg-orange-500/10 border border-orange-500/20">
-                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-orange-500/25 border-2 border-orange-500/50 flex items-center justify-center flex-shrink-0">
-                  <span className="text-orange-400 text-xs sm:text-sm font-black">2</span>
-                </div>
-                <div className="text-center sm:text-left">
-                  <p className="text-white text-[11px] sm:text-sm font-bold leading-none mb-0.5">Kategoriyi Aç</p>
-                  <p className="text-slate-500 text-[10px] sm:text-xs leading-snug">Satıra tıkla, <span className="text-orange-400 font-medium">+ Ürün Ekle</span> çıkar</p>
-                </div>
-              </div>
-              <div className="flex items-center text-slate-700"><ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 -rotate-90" /></div>
-              <div className="flex-1 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3.5 rounded-lg sm:rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-emerald-500/25 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0">
-                  <span className="text-emerald-400 text-xs sm:text-sm font-black">3</span>
-                </div>
-                <div className="text-center sm:text-left">
-                  <p className="text-white text-[11px] sm:text-sm font-bold leading-none mb-0.5">Ürün Ekle</p>
-                  <p className="text-slate-500 text-[10px] sm:text-xs leading-snug">Ad, fiyat, resim ve indirim gir</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div className="flex items-center justify-between mb-6 md:mb-8">
@@ -651,16 +655,23 @@ export default function FiyatListesiContent() {
                 <Layers className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="text-lg md:text-2xl font-bold text-white">Kategoriler ve Ürünler</h3>
-                <p className="text-gray-500 text-xs md:text-sm mt-0.5">Her kategori için ürün, fiyat ve resim ekleyin</p>
+                <h3 className="text-lg md:text-2xl font-bold text-gray-900">Kategoriler ve Ürünler</h3>
+                <p className="text-gray-600 text-xs md:text-sm mt-0.5">Her kategori için ürün, fiyat ve resim ekleyin</p>
               </div>
             </div>
             <button
               onClick={addCategory}
-              className="flex items-center gap-1.5 px-3 md:px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 border border-blue-500/30 rounded-xl text-blue-300 text-sm font-medium transition-all"
+              className="group relative overflow-hidden flex items-center gap-2 pl-3 pr-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg,#f97316,#f59e0b)',
+                boxShadow: '0 4px 14px rgba(249,115,22,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
+              }}
             >
-              <Plus className="w-3.5 h-3.5" />
-              Kategori Ekle
+              <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+              <span className="w-6 h-6 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,255,255,0.2)' }}>
+                <Plus className="w-3.5 h-3.5 text-white" />
+              </span>
+              <span className="text-white drop-shadow-sm">Kategori Ekle</span>
             </button>
           </div>
 
@@ -668,12 +679,12 @@ export default function FiyatListesiContent() {
             {priceList.categories.map((cat, catIdx) => {
               const isOpen = openCategories.includes(cat.id);
               return (
-                <div key={cat.id} className="rounded-xl overflow-hidden border border-slate-600/50">
+                <div key={cat.id} className="rounded-xl overflow-hidden border border-gray-300/50">
 
                   {/* ── Kategori Başlığı ── */}
                   <div
                     className={`flex items-center gap-2 px-3 py-3 cursor-pointer transition-all ${
-                      isOpen ? 'bg-slate-700/80' : 'bg-slate-800/80 hover:bg-slate-700/60'
+                      isOpen ? 'bg-gray-200' : 'bg-gray-100 hover:bg-gray-100'
                     }`}
                     onClick={() => { if (cat.name.trim()) toggleCategory(cat.id); }}
                   >
@@ -692,23 +703,23 @@ export default function FiyatListesiContent() {
                       />
                       {cat.imageUrl ? (
                         <div className="relative group">
-                          <img src={cat.imageUrl} alt={cat.name} className="w-10 h-10 rounded-lg object-cover border border-white/20" />
+                          <img src={cat.imageUrl} alt={cat.name} className="w-10 h-10 rounded-lg object-cover border border-gray-300" />
                           {catUploading === cat.id && (
                             <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
-                              <Loader2 className="w-3 h-3 text-white animate-spin" />
+                              <Loader2 className="w-3 h-3 text-gray-900 animate-spin" />
                             </div>
                           )}
                           <button
                             onClick={() => setPriceList((prev) => ({ ...prev, categories: prev.categories.map((c) => c.id === cat.id ? { ...c, imageUrl: '' } : c) }))}
                             className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center"
                           >
-                            <XIcon className="w-2.5 h-2.5 text-white" />
+                            <XIcon className="w-2.5 h-2.5 text-gray-900" />
                           </button>
                         </div>
                       ) : (
                         <button
                           onClick={() => catInputRefs.current[cat.id]?.click()}
-                          className="w-10 h-10 rounded-lg border border-dashed border-slate-500 hover:border-orange-400/60 flex items-center justify-center text-slate-500 hover:text-orange-400 transition-all"
+                          className="w-10 h-10 rounded-lg border border-dashed border-slate-500 hover:border-orange-400/60 flex items-center justify-center text-gray-500 hover:text-orange-400 transition-all"
                           title="Kategori resmi ekle"
                         >
                           <ImagePlus className="w-3.5 h-3.5" />
@@ -722,16 +733,16 @@ export default function FiyatListesiContent() {
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => updateCategory(cat.id, e.target.value)}
                       placeholder="Kategori adı..."
-                      className="flex-1 bg-transparent text-white font-semibold placeholder-slate-500 focus:outline-none text-sm cursor-text"
+                      className="flex-1 bg-transparent text-gray-900 font-semibold placeholder-slate-500 focus:outline-none text-sm cursor-text"
                     />
 
-                    <span className="text-xs text-slate-400 bg-slate-600/50 px-2 py-0.5 rounded-full flex-shrink-0">
+                    <span className="text-xs text-gray-500 bg-slate-600/50 px-2 py-0.5 rounded-full flex-shrink-0">
                       {cat.items.length} ürün
                     </span>
 
                     <button
                       onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); }}
-                      className="text-slate-600 hover:text-red-400 transition-all flex-shrink-0 ml-1"
+                      className="text-gray-600 hover:text-red-400 transition-all flex-shrink-0 ml-1"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -747,23 +758,23 @@ export default function FiyatListesiContent() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="bg-slate-900/60 p-2.5 space-y-2">
+                        <div className="bg-white/80 p-2.5 space-y-2">
                           {cat.items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-3 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl px-3 py-2.5 transition-all">
+                            <div key={item.id} className="flex items-center gap-3 bg-gray-100 border border-gray-200 hover:border-gray-300 rounded-xl px-3 py-2.5 transition-all">
                               {item.imageUrl ? (
-                                <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-slate-600 flex-shrink-0" />
+                                <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-gray-300 flex-shrink-0" />
                               ) : (
-                                <div className="w-10 h-10 rounded-lg bg-slate-700 border border-slate-600 flex items-center justify-center flex-shrink-0">
-                                  <Package className="w-4 h-4 text-slate-500" />
+                                <div className="w-10 h-10 rounded-lg bg-gray-200 border border-gray-300 flex items-center justify-center flex-shrink-0">
+                                  <Package className="w-4 h-4 text-gray-500" />
                                 </div>
                               )}
                               <div className="flex-1 min-w-0">
-                                <p className="text-white text-sm font-medium truncate">{item.name || <span className="text-slate-500 italic">İsimsiz ürün</span>}</p>
+                                <p className="text-gray-900 text-sm font-medium truncate">{item.name || <span className="text-gray-500 italic">İsimsiz ürün</span>}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                   {item.price ? (
                                     <span className="text-amber-400 text-xs font-bold">{priceList.currency} {item.price}</span>
                                   ) : (
-                                    <span className="text-slate-600 text-xs">Fiyat girilmedi</span>
+                                    <span className="text-gray-600 text-xs">Fiyat girilmedi</span>
                                   )}
                                   {item.discount && Number(item.discount) > 0 && (
                                     <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-1.5 py-0.5 rounded-full font-bold">%{item.discount}</span>
@@ -771,10 +782,10 @@ export default function FiyatListesiContent() {
                                 </div>
                               </div>
                               <div className="flex items-center gap-1.5 flex-shrink-0">
-                                <button onClick={() => openEditItemModal(cat.id, item)} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-500 hover:text-blue-400 hover:bg-blue-500/10 border border-transparent hover:border-blue-500/20 transition-all" title="Düzenle">
+                                <button onClick={() => openEditItemModal(cat.id, item)} className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 border border-transparent hover:border-blue-500/20 transition-all" title="Düzenle">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
-                                <button onClick={() => removeItem(cat.id, item.id)} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all" title="Sil">
+                                <button onClick={() => removeItem(cat.id, item.id)} className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-600 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all" title="Sil">
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </div>
@@ -784,7 +795,7 @@ export default function FiyatListesiContent() {
                           {/* Ürün Ekle Butonu */}
                           <button
                             onClick={() => addItem(cat.id)}
-                            className="flex items-center gap-1.5 w-full justify-center py-2.5 text-orange-400 hover:text-white text-xs font-semibold transition-all border border-orange-500/40 hover:border-orange-500 bg-orange-500/10 hover:bg-orange-500/25 rounded-lg mt-1 shadow-[0_0_12px_rgba(249,115,22,0.15)] hover:shadow-[0_0_18px_rgba(249,115,22,0.3)]"
+                            className="flex items-center gap-1.5 w-full justify-center py-2.5 text-orange-400 hover:text-gray-900 text-xs font-semibold transition-all border border-orange-500/40 hover:border-orange-500 bg-orange-500/10 hover:bg-orange-500/25 rounded-lg mt-1 shadow-[0_0_12px_rgba(249,115,22,0.15)] hover:shadow-[0_0_18px_rgba(249,115,22,0.3)]"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             Ürün Ekle
@@ -804,7 +815,7 @@ export default function FiyatListesiContent() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <div className="card-premium p-4 md:p-8 space-y-4">
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
               <Clock className="w-4 h-4 text-orange-400" />
               Geçerlilik Süresi
             </label>
@@ -815,8 +826,8 @@ export default function FiyatListesiContent() {
                   onClick={() => setExpiration(opt.value)}
                   className={`py-2.5 rounded-xl border text-xs md:text-sm font-medium transition-all ${
                     expiration === opt.value
-                      ? 'bg-blue-500/30 border-blue-500/50 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
-                      : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                      ? 'bg-blue-500/30 border-blue-500/50 text-gray-900 shadow-[0_0_15px_rgba(59,130,246,0.3)]'
+                      : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
                   }`}
                 >
                   {opt.label}
@@ -834,7 +845,7 @@ export default function FiyatListesiContent() {
               onChange={(e) => setNote(e.target.value)}
               rows={2}
               placeholder="QR kod için ek not..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all resize-none"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900 text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all resize-none"
             />
           </div>
         </div>
@@ -845,7 +856,7 @@ export default function FiyatListesiContent() {
         <button
           onClick={handleGenerate}
           disabled={!isValid || isGenerating || !!itemUploading || !!catUploading || logoUploading}
-          className={`btn-primary w-full py-2.5 md:py-4 rounded-xl md:rounded-2xl font-bold text-white text-sm md:text-lg flex items-center justify-center gap-2 md:gap-3 transition-all duration-300 ${
+          className={`btn-primary w-full py-2.5 md:py-4 rounded-xl md:rounded-2xl font-bold text-gray-900 text-sm md:text-lg flex items-center justify-center gap-2 md:gap-3 transition-all duration-300 ${
             !isValid || isGenerating || !!itemUploading || !!catUploading || logoUploading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
@@ -872,7 +883,7 @@ export default function FiyatListesiContent() {
           </p>
         )}
         {!isValid && emptyNamedCategories.length === 0 && (
-          <p className="text-center text-gray-500 text-sm mt-2">
+          <p className="text-center text-gray-600 text-sm mt-2">
             Marka adı, en az bir kategori ve ürün (ad + fiyat) giriniz
           </p>
         )}
@@ -883,10 +894,10 @@ export default function FiyatListesiContent() {
         <div className="card-premium p-3 md:p-8">
           <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-5">
             <div className="p-1.5 md:p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg">
-              <ImagePlus className="w-3 h-3 md:w-4 md:h-4 text-white" />
+              <ImagePlus className="w-3 h-3 md:w-4 md:h-4 text-gray-900" />
             </div>
             <div>
-              <h3 className="text-sm md:text-lg font-bold text-white">Örnek Ürün Görselleri</h3>
+              <h3 className="text-sm md:text-lg font-bold text-gray-900">Örnek Ürün Görselleri</h3>
               <p className="text-gray-500 text-xs hidden md:block mt-0.5">Her sektöre uygun fiyat listesi oluşturabilirsiniz</p>
             </div>
           </div>
@@ -909,7 +920,7 @@ export default function FiyatListesiContent() {
                 />
                 <div className={`absolute inset-0 bg-gradient-to-t ${item.color} opacity-0 group-hover:opacity-60 transition-opacity duration-300`} />
                 <div className="absolute bottom-0 left-0 right-0 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="text-white text-xs font-semibold text-center drop-shadow">{item.label}</p>
+                  <p className="text-gray-900 text-xs font-semibold text-center drop-shadow">{item.label}</p>
                 </div>
               </div>
             ))}
@@ -927,28 +938,28 @@ export default function FiyatListesiContent() {
       >
         <div className="card-premium p-3 md:p-6">
           <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 mb-2 md:mb-4 shadow-lg">
-            <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            <Zap className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
           </div>
-          <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı Paylaşım</h3>
-          <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+          <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Hızlı Paylaşım</h3>
+          <p className="text-gray-600 text-xs md:text-sm hidden md:block">
             Fiyat listenizi saniyeler içinde QR koda dönüştürün.
           </p>
         </div>
         <div className="card-premium p-3 md:p-6">
           <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
-            <Store className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            <Store className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
           </div>
-          <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Her İşletme</h3>
-          <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+          <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Her İşletme</h3>
+          <p className="text-gray-600 text-xs md:text-sm hidden md:block">
             Restoran, berber, mağaza; her işletme için uygun.
           </p>
         </div>
         <div className="card-premium p-3 md:p-6 col-span-2 md:col-span-1">
           <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
-            <Clock className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            <Clock className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
           </div>
-          <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Geçerlilik</h3>
-          <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+          <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Geçerlilik</h3>
+          <p className="text-gray-600 text-xs md:text-sm hidden md:block">
             Belirli süre geçerli QR kod oluşturun.
           </p>
         </div>
@@ -962,14 +973,14 @@ export default function FiyatListesiContent() {
         className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
       >
         <div className="card-premium p-4 md:p-6">
-          <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Restoran Menüsü</h3>
-          <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 text-gradient">Restoran Menüsü</h3>
+          <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
             Başlangıç, ana yemek, tatlı gibi kategoriler ekleyip ürün ve fiyatlarınızı girin. QR kodu masalara koyun, müşteriler telefonuyla okutarak menüye erişsin.
           </p>
         </div>
         <div className="card-premium p-4 md:p-6">
-          <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Hizmet Listesi</h3>
-          <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 text-gradient">Hizmet Listesi</h3>
+          <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
             Berber, güzellik salonu, tamirci gibi işletmeler için hizmet kategorileri ve fiyatlarını paylaşın. Güncelleme gerektiğinde yeni QR kolayca oluşturun.
           </p>
         </div>
@@ -982,13 +993,13 @@ export default function FiyatListesiContent() {
         transition={{ delay: 0.6 }}
         className="card-premium p-4 md:p-8"
       >
-        <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 text-gradient">Dijital Fiyat Listesiyle İşletmenizi Modernleştirin</h2>
-        <p className="text-gray-400 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
+        <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 text-gradient">Dijital Fiyat Listesiyle İşletmenizi Modernleştirin</h2>
+        <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
           Kağıt menü ve fiyat listelerinin yerini artık dijital QR kodlar alıyor. Müşterileriniz telefonlarıyla saniyeler içinde güncel fiyat listenize ulaşabilir.
           Hem maliyet tasarrufu sağlarsınız hem de güncellemeler anında yansır.
         </p>
-        <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Fiyat Listesi QR Kodunun Avantajları</h3>
-        <ul className="text-gray-400 space-y-2 md:space-y-3 mb-4 md:mb-6 text-sm md:text-base">
+        <h3 className="text-base md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Fiyat Listesi QR Kodunun Avantajları</h3>
+        <ul className="text-gray-700 space-y-2 md:space-y-3 mb-4 md:mb-6 text-sm md:text-base">
           <li className="flex items-start gap-3">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center mt-0.5">
               <span className="text-orange-400 text-xs">✓</span>
@@ -1014,7 +1025,7 @@ export default function FiyatListesiContent() {
             <span>Restoran, kafe, berber, mağaza — her işletme için uygun</span>
           </li>
         </ul>
-        <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+        <p className="text-gray-600 text-sm md:text-base leading-relaxed">
           LuxQR ile fiyat listenizi saniyeler içinde QR koda dönüştürün. Modern işletmeler için ideal dijital çözüm.
         </p>
       </motion.div>
@@ -1042,14 +1053,14 @@ export default function FiyatListesiContent() {
               exit={{ opacity: 0, y: 60, scale: 0.97 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+              className="w-full max-w-md bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl"
             >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center"><Package className="w-4 h-4 text-white" /></div>
-                  <h3 className="text-white font-bold text-base">{itemModal.isNew ? 'Ürün Ekle' : 'Ürünü Düzenle'}</h3>
+                  <h3 className="text-gray-900 font-bold text-base">{itemModal.isNew ? 'Ürün Ekle' : 'Ürünü Düzenle'}</h3>
                 </div>
-                <button onClick={() => setItemModal(null)} className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"><XIcon className="w-4 h-4" /></button>
+                <button onClick={() => setItemModal(null)} className="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all"><XIcon className="w-4 h-4" /></button>
               </div>
 
               <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
@@ -1058,32 +1069,32 @@ export default function FiyatListesiContent() {
                   {itemModal.item.imageUrl ? (
                     <div className="relative group flex-shrink-0">
                       <img src={itemModal.item.imageUrl} alt="" className="w-20 h-20 rounded-2xl object-cover border border-white/15" />
-                      {itemModalUploading && <div className="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center"><Loader2 className="w-5 h-5 text-white animate-spin" /></div>}
+                      {itemModalUploading && <div className="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center"><Loader2 className="w-5 h-5 text-gray-900 animate-spin" /></div>}
                       <button onClick={() => setItemModal((p) => p ? { ...p, item: { ...p.item, imageUrl: '' } } : null)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center shadow"><XIcon className="w-3 h-3 text-white" /></button>
                     </div>
                   ) : (
-                    <button onClick={() => itemModalImgRef.current?.click()} className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-600 hover:border-orange-400/60 flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-orange-400 transition-all flex-shrink-0">
+                    <button onClick={() => itemModalImgRef.current?.click()} className="w-20 h-20 rounded-2xl border-2 border-dashed border-gray-300 hover:border-orange-400/60 flex flex-col items-center justify-center gap-1.5 text-gray-500 hover:text-orange-400 transition-all flex-shrink-0">
                       {itemModalUploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <><ImagePlus className="w-6 h-6" /><span className="text-[10px]">Resim ekle</span></>}
                     </button>
                   )}
                   <div className="flex-1">
-                    <p className="text-slate-400 text-xs mb-1">Ürün görseli (isteğe bağlı)</p>
-                    <p className="text-slate-600 text-[11px]">JPG, PNG, WEBP desteklenir</p>
+                    <p className="text-gray-500 text-xs mb-1">Ürün görseli (isteğe bağlı)</p>
+                    <p className="text-gray-600 text-[11px]">JPG, PNG, WEBP desteklenir</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Ürün Adı <span className="text-red-400">*</span></label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Ürün Adı <span className="text-red-400">*</span></label>
                   <input type="text" value={itemModal.item.name} onChange={(e) => setItemModal((p) => p ? { ...p, item: { ...p.item, name: e.target.value } } : null)}
                     placeholder="Ör: Mercimek Çorbası" autoFocus
-                    className="w-full bg-slate-800 border border-slate-600 focus:border-orange-400 rounded-xl px-4 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none transition-all" />
+                    className="w-full bg-gray-100 border border-gray-300 focus:border-orange-400 rounded-xl px-4 py-2.5 text-gray-900 text-sm placeholder-slate-600 focus:outline-none transition-all" />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">Açıklama</label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Açıklama</label>
                   <textarea value={itemModal.item.description} onChange={(e) => setItemModal((p) => p ? { ...p, item: { ...p.item, description: e.target.value } } : null)}
                     placeholder="Ürün hakkında kısa açıklama..." rows={2}
-                    className="w-full bg-slate-800 border border-slate-600 focus:border-slate-500 rounded-xl px-4 py-2.5 text-slate-300 text-sm placeholder-slate-600 focus:outline-none transition-all resize-none" />
+                    className="w-full bg-gray-100 border border-gray-300 focus:border-slate-500 rounded-xl px-4 py-2.5 text-slate-300 text-sm placeholder-slate-600 focus:outline-none transition-all resize-none" />
                 </div>
 
                 {(() => {
@@ -1093,9 +1104,9 @@ export default function FiyatListesiContent() {
                   return (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Fiyat <span className="text-red-400">*</span></label>
-                        <div className="flex items-center gap-1.5 bg-slate-800 border border-slate-600 focus-within:border-amber-400 rounded-xl px-3 py-2.5 transition-all">
-                          <span className="text-slate-400 text-xs font-semibold">{priceList.currency}</span>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Fiyat <span className="text-red-400">*</span></label>
+                        <div className="flex items-center gap-1.5 bg-gray-100 border border-gray-300 focus-within:border-amber-400 rounded-xl px-3 py-2.5 transition-all">
+                          <span className="text-gray-500 text-xs font-semibold">{priceList.currency}</span>
                           <input type="text" inputMode="decimal" value={itemModal.item.price}
                             onChange={(e) => {
                               const v = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.');
@@ -1107,9 +1118,9 @@ export default function FiyatListesiContent() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-slate-400 mb-1.5">İndirimli Fiyat</label>
-                        <div className={`flex items-center gap-1.5 bg-slate-800 border rounded-xl px-3 py-2.5 transition-all ${discTooHigh ? 'border-red-500/60 focus-within:border-red-400' : 'border-slate-600 focus-within:border-emerald-400'}`}>
-                          <span className="text-slate-400 text-xs font-semibold">{priceList.currency}</span>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">İndirimli Fiyat</label>
+                        <div className={`flex items-center gap-1.5 bg-gray-100 border rounded-xl px-3 py-2.5 transition-all ${discTooHigh ? 'border-red-500/60 focus-within:border-red-400' : 'border-gray-300 focus-within:border-emerald-400'}`}>
+                          <span className="text-gray-500 text-xs font-semibold">{priceList.currency}</span>
                           <input type="text" inputMode="decimal"
                             value={itemModal.item.discountedPrice || ''}
                             onChange={(e) => {
@@ -1135,10 +1146,10 @@ export default function FiyatListesiContent() {
                 })()}
               </div>
 
-              <div className="flex gap-3 px-5 py-4 border-t border-white/10">
-                <button onClick={() => setItemModal(null)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm font-medium transition-all">İptal</button>
+              <div className="flex gap-3 px-5 py-4 border-t border-gray-200">
+                <button onClick={() => setItemModal(null)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-500 hover:text-gray-900 text-sm font-medium transition-all">İptal</button>
                 <button disabled={!itemModal.item.name.trim() || !itemModal.item.price.trim() || itemModalUploading || (!!itemModal.item.discountedPrice && Number(itemModal.item.discountedPrice) >= Number(itemModal.item.price) && Number(itemModal.item.price) > 0)} onClick={saveItemModal}
-                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold transition-all shadow-lg shadow-orange-500/30">
+                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 text-sm font-bold transition-all shadow-lg shadow-orange-500/30">
                   {itemModal.isNew ? 'Ürünü Ekle' : 'Kaydet'}
                 </button>
               </div>
@@ -1164,12 +1175,12 @@ function DiscountModalInner({ discountModal, setDiscountModal, priceList, setPri
     : 0;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" onClick={() => setDiscountModal(null)}>
-      <div className="w-full max-w-xs bg-slate-900 border border-white/10 rounded-2xl p-5 shadow-2xl" onClick={e => e.stopPropagation()}>
-        <h3 className="text-white font-bold text-base mb-1">İndirim Ekle</h3>
-        <p className="text-slate-500 text-xs mb-4">{item.name || 'Ürün'} — Fiyat: {priceList.currency}{item.price}</p>
-        <label className="text-slate-400 text-xs font-semibold block mb-1">İndirimli Fiyat</label>
-        <div className="flex items-center gap-2 bg-slate-800 border border-slate-600 rounded-xl px-3 py-2.5 mb-3">
-          <span className="text-slate-400 text-sm font-semibold">{priceList.currency}</span>
+      <div className="w-full max-w-xs bg-white border border-gray-200 rounded-2xl p-5 shadow-2xl" onClick={e => e.stopPropagation()}>
+        <h3 className="text-gray-900 font-bold text-base mb-1">İndirim Ekle</h3>
+        <p className="text-gray-500 text-xs mb-4">{item.name || 'Ürün'} — Fiyat: {priceList.currency}{item.price}</p>
+        <label className="text-gray-500 text-xs font-semibold block mb-1">İndirimli Fiyat</label>
+        <div className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-xl px-3 py-2.5 mb-3">
+          <span className="text-gray-500 text-sm font-semibold">{priceList.currency}</span>
           <input
             type="number"
             inputMode="decimal"
@@ -1184,12 +1195,12 @@ function DiscountModalInner({ discountModal, setDiscountModal, priceList, setPri
         </div>
         {pct > 0 && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2 mb-4 flex items-center justify-between">
-            <span className="text-slate-400 text-xs">Hesaplanan indirim</span>
+            <span className="text-gray-500 text-xs">Hesaplanan indirim</span>
             <span className="text-red-400 font-bold text-lg">%{pct}</span>
           </div>
         )}
         <div className="flex gap-2">
-          <button onClick={() => setDiscountModal(null)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm font-medium transition-all">İptal</button>
+          <button onClick={() => setDiscountModal(null)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-500 hover:text-gray-900 text-sm font-medium transition-all">İptal</button>
           <button
             disabled={!discountModal.tempVal || pct <= 0}
             onClick={() => {
@@ -1203,7 +1214,7 @@ function DiscountModalInner({ discountModal, setDiscountModal, priceList, setPri
               }));
               setDiscountModal(null);
             }}
-            className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold transition-all"
+            className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-gray-900 text-sm font-bold transition-all"
           >Onayla</button>
         </div>
       </div>

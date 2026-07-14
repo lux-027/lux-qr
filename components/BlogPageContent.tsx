@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 
 const NewsletterForm = dynamic(() => import('@/components/NewsletterForm'), {
   ssr: false,
-  loading: () => <div className="h-32 bg-white/5 rounded-2xl animate-pulse" />
+  loading: () => <div className="h-32 bg-gray-50 rounded-2xl animate-pulse" />
 });
 
 interface BlogPageContentProps {
@@ -17,25 +17,52 @@ interface BlogPageContentProps {
 
 export default function BlogPageContent({ posts }: BlogPageContentProps) {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <main className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05, duration: 0.3 }}
-          className="text-center mb-12"
+          className="mb-10 md:mb-14"
         >
-          <div className="relative inline-block mb-4">
-            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
-            <QrCode className="relative w-12 h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 text-gradient">
-            LuxQr Blog
-          </h1>
-          <p className="text-xl text-gray-300">
-            QR Kod Rehberi ve Güncel Haberler
-          </p>
+          <motion.div
+            whileHover={{ y: -4, rotateX: 2, rotateY: -2 }}
+            style={{
+              transformStyle: 'preserve-3d',
+              perspective: '800px',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(219,234,254,0.8) 100%)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(59,130,246,0.25)',
+              boxShadow: '0 8px 32px rgba(59,130,246,0.15), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+            }}
+            className="relative rounded-3xl overflow-hidden p-6 md:p-8 max-w-2xl mx-auto"
+          >
+            <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-3xl pointer-events-none"
+              style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.55) 0%, transparent 100%)' }} />
+            <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)' }} />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-5 md:gap-8">
+              <div className="flex-shrink-0">
+                <div className="relative">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center shadow-2xl rotate-3 hover:rotate-6 transition-transform duration-300"
+                    style={{ background: 'linear-gradient(135deg, #3b82f6, #7c3aed)', boxShadow: '0 8px 24px rgba(59,130,246,0.45)' }}>
+                    <FileText className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-xl flex items-center justify-center shadow-lg -rotate-12"
+                    style={{ background: 'linear-gradient(135deg, #06b6d4, #3b82f6)', boxShadow: '0 4px 12px rgba(6,182,212,0.4)' }}>
+                    <QrCode className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              </div>
+              <div className="text-center md:text-left">
+                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1">
+                  LuxQr <span className="bg-gradient-to-r from-blue-500 to-violet-600 bg-clip-text text-transparent">Blog</span>
+                </h1>
+                <p className="text-gray-600 text-sm md:text-base">QR Kod Rehberi ve Güncel Haberler</p>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Blog Posts Grid */}
@@ -83,7 +110,7 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                       </div>
                       
                       {/* Title */}
-                      <h2 className="text-base md:text-xl font-bold text-white mb-2 md:mb-3 line-clamp-2">
+                      <h2 className="text-base md:text-xl font-bold text-gray-900 mb-2 md:mb-3 line-clamp-2">
                         {post.title}
                       </h2>
                       
@@ -93,7 +120,7 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                       </p>
                       
                       {/* Date & Read More */}
-                      <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-white/10">
+                      <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-200">
                         <div className="flex items-center gap-1 md:gap-2 text-gray-500 text-xs md:text-sm">
                           <Calendar className="w-3 h-3 md:w-4 md:h-4" />
                           {new Date(post.createdAt).toLocaleDateString('tr-TR', {
@@ -122,7 +149,7 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
           transition={{ delay: 0.2, duration: 0.3 }}
           className="mb-16"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-8 text-center text-gradient">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-8 text-center text-gradient">
             QR Kod Türleri
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
@@ -141,9 +168,9 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                 <Link href={item.link}>
                   <div className="card-premium p-3 md:p-6 hover:border-blue-500/50 transition-all group">
                     <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg group-hover:scale-110 transition-transform">
-                      <item.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                      <item.icon className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
                     </div>
-                    <h3 className="text-sm md:text-lg font-semibold text-white mb-1 md:mb-2">{item.title}</h3>
+                    <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
                     <p className="text-gray-400 text-xs md:text-sm">{item.desc}</p>
                   </div>
                 </Link>
@@ -161,15 +188,15 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
           <div className="relative z-10 text-center">
-            <h2 className="text-xl md:text-3xl md:text-4xl font-bold text-white mb-2 md:mb-4 text-gradient">
+            <h2 className="text-xl md:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-4 text-gradient">
               Hemen QR Kod Oluşturun
             </h2>
-            <p className="text-gray-300 text-sm md:text-lg mb-4 md:mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-600 text-sm md:text-lg mb-4 md:mb-8 max-w-2xl mx-auto">
               LuxQr ile saniyeler içinde profesyonel QR kodlar oluşturun. Ücretsiz, hızlı ve güvenli.
             </p>
             <Link
               href="/"
-              className="btn-primary inline-flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 text-white font-semibold rounded-xl md:rounded-2xl text-sm md:text-base"
+              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold rounded-xl md:rounded-2xl text-sm md:text-base"
             >
               QR Kod Oluştur
               <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
@@ -197,9 +224,9 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
             >
               <div className="card-premium p-3 md:p-6 text-center">
                 <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
-                  <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                  <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
                 </div>
-                <p className="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2">{stat.value}</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">{stat.value}</p>
                 <p className="text-gray-400 text-xs md:text-sm">{stat.label}</p>
               </div>
             </motion.div>
@@ -222,7 +249,7 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
           transition={{ delay: 0.5, duration: 0.3 }}
           className="mt-8 md:mt-16 mb-8 md:mb-16"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-8 text-center text-gradient">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-8 text-center text-gradient">
             Sıkça Sorulan Sorular
           </h2>
           <div className="max-w-3xl mx-auto space-y-3 md:space-y-4">
@@ -240,10 +267,10 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                 <div className="card-premium p-3 md:p-6">
                   <div className="flex items-start gap-2 md:gap-3">
                     <div className="flex-shrink-0 p-1.5 md:p-2 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg">
-                      <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                      <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-gray-900" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1 md:mb-2 text-sm md:text-base">{faq.q}</h3>
+                      <h3 className="text-gray-900 font-semibold mb-1 md:mb-2 text-sm md:text-base">{faq.q}</h3>
                       <p className="text-gray-400 text-xs md:text-sm">{faq.a}</p>
                     </div>
                   </div>

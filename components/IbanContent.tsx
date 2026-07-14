@@ -93,35 +93,52 @@ export default function IbanContent() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8"
+      className="min-h-screen p-4 md:p-8"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-12 md:mb-16"
+          className="mb-8 md:mb-12"
         >
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full" />
-            <div className="relative flex items-center justify-center gap-3 mb-4">
-              <div className="relative">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-yellow-500/40 rotate-3 hover:-rotate-3 transition-transform duration-300">
-                  <Landmark className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
-                </div>
-                <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg -rotate-12">
-                  <QrCode className="w-4 h-4 text-white" />
+          <motion.div
+            whileHover={{ y: -4, rotateX: 3, rotateY: -3 }}
+            style={{
+              transformStyle: 'preserve-3d',
+              perspective: '800px',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(254,249,195,0.8) 100%)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(234,179,8,0.25)',
+              boxShadow: '0 8px 32px rgba(234,179,8,0.15), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+            }}
+            className="relative rounded-3xl overflow-hidden p-6 md:p-8 max-w-2xl mx-auto"
+          >
+            <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-3xl pointer-events-none"
+              style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.55) 0%, transparent 100%)' }} />
+            <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(234,179,8,0.2) 0%, transparent 70%)' }} />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-5 md:gap-8">
+              <div className="flex-shrink-0">
+                <div className="relative">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center rotate-3 hover:-rotate-3 transition-transform duration-300"
+                    style={{ background: 'linear-gradient(135deg, #eab308, #d97706)', boxShadow: '0 8px 24px rgba(234,179,8,0.45)' }}>
+                    <Landmark className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-xl flex items-center justify-center shadow-lg -rotate-12"
+                    style={{ background: 'linear-gradient(135deg, #f97316, #eab308)', boxShadow: '0 4px 12px rgba(249,115,22,0.4)' }}>
+                    <QrCode className="w-4 h-4 text-white" />
+                  </div>
                 </div>
               </div>
-              <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white">LuxQr</h1>
+              <div className="text-center md:text-left">
+                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1">
+                  IBAN <span className="bg-gradient-to-r from-yellow-500 to-amber-600 bg-clip-text text-transparent">QR Kodu</span>
+                </h1>
+                <p className="text-gray-600 text-sm md:text-base">IBAN bilgilerinizi QR kod olarak oluşturun ve paylaşın</p>
+              </div>
             </div>
-          </div>
-          <p className="text-base md:text-3xl lg:text-4xl font-semibold text-gray-300 mb-3">
-            Modern <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]">QR Kod Oluşturma</span>
-          </p>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            IBAN bilgilerinizi QR kod olarak oluşturun
-          </p>
+          </motion.div>
         </motion.div>
 
         {/* Form Section */}
@@ -133,7 +150,7 @@ export default function IbanContent() {
         >
           {/* Bank Name Input */}
           <div className="mb-4 md:mb-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <Building2 className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
               Banka Adı (Opsiyonel)
             </label>
@@ -142,13 +159,13 @@ export default function IbanContent() {
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
               placeholder="Banka adı girin"
-              className="w-full bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+              className="w-full bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
             />
           </div>
 
           {/* IBAN Input */}
           <div className="mb-4 md:mb-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
               IBAN Numarası
             </label>
@@ -157,7 +174,7 @@ export default function IbanContent() {
               value={iban}
               onChange={handleIbanChange}
               placeholder="TRXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX"
-              className={`w-full bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base font-mono tracking-wider ${
+              className={`w-full bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base font-mono tracking-wider ${
                 showError ? 'border-red-500' : ''
               }`}
               maxLength={33}
@@ -169,7 +186,7 @@ export default function IbanContent() {
 
           {/* Account Holder Input */}
           <div className="mb-4 md:mb-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <FileText className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
               Hesap Sahibi (Opsiyonel)
             </label>
@@ -178,13 +195,13 @@ export default function IbanContent() {
               value={accountHolder}
               onChange={(e) => setAccountHolder(e.target.value)}
               placeholder="Hesap sahibi adı"
-              className="w-full bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+              className="w-full bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
             />
           </div>
 
           {/* Note/Description Field */}
           <div className="mb-4 md:mb-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <FileText className="w-4 h-4 md:w-5 md:h-5 text-violet-400" />
               Not / Açıklama
             </label>
@@ -192,13 +209,13 @@ export default function IbanContent() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="QR kod hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-20 md:h-24 bg-slate-800/50 border border-white/10 rounded-2xl p-3 md:p-4 text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
             />
           </div>
 
           {/* Expiration Selection */}
           <div className="mb-4 md:mb-6">
-            <label className="flex items-center gap-2 text-white font-semibold mb-2 md:mb-3">
+            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
               <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
               Geçerlilik Süresi
             </label>
@@ -215,7 +232,7 @@ export default function IbanContent() {
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
-                    expiration === option.value ? option.activeColor : 'border-white/10 text-gray-400 hover:border-white/20'
+                    expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >
                   <option.icon className={`w-4 h-4 md:w-5 md:h-5 ${expiration === option.value ? option.color : 'text-gray-500'}`} />
@@ -230,7 +247,7 @@ export default function IbanContent() {
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className="btn-primary w-full text-white font-semibold py-3 md:py-4 rounded-2xl disabled:opacity-50 text-sm md:text-base"
+              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold py-3 md:py-4 rounded-2xl disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
             </button>
@@ -246,30 +263,30 @@ export default function IbanContent() {
         >
           <div className="card-premium p-3 md:p-6">
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg">
-              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Hızlı Paylaşım</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Hızlı Paylaşım</h3>
+            <p className="text-gray-600 text-xs md:text-sm hidden md:block">
               IBAN bilgilerinizi saniyeler içinde paylaşın.
             </p>
           </div>
 
           <div className="card-premium p-3 md:p-6">
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-2 md:mb-4 shadow-lg">
-              <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Shield className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Güvenli</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Güvenli</h3>
+            <p className="text-gray-600 text-xs md:text-sm hidden md:block">
               Banka bilgileriniz güvende. Şifreli ve güvenli paylaşım.
             </p>
           </div>
 
           <div className="card-premium p-3 md:p-6 col-span-2 md:col-span-1">
             <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 mb-2 md:mb-4 shadow-lg">
-              <Clock className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <Clock className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
             </div>
-            <h3 className="text-sm md:text-xl font-semibold text-white mb-1 md:mb-2">Geçerlilik</h3>
-            <p className="text-gray-400 text-xs md:text-sm hidden md:block">
+            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Geçerlilik</h3>
+            <p className="text-gray-600 text-xs md:text-sm hidden md:block">
               Belirli süre geçerli QR kod oluşturun.
             </p>
           </div>
@@ -283,15 +300,15 @@ export default function IbanContent() {
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
         >
           <div className="card-premium p-4 md:p-6">
-            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">IBAN QR Kodları</h3>
-            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 text-gradient">IBAN QR Kodları</h3>
+            <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
               Banka hesap bilgilerinizi QR kod ile kolayca paylaşın. 
               Ödemeler, bağışlar ve para transferleri için hızlı erişim sağlar.
             </p>
           </div>
           <div className="card-premium p-4 md:p-6">
-            <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 text-gradient">Hızlı Transfer</h3>
-            <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 text-gradient">Hızlı Transfer</h3>
+            <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
               IBAN bilgilerinizi saniyeler içinde QR koda dönüştürün. 
               Mobil bankacılık uygulamaları ile entegre çalışır.
             </p>
@@ -305,16 +322,16 @@ export default function IbanContent() {
           transition={{ delay: 0.6 }}
           className="card-premium p-4 md:p-8 md:p-12"
         >
-          <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 text-gradient">IBAN Paylaşımında QR Kodun Sağladığı Kolaylık</h2>
-          <p className="text-gray-400 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
+          <h2 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 text-gradient">IBAN Paylaşımında QR Kodun Sağladığı Kolaylık</h2>
+          <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
             Geleneksel IBAN paylaşım yöntemleri artık yetersiz kalıyor. Uzun IBAN numaralarını manuel olarak kopyalama ve gönderme süreci yerine, QR kod teknolojisi ile saniyeler içinde paylaşım yapabilirsiniz. 
             Özellikle toplantılar, etkinlikler ve ticari işlemler için QR kod tabanlı IBAN paylaşımı, hata riskini en aza indirirken işlem hızını maksimuma çıkarır.
           </p>
 
-          <h3 className="text-base md:text-xl font-semibold text-white mb-2 md:mb-3">Dijital Ödeme Rehberi</h3>
-          <p className="text-gray-400 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">Dijital dönüşüm çağında ödeme süreçleri de evriliyor. QR kod teknolojisi ile:</p>
+          <h3 className="text-base md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Dijital Ödeme Rehberi</h3>
+          <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">Dijital dönüşüm çağında ödeme süreçleri de evriliyor. QR kod teknolojisi ile:</p>
 
-          <ul className="text-gray-400 space-y-2 md:space-y-3 mb-4 md:mb-6 text-sm md:text-base">
+          <ul className="text-gray-600 space-y-2 md:space-y-3 mb-4 md:mb-6 text-sm md:text-base">
             <li className="flex items-start gap-3">
               <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center mt-0.5">
                 <span className="text-green-400 text-xs">✓</span>
@@ -341,7 +358,7 @@ export default function IbanContent() {
             </li>
           </ul>
 
-          <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             LuxQR ile IBAN bilgilerinizi güvenli ve hızlı bir şekilde paylaşın. Modern ödeme çözümleri için ideal platform.
           </p>
         </motion.div>

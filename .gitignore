@@ -35,3 +35,7 @@ next-env.d.ts
 # prisma
 /prisma/*.db
 /prisma/*.db-journal
+
+# media assets
+/public/*.mp4
+/public/*.mov

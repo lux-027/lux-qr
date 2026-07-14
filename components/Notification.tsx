@@ -49,13 +49,13 @@ export function Notification({ message, type = 'info', duration = 5000, onClose 
         >
           <div className="flex items-start gap-3">
             {icons[type]}
-            <p className="text-white text-sm flex-1">{message}</p>
+            <p className="text-gray-900 text-sm flex-1">{message}</p>
             <button
               onClick={() => {
                 setIsVisible(false);
                 setTimeout(() => onClose?.(), 300);
               }}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-gray-900 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -128,10 +128,10 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                 {notification.type === 'success' && <CheckCircle className="w-5 h-5 text-green-400" />}
                 {notification.type === 'error' && <XCircle className="w-5 h-5 text-red-400" />}
                 {notification.type === 'info' && <AlertCircle className="w-5 h-5 text-blue-400" />}
-                <p className="text-white text-sm flex-1">{notification.message}</p>
+                <p className="text-gray-900 text-sm flex-1">{notification.message}</p>
                 <button
                   onClick={() => removeNotification(notification.id)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-gray-900 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>

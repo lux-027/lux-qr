@@ -61,7 +61,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
       </div>
     );
@@ -69,7 +69,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   if (error || !pl) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <p className="text-gray-400">{error || 'Menü yüklenemedi.'}</p>
       </div>
     );
@@ -98,7 +98,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
 
       {/* Sidebar Overlay */}
       <AnimatePresence>
@@ -116,24 +116,24 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-              className="fixed left-0 top-0 h-full w-72 bg-slate-900 border-r border-white/10 z-50 flex flex-col"
+              className="fixed left-0 top-0 h-full w-72 bg-white border-r border-gray-200 z-50 flex flex-col"
             >
               {/* Sidebar Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                 <div className="flex items-center gap-3">
                   {pl.logoUrl ? (
                     <img src={pl.logoUrl} alt={pl.brandName} className="w-9 h-9 rounded-xl object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center flex-shrink-0">
-                      <ShoppingBag className="w-5 h-5 text-white" />
+                      <ShoppingBag className="w-5 h-5 text-gray-900" />
                     </div>
                   )}
                   <div className="min-w-0">
-                    <p className="text-white font-bold text-sm leading-tight truncate">{pl.brandName}</p>
+                    <p className="text-gray-900 font-bold text-sm leading-tight truncate">{pl.brandName}</p>
                     <p className="text-gray-500 text-xs">{pl.categories.length} kategori</p>
                   </div>
                 </div>
-                <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-white transition-all flex-shrink-0 ml-2">
+                <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-900 transition-all flex-shrink-0 ml-2">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -142,7 +142,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               <button
                 onClick={goHome}
                 className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-all border-b border-white/5 ${
-                  view === 'home' ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  view === 'home' ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <Sparkles className="w-4 h-4 flex-shrink-0" />
@@ -159,7 +159,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                     className={`w-full flex items-center justify-between px-5 py-3.5 text-left transition-all ${
                       view === 'category' && selectedCat?.id === cat.id
                         ? 'bg-orange-500/10 text-orange-400 border-r-2 border-orange-500'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                        : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     <span className="font-medium text-sm">{cat.name}</span>
@@ -167,7 +167,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
                         view === 'category' && selectedCat?.id === cat.id
                           ? 'bg-orange-500/20 text-orange-400'
-                          : 'bg-white/5 text-gray-600'
+                          : 'bg-gray-50 text-gray-600'
                       }`}>
                         {cat.items.length}
                       </span>
@@ -182,14 +182,14 @@ export default function MenuPage({ params }: { params: { id: string } }) {
       </AnimatePresence>
 
       {/* Top Bar */}
-      <div className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-white/[0.08]">
+      <div className="sticky top-0 z-30 bg-gray-50/90 backdrop-blur-xl border-b border-white/[0.08]">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Sol: geri butonu (sadece kategori görünümünde) veya logo */}
           <div className="flex items-center gap-3">
             {view === 'category' ? (
               <button
                 onClick={goHome}
-                className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-all"
+                className="flex items-center gap-1.5 text-gray-400 hover:text-gray-900 transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -199,11 +199,11 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                 <img src={pl.logoUrl} alt={pl.brandName} className="w-8 h-8 rounded-lg object-cover" />
               ) : (
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
-                  <ShoppingBag className="w-4 h-4 text-white" />
+                  <ShoppingBag className="w-4 h-4 text-gray-900" />
                 </div>
               )}
             </button>
-            <span className="text-white font-bold text-sm">
+            <span className="text-gray-900 font-bold text-sm">
               {view === 'category' && selectedCat ? selectedCat.name : pl.brandName}
             </span>
           </div>
@@ -211,7 +211,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
           {/* Sağ: 3 çizgi */}
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+            className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -240,7 +240,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                     <img
                       src={pl.logoUrl}
                       alt={pl.brandName}
-                      className="relative w-24 h-24 rounded-3xl object-cover border-2 border-white/10 shadow-2xl"
+                      className="relative w-24 h-24 rounded-3xl object-cover border-2 border-gray-200 shadow-2xl"
                     />
                   </div>
                 </div>
@@ -249,12 +249,12 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                   <div className="relative">
                     <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
                     <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-2xl">
-                      <ShoppingBag className="w-10 h-10 text-white" />
+                      <ShoppingBag className="w-10 h-10 text-gray-900" />
                     </div>
                   </div>
                 </div>
               )}
-              <h1 className="text-3xl font-bold text-white mb-2">{pl.brandName}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{pl.brandName}</h1>
               {pl.brandDescription && (
                 <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">{pl.brandDescription}</p>
               )}
@@ -284,7 +284,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                     )}
                     <div className="p-4">
                       <p className="text-xs text-orange-400/80 mb-1.5">{item.categoryName}</p>
-                      <p className="text-white font-semibold text-sm mb-1 leading-tight">{item.name}</p>
+                      <p className="text-gray-900 font-semibold text-sm mb-1 leading-tight">{item.name}</p>
                       {item.description && (
                         <p className="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">{item.description}</p>
                       )}
@@ -319,7 +319,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                         </div>
                       )}
                       <div className="text-left">
-                        <span className="text-white font-medium text-sm block">{cat.name}</span>
+                        <span className="text-gray-900 font-medium text-sm block">{cat.name}</span>
                         <span className="text-gray-600 text-xs">{cat.items.length} ürün</span>
                       </div>
                     </div>
@@ -346,7 +346,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                 <span className="text-orange-400 text-sm font-bold">{selectedCat.items.length}</span>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">{selectedCat.name}</h2>
+                <h2 className="text-xl font-bold text-gray-900">{selectedCat.name}</h2>
                 <p className="text-gray-500 text-xs">{selectedCat.items.length} ürün</p>
               </div>
             </div>
@@ -365,7 +365,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                   )}
                   <div className="flex-1 min-w-0 flex items-center justify-between gap-3 px-4 py-4" style={{ paddingLeft: item.imageUrl ? '0' : undefined }}>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium text-sm">{item.name}</p>
+                      <p className="text-gray-900 font-medium text-sm">{item.name}</p>
                       {item.description && (
                         <p className="text-gray-500 text-xs mt-1 leading-relaxed">{item.description}</p>
                       )}
