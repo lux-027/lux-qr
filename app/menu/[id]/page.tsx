@@ -61,7 +61,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
       </div>
     );
@@ -69,8 +69,8 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   if (error || !pl) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400">{error || 'Menü yüklenemedi.'}</p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-gray-600">{error || 'Menü yüklenemedi.'}</p>
       </div>
     );
   }
@@ -98,7 +98,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-white text-gray-900">
 
       {/* Sidebar Overlay */}
       <AnimatePresence>
@@ -109,7 +109,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 bg-black/70 z-40 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
             />
             <motion.aside
               initial={{ x: '-100%' }}
@@ -141,8 +141,8 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               {/* Ana Sayfa linki */}
               <button
                 onClick={goHome}
-                className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-all border-b border-white/5 ${
-                  view === 'home' ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+                className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-all border-b border-gray-100 ${
+                  view === 'home' ? 'text-orange-500 bg-orange-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <Sparkles className="w-4 h-4 flex-shrink-0" />
@@ -158,15 +158,15 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                     onClick={() => openCategory(cat)}
                     className={`w-full flex items-center justify-between px-5 py-3.5 text-left transition-all ${
                       view === 'category' && selectedCat?.id === cat.id
-                        ? 'bg-orange-500/10 text-orange-400 border-r-2 border-orange-500'
-                        : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+                        ? 'bg-orange-50 text-orange-500 border-r-2 border-orange-500'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     <span className="font-medium text-sm">{cat.name}</span>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
                         view === 'category' && selectedCat?.id === cat.id
-                          ? 'bg-orange-500/20 text-orange-400'
+                          ? 'bg-orange-50 text-orange-500'
                           : 'bg-gray-50 text-gray-600'
                       }`}>
                         {cat.items.length}
@@ -182,14 +182,14 @@ export default function MenuPage({ params }: { params: { id: string } }) {
       </AnimatePresence>
 
       {/* Top Bar */}
-      <div className="sticky top-0 z-30 bg-gray-50/90 backdrop-blur-xl border-b border-white/[0.08]">
+      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Sol: geri butonu (sadece kategori görünümünde) veya logo */}
           <div className="flex items-center gap-3">
             {view === 'category' ? (
               <button
                 onClick={goHome}
-                className="flex items-center gap-1.5 text-gray-400 hover:text-gray-900 transition-all"
+                className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -211,7 +211,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
           {/* Sağ: 3 çizgi */}
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -236,7 +236,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               {pl.logoUrl ? (
                 <div className="flex justify-center mb-5">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
+                    <div className="absolute inset-0 bg-orange-50 blur-3xl rounded-full scale-150" />
                     <img
                       src={pl.logoUrl}
                       alt={pl.brandName}
@@ -247,7 +247,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               ) : (
                 <div className="flex justify-center mb-5">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-orange-500/15 blur-3xl rounded-full scale-150" />
+                    <div className="absolute inset-0 bg-orange-50 blur-3xl rounded-full scale-150" />
                     <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-2xl">
                       <ShoppingBag className="w-10 h-10 text-gray-900" />
                     </div>
@@ -256,15 +256,15 @@ export default function MenuPage({ params }: { params: { id: string } }) {
               )}
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{pl.brandName}</h1>
               {pl.brandDescription && (
-                <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">{pl.brandDescription}</p>
+                <p className="text-gray-600 text-sm max-w-xs mx-auto leading-relaxed">{pl.brandDescription}</p>
               )}
             </div>
 
             {/* Featured Section */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-4 h-4 text-orange-400" />
-                <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Öne Çıkanlar</h2>
+                <Sparkles className="w-4 h-4 text-orange-500" />
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">Öne Çıkanlar</h2>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {featured.map((item, i) => (
@@ -277,18 +277,18 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                       const cat = pl.categories.find(c => c.id === item.catId);
                       if (cat) openCategory(cat);
                     }}
-                    className="text-left bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden transition-all"
+                    className="text-left bg-white hover:bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden transition-all"
                   >
                     {item.imageUrl && (
                       <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
                     )}
                     <div className="p-4">
-                      <p className="text-xs text-orange-400/80 mb-1.5">{item.categoryName}</p>
+                      <p className="text-xs text-orange-500/80 mb-1.5">{item.categoryName}</p>
                       <p className="text-gray-900 font-semibold text-sm mb-1 leading-tight">{item.name}</p>
                       {item.description && (
                         <p className="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">{item.description}</p>
                       )}
-                      <p className="text-orange-400 font-bold">{symbol}{item.price}</p>
+                      <p className="text-orange-500 font-bold">{symbol}{item.price}</p>
                     </div>
                   </motion.button>
                 ))}
@@ -298,7 +298,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
             {/* Category Cards */}
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Kategoriler</h2>
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">Kategoriler</h2>
               </div>
               <div className="space-y-2">
                 {pl.categories.map((cat, i) => (
@@ -308,14 +308,14 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.05 }}
                     onClick={() => openCategory(cat)}
-                    className="w-full flex items-center justify-between bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] rounded-2xl overflow-hidden transition-all group"
+                    className="w-full flex items-center justify-between bg-white hover:bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden transition-all group"
                   >
                     <div className="flex items-center gap-3 px-5 py-4">
                       {cat.imageUrl ? (
                         <img src={cat.imageUrl} alt={cat.name} className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
                       ) : (
-                        <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center flex-shrink-0">
-                          <span className="text-orange-400 text-xs font-bold">{cat.items.length}</span>
+                        <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center flex-shrink-0">
+                          <span className="text-orange-500 text-xs font-bold">{cat.items.length}</span>
                         </div>
                       )}
                       <div className="text-left">
@@ -323,7 +323,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                         <span className="text-gray-600 text-xs">{cat.items.length} ürün</span>
                       </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-all mr-4" />
+                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-600 transition-all mr-4" />
                   </motion.button>
                 ))}
               </div>
@@ -342,8 +342,8 @@ export default function MenuPage({ params }: { params: { id: string } }) {
             className="max-w-2xl mx-auto px-4 pb-20 pt-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center flex-shrink-0">
-                <span className="text-orange-400 text-sm font-bold">{selectedCat.items.length}</span>
+              <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center flex-shrink-0">
+                <span className="text-orange-500 text-sm font-bold">{selectedCat.items.length}</span>
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">{selectedCat.name}</h2>
@@ -358,7 +358,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-4 bg-white/[0.04] border border-white/[0.07] rounded-2xl overflow-hidden"
+                  className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl overflow-hidden"
                 >
                   {item.imageUrl && (
                     <img src={item.imageUrl} alt={item.name} className="w-20 h-20 object-cover flex-shrink-0" />
@@ -370,7 +370,7 @@ export default function MenuPage({ params }: { params: { id: string } }) {
                         <p className="text-gray-500 text-xs mt-1 leading-relaxed">{item.description}</p>
                       )}
                     </div>
-                    <span className="text-orange-400 font-bold text-base flex-shrink-0 tabular-nums">
+                    <span className="text-orange-500 font-bold text-base flex-shrink-0 tabular-nums">
                       {symbol}{item.price}
                     </span>
                   </div>

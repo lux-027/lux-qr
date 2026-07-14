@@ -882,6 +882,14 @@ button, input, textarea, select {
 
 }
 
+@keyframes drift {
+
+  0% { transform: translate(0, 0); }
+
+  100% { transform: translate(var(--drift-x), var(--drift-y)); }
+
+}
+
 
 
 /* ─── Tech grid pattern overlay ──────────────────────────── */

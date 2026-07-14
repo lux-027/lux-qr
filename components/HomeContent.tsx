@@ -2,25 +2,28 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, ChevronLeft, ChevronRight, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink } from 'lucide-react';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const BlogSlider = dynamic(() => import('@/components/BlogSlider'), {
   ssr: false,
   loading: () => <div className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
 });
 
-const qrCategories = [
-  { title: 'Metin',             description: 'Metin içeriğinizi QR koda dönüştürün',                            icon: Type,        href: '/qr/metin',         color: 'from-blue-500 to-purple-500',   iconColor: '#6366f1' },
-  { title: 'Resim/Video/Belge', description: 'Resim, video ve belge yükleyerek QR kod oluşturun',               icon: ImageIcon,   href: '/qr/metin-belge',   color: 'from-purple-500 to-pink-500',   iconColor: '#a855f7' },
+const basicQrCategories = [
+  { title: 'Metin',             description: 'Metin içeriğinizi QR koda dönüştürün',                              icon: Type,        href: '/qr/metin',         color: 'from-blue-500 to-purple-500',   iconColor: '#6366f1' },
+  { title: 'Resim/Video/Belge', description: 'Resim, video ve belge yükleyerek QR kod oluşturun',                 icon: ImageIcon,   href: '/qr/metin-belge',   color: 'from-purple-500 to-pink-500',   iconColor: '#a855f7' },
+  { title: 'Ses Dosyası',       description: 'Ses dosyalarınız yükleyerek QR kod oluşturun',                      icon: Mic,         href: '/qr/ses-dosyasi',   color: 'from-green-500 to-emerald-500', iconColor: '#22c55e' },
+  { title: 'WiFi',              description: 'WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın',                 icon: Wifi,        href: '/qr/wifi',          color: 'from-pink-500 to-rose-500',     iconColor: '#ec4899' },
+  { title: 'IBAN',              description: 'IBAN bilgilerinizi QR kod ile kolayca paylaşın',                    icon: Landmark,    href: '/qr/iban',          color: 'from-blue-500 to-cyan-500',     iconColor: '#3b82f6' },
+];
+
+const advancedQrCategories = [
   { title: 'Kartvizit',         description: 'vCard formatında dijital kartvizit oluşturun ve paylaşın',         icon: CreditCard,  href: '/qr/kartvizit',     color: 'from-cyan-500 to-blue-500',     iconColor: '#06b6d4' },
-  { title: 'WiFi',              description: 'WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın',               icon: Wifi,        href: '/qr/wifi',          color: 'from-pink-500 to-rose-500',     iconColor: '#ec4899' },
-  { title: 'Sosyal Medya',      description: 'Instagram, TikTok ve Link-in-bio sayfalarınız için QR kod',       icon: Share2,      href: '/qr/sosyal-medya',  color: 'from-orange-500 to-red-500',    iconColor: '#f97316' },
-  { title: 'Ses Dosyası',       description: 'Ses dosyalarınız yükleyerek QR kod oluşturun',                    icon: Mic,         href: '/qr/ses-dosyasi',   color: 'from-green-500 to-emerald-500', iconColor: '#22c55e' },
-  { title: 'IBAN',              description: 'IBAN bilgilerinizi QR kod ile kolayca paylaşın',                  icon: Landmark,    href: '/qr/iban',          color: 'from-blue-500 to-cyan-500',     iconColor: '#3b82f6' },
+  { title: 'Sosyal Medya',      description: 'Instagram, TikTok ve Link-in-bio sayfalarınız için QR kod',        icon: Share2,      href: '/qr/sosyal-medya',  color: 'from-orange-500 to-red-500',    iconColor: '#f97316' },
   { title: 'Fiyat Listesi',     description: 'Restoran menüsü, hizmet ve ürün fiyat listenizi QR koda dönüştürün', icon: ShoppingBag, href: '/qr/fiyat-listesi', color: 'from-orange-500 to-amber-500',  iconColor: '#f59e0b' },
-  { title: 'Bio Link',          description: 'Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın',   icon: ExternalLink, href: '/qr/bio-link',     color: 'from-emerald-500 to-teal-500',  iconColor: '#10b981' },
+  { title: 'Bio Link',          description: 'Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın',    icon: ExternalLink, href: '/qr/bio-link',     color: 'from-emerald-500 to-teal-500',  iconColor: '#10b981' },
 ];
 
 function HeroCanvas() {
@@ -111,21 +114,6 @@ function HeroCanvas() {
 
 export default function HomeContent() {
   const [openFaq, setOpenFaq] = useState<string | null>(null);
-  const [catIndex, setCatIndex] = useState(0);
-  const [catPerPage, setCatPerPage] = useState(3);
-
-  useEffect(() => {
-    const onResize = () => setCatPerPage(window.innerWidth < 768 ? 1 : 3);
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-  const maxCatIndex = Math.max(0, qrCategories.length - catPerPage);
-
-  useEffect(() => {
-    if (catIndex > maxCatIndex) setCatIndex(maxCatIndex);
-  }, [catIndex, maxCatIndex]);
 
   const faqCategories = [
     {
@@ -175,7 +163,7 @@ export default function HomeContent() {
     >
       <div className="px-4 max-w-7xl mx-auto">
         {/* ── Hero ─────────────────────────────────────────────── */}
-        <section className="relative flex flex-col items-center justify-center text-center pt-36 pb-28 md:pt-60 md:pb-52 overflow-hidden">
+        <section className="relative flex flex-col items-center justify-center text-center pt-36 pb-28 md:pt-60 md:pb-52 overflow-visible md:overflow-hidden w-screen left-1/2 -translate-x-1/2">
 
           {/* RGB wave + micro-star canvas */}
           <HeroCanvas />
@@ -204,12 +192,15 @@ export default function HomeContent() {
 
             {/* wordmark */}
             <h1
-              className="font-black tracking-tight leading-[0.92] select-none mb-6"
-              style={{ fontSize: 'clamp(3.8rem, 12vw, 10rem)' }}
+              className="text-7xl md:text-8xl font-black tracking-tight leading-[0.92] select-none mb-6"
+              style={{
+                background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
             >
-              <span className="animate-gradient-text">
-                LuxQr
-              </span>
+              LuxQr
             </h1>
 
             {/* tagline */}
@@ -279,52 +270,86 @@ export default function HomeContent() {
 
         {/* QR Category Cards */}
         <div className="mb-16">
-          <div className="relative">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${catIndex * (100 / qrCategories.length)}%)` }}
+          <h2 className="flex items-center justify-center gap-2 text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
+            <span className="inline-flex p-1.5 md:p-2 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-md shadow-blue-500/20">
+              <QrCode className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            </span>
+            <span className="text-gradient">Temel QR</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10 md:mb-12">
+            {basicQrCategories.map((category, index) => (
+              <motion.div
+                key={category.href}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.03 * index, duration: 0.2 }}
               >
-                {qrCategories.map((category, index) => (
-                  <div key={category.href} className="flex-shrink-0 w-full md:w-1/3 px-1.5 md:px-3">
-                    <Link href={category.href}>
-                      <div className="card-premium overflow-hidden h-full flex flex-col group">
-                        <div className={`relative h-32 md:h-40 flex items-center justify-center overflow-hidden bg-gradient-to-br ${category.color}`}>
-                          <category.icon className="w-12 h-12 md:w-16 md:h-16 text-white drop-shadow-lg transition-transform duration-300 group-hover:scale-110" strokeWidth={1.2} />
-                        </div>
-                        <div className="p-3 md:p-4 flex-1 flex flex-col">
-                          <h2 className="text-sm md:text-base font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-gradient transition-colors">
-                            {category.title}
-                          </h2>
-                          <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
-                            {category.description}
-                          </p>
-                        </div>
+                <Link href={category.href}>
+                  <div className="card-premium group relative overflow-hidden h-full p-4 md:p-6 min-h-[140px] md:min-h-auto">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                    <div className="absolute -bottom-4 -right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" style={{ opacity: 0.22, color: category.iconColor }}>
+                      <category.icon className="w-full h-full" strokeWidth={1.2} />
+                    </div>
+                    <div className="relative">
+                      <div className={`inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br ${category.color} mb-2 md:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md md:shadow-lg`}>
+                        <category.icon className="w-5 h-5 md:w-7 md:h-7 text-gray-900" />
                       </div>
-                    </Link>
+                      <h2 className="text-sm md:text-xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-gradient transition-colors">
+                        {category.title}
+                      </h2>
+                      <p className="text-gray-700 mb-2 md:mb-4 leading-relaxed text-xs md:text-sm">
+                        {category.description}
+                      </p>
+                      <div className="flex items-center text-blue-400 font-semibold group-hover:translate-x-2 transition-transform duration-300 text-xs md:text-sm">
+                        <span>Başla</span>
+                        <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2" />
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
 
-            <div className="flex justify-center gap-2 mt-4 md:mt-6">
-              <button
-                onClick={() => setCatIndex(i => Math.max(0, i - 1))}
-                disabled={catIndex === 0}
-                className="p-2 rounded-full btn-secondary disabled:opacity-40"
-                aria-label="Önceki"
+          <h2 className="flex items-center justify-center gap-2 text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
+            <span className="inline-flex p-1.5 md:p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 ring-2 ring-white/20">
+              <QrCode className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            </span>
+            <span className="text-gradient">Gelişmiş QR</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {advancedQrCategories.map((category, index) => (
+              <motion.div
+                key={category.href}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.03 * index, duration: 0.2 }}
               >
-                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button
-                onClick={() => setCatIndex(i => Math.min(maxCatIndex, i + 1))}
-                disabled={catIndex >= maxCatIndex}
-                className="p-2 rounded-full btn-secondary disabled:opacity-40"
-                aria-label="Sonraki"
-              >
-                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-            </div>
+                <Link href={category.href}>
+                  <div className="card-premium group relative overflow-hidden h-full p-4 md:p-6 min-h-[140px] md:min-h-auto">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                    <div className="absolute -bottom-4 -right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" style={{ opacity: 0.22, color: category.iconColor }}>
+                      <category.icon className="w-full h-full" strokeWidth={1.2} />
+                    </div>
+                    <div className="relative">
+                      <div className={`inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br ${category.color} mb-2 md:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md md:shadow-lg`}>
+                        <category.icon className="w-5 h-5 md:w-7 md:h-7 text-gray-900" />
+                      </div>
+                      <h2 className="text-sm md:text-xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-gradient transition-colors">
+                        {category.title}
+                      </h2>
+                      <p className="text-gray-700 mb-2 md:mb-4 leading-relaxed text-xs md:text-sm">
+                        {category.description}
+                      </p>
+                      <div className="flex items-center text-blue-400 font-semibold group-hover:translate-x-2 transition-transform duration-300 text-xs md:text-sm">
+                        <span>Başla</span>
+                        <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
 

@@ -22,7 +22,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const [showOtherActions, setShowOtherActions] = useState(false);
   const [qrColor, setQrColor] = useState<'black' | 'neon' | 'sunset' | 'arctic' | 'berry'>('black');
 
-  const luxCenterLogo = `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="100"><rect width="220" height="100" rx="28" fill="#ffffff"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" fill="#0f172a" letter-spacing="12">L U X</text></svg>`) : ''}`;
+  const getLuxCenterLogo = (textColor: string) =>
+    `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="100"><rect width="220" height="100" rx="28" fill="#ffffff"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" fill="${textColor}" letter-spacing="12">L U X</text></svg>`) : ''}`;
 
   const colorThemes: Record<typeof qrColor, { stops: { offset: number; color: string }[]; label: string }> = {
     black: { label: 'Siyah', stops: [{ offset: 0, color: '#000000' }, { offset: 0.5, color: '#374151' }, { offset: 1, color: '#000000' }] },
@@ -34,6 +35,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
   const generateStyledQR = async (data: string): Promise<string> => {
     const gradientStops = colorThemes[qrColor].stops;
+    const logoTextColor = gradientStops[1]?.color || '#000000';
+    const luxCenterLogo = getLuxCenterLogo(logoTextColor);
 
     const qr = new QRCodeStyling({
       width: 256,
@@ -930,30 +933,40 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               <p className="text-xs md:text-sm text-gray-600 font-medium">QR Modları</p>
             </div>
             {(() => {
-                const basicTypes = ['text', 'media', 'audio'];
-                const isBasic = basicTypes.includes(qrData?.contentType);
                 const basicLinks = [
                   { href: '/qr/metin', label: 'Metin', icon: Type, color: 'text-blue-400' },
                   { href: '/qr/metin-belge', label: 'Resim / Video / Belge', icon: FileText, color: 'text-violet-400' },
                   { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-400' },
+                  { href: '/qr/wifi', label: 'WiFi', icon: Wifi, color: 'text-emerald-400' },
+                  { href: '/qr/iban', label: 'IBAN', icon: Landmark, color: 'text-yellow-400' },
                 ];
                 const advancedLinks = [
                   { href: '/qr/kartvizit', label: 'Kartvizit', icon: Building2, color: 'text-cyan-400' },
-                  { href: '/qr/wifi', label: 'WiFi', icon: Wifi, color: 'text-emerald-400' },
                   { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2, color: 'text-pink-400' },
-                  { href: '/qr/iban', label: 'IBAN', icon: Landmark, color: 'text-yellow-400' },
                   { href: '/qr/fiyat-listesi', label: 'Fiyat Listesi', icon: ShoppingBag, color: 'text-rose-400' },
                   { href: '/qr/bio-link', label: 'Bio Link', icon: ExternalLink, color: 'text-emerald-400' },
                 ];
-                const links = isBasic ? basicLinks : advancedLinks;
+                const renderLinks = (links: any[]) =>
+                  links.map((item) => (
+                    <Link key={item.href} href={item.href} className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900 text-xs md:text-sm transition-colors">
+                      <item.icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${item.color} flex-shrink-0`} />
+                      <span>{item.label}</span>
+                    </Link>
+                  ));
                 return (
-                  <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
-                    {links.map((item) => (
-                      <Link key={item.href} href={item.href} className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900 text-xs md:text-sm transition-colors">
-                        <item.icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${item.color} flex-shrink-0`} />
-                        <span>{item.label}</span>
-                      </Link>
-                    ))}
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Temel QR</p>
+                      <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
+                        {renderLinks(basicLinks)}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Gelişmiş QR</p>
+                      <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
+                        {renderLinks(advancedLinks)}
+                      </div>
+                    </div>
                   </div>
                 );
               })()}

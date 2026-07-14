@@ -45,8 +45,8 @@ export default function PriceListPage({ content }: { content: string }) {
 
   if (!pl) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <p className="text-gray-400">Fiyat listesi yüklenemedi.</p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-gray-600">Fiyat listesi yüklenemedi.</p>
       </div>
     );
   }
@@ -77,13 +77,13 @@ export default function PriceListPage({ content }: { content: string }) {
   };
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen bg-white">
 
       {/* Top Bar */}
       <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-200">
         <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-gray-400 hover:text-gray-900 transition-all">
+            <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-gray-600 hover:text-gray-900 transition-all">
               <Menu className="w-6 h-6" />
             </button>
             <Link href="/" className="flex items-center gap-2.5">
@@ -93,17 +93,17 @@ export default function PriceListPage({ content }: { content: string }) {
               <span className="text-gray-900 font-bold text-lg">LuxQr</span>
             </Link>
           </div>
-          <button onClick={() => router.back()} className="flex items-center gap-1.5 text-gray-400 hover:text-gray-900 text-sm transition-all">
+          <button onClick={() => router.back()} className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 text-sm transition-all">
             <ChevronLeft className="w-5 h-5" />
             <span className="hidden sm:inline">Geri</span>
           </button>
         </div>
         {menuOpen && (
-          <div className="max-w-2xl mx-auto px-4 pb-3 border-t border-white/5 pt-2">
-            <Link href="/" className="flex items-center gap-2 py-2 text-gray-400 hover:text-gray-900 text-sm transition-all" onClick={() => setMenuOpen(false)}>
+          <div className="max-w-2xl mx-auto px-4 pb-3 border-t border-gray-100 pt-2">
+            <Link href="/" className="flex items-center gap-2 py-2 text-gray-600 hover:text-gray-900 text-sm transition-all" onClick={() => setMenuOpen(false)}>
               <QrCode className="w-4 h-4" /> QR Kod Oluştur
             </Link>
-            <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-400 hover:text-gray-900 text-sm transition-all" onClick={() => setMenuOpen(false)}>
+            <Link href="/blog" className="flex items-center gap-2 py-2 text-gray-600 hover:text-gray-900 text-sm transition-all" onClick={() => setMenuOpen(false)}>
               <FileText className="w-4 h-4" /> Blog
             </Link>
           </div>
@@ -117,14 +117,14 @@ export default function PriceListPage({ content }: { content: string }) {
           {pl.logoUrl ? (
             <div className="flex justify-center mb-5">
               <div className="relative">
-                <div className="absolute inset-0 bg-orange-500/20 blur-2xl rounded-full scale-150" />
-                <img src={pl.logoUrl} alt={pl.brandName} className="relative w-24 h-24 rounded-2xl object-cover border-2 border-white/15 shadow-2xl" />
+                <div className="absolute inset-0 bg-orange-50 blur-2xl rounded-full scale-150" />
+                <img src={pl.logoUrl} alt={pl.brandName} className="relative w-24 h-24 rounded-2xl object-cover border-2 border-gray-100 shadow-2xl" />
               </div>
             </div>
           ) : (
             <div className="flex justify-center mb-5">
               <div className="relative">
-                <div className="absolute inset-0 bg-orange-500/20 blur-2xl rounded-full scale-150" />
+                <div className="absolute inset-0 bg-orange-50 blur-2xl rounded-full scale-150" />
                 <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-2xl">
                   <ShoppingBag className="w-10 h-10 text-gray-900" />
                 </div>
@@ -134,11 +134,11 @@ export default function PriceListPage({ content }: { content: string }) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="text-gray-500 text-xs font-medium tracking-wider uppercase">LuxQr</span>
             <span className="text-gray-600">×</span>
-            <span className="text-gray-400 text-xs font-medium tracking-wider uppercase">{pl.brandName}</span>
+            <span className="text-gray-600 text-xs font-medium tracking-wider uppercase">{pl.brandName}</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{pl.brandName}</h1>
           {pl.brandDescription && (
-            <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">{pl.brandDescription}</p>
+            <p className="text-gray-600 text-sm max-w-xs mx-auto leading-relaxed">{pl.brandDescription}</p>
           )}
           <div className="flex items-center justify-center gap-6 mt-5">
             <div className="text-center">
@@ -152,7 +152,7 @@ export default function PriceListPage({ content }: { content: string }) {
             </div>
             <div className="w-px h-8 bg-gray-100" />
             <div className="text-center">
-              <p className="text-xl font-bold text-orange-400">{symbol}</p>
+              <p className="text-xl font-bold text-orange-500">{symbol}</p>
               <p className="text-gray-500 text-xs mt-0.5">{pl.currency}</p>
             </div>
           </div>
@@ -170,8 +170,8 @@ export default function PriceListPage({ content }: { content: string }) {
               }}
               className={`flex-shrink-0 px-4 py-1.5 rounded-full border text-sm transition-all whitespace-nowrap ${
                 openCats.includes(cat.id)
-                  ? 'border-orange-500/50 bg-orange-500/15 text-orange-300'
-                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-300'
+                  ? 'border-orange-500/50 bg-orange-50 text-orange-500'
+                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-600'
               }`}
             >
               {cat.name}
@@ -194,10 +194,10 @@ export default function PriceListPage({ content }: { content: string }) {
           return (
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-6">
               <div className="flex items-center gap-2 mb-3 px-1">
-                <Tag className="w-4 h-4 text-orange-400" />
+                <Tag className="w-4 h-4 text-orange-500" />
                 <h2 className="text-sm font-semibold text-gray-900">Öne Çıkan Ürünler</h2>
                 {discounted.length > 0 && (
-                  <span className="ml-auto text-[10px] text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
+                  <span className="ml-auto text-[10px] text-red-500 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">
                     {discounted.length} indirimli
                   </span>
                 )}
@@ -217,14 +217,14 @@ export default function PriceListPage({ content }: { content: string }) {
                         <div className="relative">
                           <img src={item.imageUrl} alt={item.name} className="w-full h-28 object-cover" />
                           {hasDiscount && pct && (
-                            <div className="absolute top-2 left-2 bg-red-500 text-gray-900 text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
+                            <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-lg leading-none shadow">
                               %{pct}
                             </div>
                           )}
                         </div>
                       ) : hasDiscount && pct ? (
-                        <div className="h-10 flex items-center px-3 bg-red-500/10 border-b border-red-500/20">
-                          <span className="text-red-400 text-xs font-bold">%{pct} İndirim</span>
+                        <div className="h-10 flex items-center px-3 bg-red-50 border-b border-red-100">
+                          <span className="text-red-500 text-xs font-bold">%{pct} İndirim</span>
                         </div>
                       ) : null}
                       <div className="p-3">
@@ -233,10 +233,10 @@ export default function PriceListPage({ content }: { content: string }) {
                         {hasDiscount ? (
                           <div>
                             <p className="text-gray-500 text-[10px] line-through tabular-nums">{symbol}{fmt(item.price)}</p>
-                            <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{finalPrice}</p>
+                            <p className="text-orange-500 font-bold text-sm tabular-nums">{symbol}{finalPrice}</p>
                           </div>
                         ) : (
-                          <p className="text-orange-400 font-bold text-sm tabular-nums">{symbol}{fmt(item.price)}</p>
+                          <p className="text-orange-500 font-bold text-sm tabular-nums">{symbol}{fmt(item.price)}</p>
                         )}
                       </div>
                     </button>
@@ -258,7 +258,7 @@ export default function PriceListPage({ content }: { content: string }) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.07 }}
-                className="rounded-2xl overflow-hidden border border-gray-200 bg-white/[0.03]"
+                className="rounded-2xl overflow-hidden border border-gray-200 bg-white"
               >
                 {/* Category Header */}
                 <button
@@ -269,8 +269,8 @@ export default function PriceListPage({ content }: { content: string }) {
                     {cat.imageUrl ? (
                       <img src={cat.imageUrl} alt={cat.name} className="w-9 h-9 rounded-xl object-cover flex-shrink-0 border border-gray-200" />
                     ) : (
-                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-orange-400 text-xs font-bold">{cat.items.length}</span>
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-100 flex items-center justify-center flex-shrink-0">
+                        <span className="text-orange-500 text-xs font-bold">{cat.items.length}</span>
                       </div>
                     )}
                     <div className="text-left">
@@ -293,7 +293,7 @@ export default function PriceListPage({ content }: { content: string }) {
                       transition={{ duration: 0.25 }}
                       className="overflow-hidden"
                     >
-                      <div className="border-t border-gray-200 divide-y divide-white/5">
+                      <div className="border-t border-gray-200 divide-y divide-gray-100">
                         {cat.items.map((item) => {
                           const hasDiscount = hasItemDiscount(item);
                           const finalPrice = getFinalPrice(item);
@@ -308,14 +308,14 @@ export default function PriceListPage({ content }: { content: string }) {
                                 <div className="relative flex-shrink-0">
                                   <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded-xl object-cover border border-gray-200" />
                                   {hasDiscount && (
-                                    <div className="absolute -top-1.5 -left-1.5 bg-red-500 text-gray-900 text-[9px] font-bold px-1 py-0.5 rounded-md shadow leading-none">
+                                    <div className="absolute -top-1.5 -left-1.5 bg-red-500 text-white text-[9px] font-bold px-1 py-0.5 rounded-md shadow leading-none">
                                       %{getDiscountPercent(item)}
                                     </div>
                                   )}
                                 </div>
                               ) : hasDiscount ? (
-                                <div className="flex-shrink-0 bg-red-500/20 border border-red-500/30 rounded-lg px-1.5 py-0.5">
-                                  <span className="text-red-400 text-[10px] font-bold">%{getDiscountPercent(item)}</span>
+                                <div className="flex-shrink-0 bg-red-50 border border-red-100 rounded-lg px-1.5 py-0.5">
+                                  <span className="text-red-500 text-[10px] font-bold">%{getDiscountPercent(item)}</span>
                                 </div>
                               ) : null}
 
@@ -332,10 +332,10 @@ export default function PriceListPage({ content }: { content: string }) {
                                 {hasDiscount ? (
                                   <>
                                     <p className="text-gray-500 text-xs line-through tabular-nums">{symbol}{fmt(item.price)}</p>
-                                    <p className="text-orange-400 font-bold text-base tabular-nums">{symbol}{finalPrice}</p>
+                                    <p className="text-orange-500 font-bold text-base tabular-nums">{symbol}{finalPrice}</p>
                                   </>
                                 ) : (
-                                  <p className="text-orange-400 font-bold text-base tabular-nums">{symbol}{fmt(item.price)}</p>
+                                  <p className="text-orange-500 font-bold text-base tabular-nums">{symbol}{fmt(item.price)}</p>
                                 )}
                               </div>
                             </button>
@@ -356,10 +356,10 @@ export default function PriceListPage({ content }: { content: string }) {
             <div className="w-5 h-5 rounded-md bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
               <QrCode className="w-3 h-3 text-gray-900" />
             </div>
-            <span className="text-gray-400 text-sm font-medium">LuxQr</span>
+            <span className="text-gray-600 text-sm font-medium">LuxQr</span>
           </div>
           <p className="text-gray-600 text-xs">Bu sayfa LuxQr ile oluşturulmuştur</p>
-          <Link href="/" className="inline-block mt-3 text-xs text-blue-400/70 hover:text-blue-400 transition-colors">
+          <Link href="/" className="inline-block mt-3 text-xs text-blue-600/70 hover:text-blue-600 transition-colors">
             Sen de ücretsiz QR oluştur →
           </Link>
         </div>
@@ -388,24 +388,24 @@ export default function PriceListPage({ content }: { content: string }) {
                 <div className="relative">
                   <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-52 object-cover" />
                   {hasItemDiscount(selectedItem) && (
-                    <div className="absolute top-3 left-3 bg-red-500 text-gray-900 text-sm font-bold px-2.5 py-1 rounded-xl shadow-lg flex items-center gap-1">
+                    <div className="absolute top-3 left-3 bg-red-500 text-white text-sm font-bold px-2.5 py-1 rounded-xl shadow-lg flex items-center gap-1">
                       <Tag className="w-3.5 h-3.5" />
                       %{getDiscountPercent(selectedItem)} İndirim
                     </div>
                   )}
                   <button
                     onClick={() => setSelectedItem(null)}
-                    className="absolute top-3 right-3 w-8 h-8 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-900 hover:bg-black/70 transition-all"
+                    className="absolute top-3 right-3 w-8 h-8 bg-gray-100 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-200 transition-all"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
-                <div className="relative flex items-center justify-center h-28 bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-b border-gray-200">
-                  <ShoppingBag className="w-12 h-12 text-orange-400/40" />
+                <div className="relative flex items-center justify-center h-28 bg-gradient-to-br from-orange-50 to-amber-50 border-b border-gray-200">
+                  <ShoppingBag className="w-12 h-12 text-orange-500" />
                   <button
                     onClick={() => setSelectedItem(null)}
-                    className="absolute top-3 right-3 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-900 hover:bg-white/20 transition-all"
+                    className="absolute top-3 right-3 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-100 transition-all"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -417,23 +417,23 @@ export default function PriceListPage({ content }: { content: string }) {
                 <p className="text-gray-500 text-xs font-medium uppercase tracking-wider mb-1">{selectedItem.categoryName}</p>
                 <h2 className="text-gray-900 text-xl font-bold mb-2">{selectedItem.name}</h2>
                 {selectedItem.description && (
-                  <p className="text-gray-400 text-sm leading-relaxed mb-4">{selectedItem.description}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{selectedItem.description}</p>
                 )}
 
                 {/* Price */}
                 <div className="flex items-center justify-between bg-gray-50 rounded-2xl px-4 py-3">
-                  <span className="text-gray-400 text-sm">Fiyat</span>
+                  <span className="text-gray-600 text-sm">Fiyat</span>
                   {hasItemDiscount(selectedItem) ? (
                     <div className="text-right">
                       <p className="text-gray-500 text-xs line-through tabular-nums">
                         {symbol}{fmt(selectedItem.price)}
                       </p>
-                      <p className="text-orange-400 font-bold text-xl tabular-nums">
+                      <p className="text-orange-500 font-bold text-xl tabular-nums">
                         {symbol}{getFinalPrice(selectedItem)}
                       </p>
                     </div>
                   ) : (
-                    <p className="text-orange-400 font-bold text-xl tabular-nums">{symbol}{fmt(selectedItem.price)}</p>
+                    <p className="text-orange-500 font-bold text-xl tabular-nums">{symbol}{fmt(selectedItem.price)}</p>
                   )}
                 </div>
               </div>

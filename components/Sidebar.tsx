@@ -6,8 +6,8 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-import { X, Globe2, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink, ChevronDown, Star } from 'lucide-react';
-
+import { X, Globe2, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink, ChevronDown, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import Image from 'next/image';
 import ShareButton from './ShareButton';
 
 import { useState, useEffect } from 'react';
@@ -20,11 +20,15 @@ interface SidebarProps {
 
   setIsOpen: (isOpen: boolean) => void;
 
+  isCollapsed?: boolean;
+
+  setIsCollapsed?: (isCollapsed: boolean) => void;
+
 }
 
 
 
-export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsCollapsed }: SidebarProps) {
 
   const pathname = usePathname();
 
@@ -37,6 +41,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const [qrOpen, setQrOpen] = useState(false);
 
   const [qrOpen2, setQrOpen2] = useState(false);
+
+  const [expandReady, setExpandReady] = useState(false);
 
 
 
@@ -59,6 +65,24 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     else if (advancedHrefs.includes(pathname)) setQrOpen2(true);
 
   }, [pathname]);
+
+  // Show expand button only after sidebar closing transition finishes
+
+  useEffect(() => {
+
+    if (!isCollapsed) {
+
+      setExpandReady(false);
+
+      return;
+
+    }
+
+    const timer = setTimeout(() => setExpandReady(true), 350);
+
+    return () => clearTimeout(timer);
+
+  }, [isCollapsed]);
 
 
 
@@ -140,13 +164,23 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
       <div
 
-        className={`fixed top-0 left-0 h-full w-64 bg-white/95 backdrop-blur-md z-50 border-r border-black/08 shadow-xl transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col  ${
+        className={`fixed top-0 left-0 h-full w-64 bg-white/95 backdrop-blur-md z-50 border-r border-black/08 shadow-xl transition-transform duration-300 ease-in-out flex flex-col ${
 
           isOpen ? 'translate-x-0' : '-translate-x-full'
 
-        }`}
+        } ${isCollapsed ? 'md:-translate-x-full' : 'md:translate-x-0'}`}
 
       >
+
+        {/* Desktop collapse toggle */}
+        <button
+          type="button"
+          onClick={() => setIsCollapsed?.(!isCollapsed)}
+          className="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white text-white shadow-2xl items-center justify-center hover:scale-110 hover:shadow-blue-500/30 transition-all"
+          aria-label="Sol barı daralt"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
 
         {/* Logo */}
 
@@ -154,17 +188,13 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
           <div className="flex items-center gap-6">
 
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
 
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-400 shadow-lg flex items-center justify-center">
-
-                <QrCode className="w-6 h-6 text-white" />
-
-              </div>
+              <Image src="/luxqrlogo1.png" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
 
               <span className="text-2xl font-bold text-gradient">LuxQr</span>
 
-            </div>
+            </Link>
 
             <ShareButton />
 
@@ -541,6 +571,16 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </div>
 
       </div>
+
+      {/* Desktop expand tab when collapsed */}
+      <button
+        type="button"
+        onClick={() => setIsCollapsed?.(false)}
+        className={`hidden md:fixed md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-50 md:w-10 md:h-10 md:rounded-full md:bg-gradient-to-br md:from-blue-500 md:to-indigo-600 md:text-white md:border-2 md:border-white md:shadow-2xl md:items-center md:justify-center md:hover:scale-110 md:transition-transform md:translate-x-1/2 ${expandReady ? 'md:flex' : 'md:hidden'}`}
+        aria-label="Sol barı aç"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
 
     </>
 
