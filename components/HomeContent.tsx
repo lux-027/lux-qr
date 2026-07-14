@@ -2,9 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink } from 'lucide-react';
+import { QrCode, Type, CreditCard, Wifi, Share2, Mic, ArrowRight, Sparkles, Zap, Shield, HelpCircle, ChevronDown, ChevronLeft, ChevronRight, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const BlogSlider = dynamic(() => import('@/components/BlogSlider'), {
   ssr: false,
@@ -51,56 +51,58 @@ function HeroCanvas() {
           35%      { transform: translate(70px,20px) scale(1.12); }
           65%      { transform: translate(-30px,-50px) scale(0.95); }
         }
+        .hblob-1 { width: 240px; height: 160px; filter: blur(20px); }
+        .hblob-2 { width: 200px; height: 140px; filter: blur(18px); }
+        .hblob-3 { width: 180px; height: 120px; filter: blur(16px); }
+        .hblob-4 { width: 170px; height: 120px; filter: blur(16px); }
+        .hblob-5 { width: 320px; height: 100px; filter: blur(24px); }
+        @media (min-width: 768px) {
+          .hblob-1 { width: 420px; height: 260px; filter: blur(32px); }
+          .hblob-2 { width: 360px; height: 220px; filter: blur(28px); }
+          .hblob-3 { width: 300px; height: 200px; filter: blur(24px); }
+          .hblob-4 { width: 280px; height: 190px; filter: blur(26px); }
+          .hblob-5 { width: 560px; height: 160px; filter: blur(40px); }
+        }
       `}</style>
 
       {/* blob 1 — vivid blue */}
-      <div style={{
+      <div className="hblob-1" style={{
         position:'absolute', pointerEvents:'none', zIndex:0,
         top:'-80px', left:'5%',
-        width:'420px', height:'260px',
         borderRadius:'50%',
         background:'radial-gradient(ellipse, rgba(59,130,246,0.28) 0%, transparent 70%)',
-        filter:'blur(32px)',
         animation:'hblob1 9s ease-in-out infinite',
       }}/>
       {/* blob 2 — electric violet */}
-      <div style={{
+      <div className="hblob-2" style={{
         position:'absolute', pointerEvents:'none', zIndex:0,
         top:'-60px', left:'30%',
-        width:'360px', height:'220px',
         borderRadius:'50%',
         background:'radial-gradient(ellipse, rgba(124,58,237,0.22) 0%, transparent 70%)',
-        filter:'blur(28px)',
         animation:'hblob2 11s ease-in-out infinite',
       }}/>
       {/* blob 3 — cyan */}
-      <div style={{
+      <div className="hblob-3" style={{
         position:'absolute', pointerEvents:'none', zIndex:0,
         top:'-40px', left:'55%',
-        width:'300px', height:'200px',
         borderRadius:'50%',
         background:'radial-gradient(ellipse, rgba(6,182,212,0.20) 0%, transparent 70%)',
-        filter:'blur(24px)',
         animation:'hblob3 8s ease-in-out infinite',
       }}/>
       {/* blob 4 — hot pink */}
-      <div style={{
+      <div className="hblob-4" style={{
         position:'absolute', pointerEvents:'none', zIndex:0,
         top:'-70px', right:'8%',
-        width:'280px', height:'190px',
         borderRadius:'50%',
         background:'radial-gradient(ellipse, rgba(236,72,153,0.18) 0%, transparent 70%)',
-        filter:'blur(26px)',
         animation:'hblob4 13s ease-in-out infinite',
       }}/>
       {/* blob 5 — indigo wide base */}
-      <div style={{
+      <div className="hblob-5" style={{
         position:'absolute', pointerEvents:'none', zIndex:0,
         top:'-20px', left:'20%',
-        width:'560px', height:'160px',
         borderRadius:'50%',
         background:'radial-gradient(ellipse, rgba(99,102,241,0.14) 0%, transparent 70%)',
-        filter:'blur(40px)',
         animation:'hblob5 15s ease-in-out infinite',
       }}/>
     </>
@@ -109,6 +111,21 @@ function HeroCanvas() {
 
 export default function HomeContent() {
   const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const [catIndex, setCatIndex] = useState(0);
+  const [catPerPage, setCatPerPage] = useState(3);
+
+  useEffect(() => {
+    const onResize = () => setCatPerPage(window.innerWidth < 768 ? 1 : 3);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const maxCatIndex = Math.max(0, qrCategories.length - catPerPage);
+
+  useEffect(() => {
+    if (catIndex > maxCatIndex) setCatIndex(maxCatIndex);
+  }, [catIndex, maxCatIndex]);
 
   const faqCategories = [
     {
@@ -245,14 +262,10 @@ export default function HomeContent() {
                 };
                 requestAnimationFrame(step);
               }}
-              className="animate-gradient-btn inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white font-bold text-sm md:text-base"
-              style={{
-                boxShadow: '0 4px 24px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.15)',
-                cursor: 'pointer',
-              }}
+              className="btn-primary text-sm md:text-base group"
             >
               QR Kod Oluştur
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.button>
           </motion.div>
 
@@ -265,46 +278,54 @@ export default function HomeContent() {
         <div id="kategoriler" className="pt-2 md:pt-4" />
 
         {/* QR Category Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
-          {qrCategories.map((category, index) => (
-            <motion.div
-              key={category.href}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.03 * index, duration: 0.2 }}
-            >
-              <Link href={category.href}>
-                <div className="card-premium group relative overflow-hidden h-full p-4 md:p-6 min-h-[140px] md:min-h-auto" style={{ minHeight: '140px' }}>
-                  <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+        <div className="mb-16">
+          <div className="relative">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${catIndex * (100 / qrCategories.length)}%)` }}
+              >
+                {qrCategories.map((category, index) => (
+                  <div key={category.href} className="flex-shrink-0 w-full md:w-1/3 px-1.5 md:px-3">
+                    <Link href={category.href}>
+                      <div className="card-premium overflow-hidden h-full flex flex-col group">
+                        <div className={`relative h-32 md:h-40 flex items-center justify-center overflow-hidden bg-gradient-to-br ${category.color}`}>
+                          <category.icon className="w-12 h-12 md:w-16 md:h-16 text-white drop-shadow-lg transition-transform duration-300 group-hover:scale-110" strokeWidth={1.2} />
+                        </div>
+                        <div className="p-3 md:p-4 flex-1 flex flex-col">
+                          <h2 className="text-sm md:text-base font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-gradient transition-colors">
+                            {category.title}
+                          </h2>
+                          <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
+                            {category.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                  {/* decorative bg icon — bottom-right overflow, colored */}
-                  <div className="absolute -bottom-4 -right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
-                    style={{ opacity: 0.22, color: category.iconColor }}>
-                    <category.icon className="w-full h-full" strokeWidth={1.2} />
-                  </div>
-                  
-                  <div className="relative">
-                    <div className={`inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br ${category.color} mb-2 md:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md md:shadow-lg`}>
-                      <category.icon className="w-5 h-5 md:w-7 md:h-7 text-gray-900" />
-                    </div>
-                    
-                    <h2 className="text-sm md:text-xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-gradient transition-colors">
-                      {category.title}
-                    </h2>
-                    
-                    <p className="text-gray-700 mb-2 md:mb-4 leading-relaxed text-xs md:text-sm">
-                      {category.description}
-                    </p>
-                    
-                    <div className="flex items-center text-blue-400 font-semibold group-hover:translate-x-2 transition-transform duration-300 text-xs md:text-sm">
-                      <span>Başla</span>
-                      <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2" />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+            <div className="flex justify-center gap-2 mt-4 md:mt-6">
+              <button
+                onClick={() => setCatIndex(i => Math.max(0, i - 1))}
+                disabled={catIndex === 0}
+                className="p-2 rounded-full btn-secondary disabled:opacity-40"
+                aria-label="Önceki"
+              >
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+              <button
+                onClick={() => setCatIndex(i => Math.min(maxCatIndex, i + 1))}
+                disabled={catIndex >= maxCatIndex}
+                className="p-2 rounded-full btn-secondary disabled:opacity-40"
+                aria-label="Sonraki"
+              >
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Features Section */}
@@ -730,3 +751,4 @@ function ExtraContent({ openFaq, setOpenFaq, faqCategories }: { openFaq: string 
     </>
   );
 }
+

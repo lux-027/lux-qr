@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, ArrowRight, QrCode, Home, FileText, Zap, Shield, Users, CheckCircle, TrendingUp } from 'lucide-react';
+import { Calendar, ArrowRight, QrCode, Home, FileText, Zap, Shield, Users, CheckCircle, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
 
 const NewsletterForm = dynamic(() => import('@/components/NewsletterForm'), {
   ssr: false,
@@ -16,6 +17,29 @@ interface BlogPageContentProps {
 }
 
 export default function BlogPageContent({ posts }: BlogPageContentProps) {
+  const [qrIndex, setQrIndex] = useState(0);
+  const [qrPerPage, setQrPerPage] = useState(3);
+
+  useEffect(() => {
+    const onResize = () => setQrPerPage(window.innerWidth < 768 ? 1 : 3);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const qrTypes = [
+    { icon: FileText, title: 'Metin & Belge', desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge' },
+    { icon: Users, title: 'Kartvizit', desc: 'Dijital vCard', link: '/qr/kartvizit' },
+    { icon: Zap, title: 'WiFi', desc: 'Ağ paylaşımı', link: '/qr/wifi' },
+    { icon: Shield, title: 'Sosyal Medya', desc: 'Link-in-bio', link: '/qr/sosyal-medya' },
+  ];
+
+  const maxQrIndex = Math.max(0, qrTypes.length - qrPerPage);
+
+  useEffect(() => {
+    if (qrIndex > maxQrIndex) setQrIndex(maxQrIndex);
+  }, [qrIndex, maxQrIndex]);
+
   return (
     <main className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
@@ -152,30 +176,49 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-8 text-center text-gradient">
             QR Kod Türleri
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {[
-              { icon: FileText, title: 'Metin & Belge', desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge' },
-              { icon: Users, title: 'Kartvizit', desc: 'Dijital vCard', link: '/qr/kartvizit' },
-              { icon: Zap, title: 'WiFi', desc: 'Ağ paylaşımı', link: '/qr/wifi' },
-              { icon: Shield, title: 'Sosyal Medya', desc: 'Link-in-bio', link: '/qr/sosyal-medya' },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 + 0.05 * index, duration: 0.3 }}
+
+          <div className="relative">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${qrIndex * (100 / qrTypes.length)}%)` }}
               >
-                <Link href={item.link}>
-                  <div className="card-premium p-3 md:p-6 hover:border-blue-500/50 transition-all group">
-                    <div className="inline-flex p-2 md:p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-2 md:mb-4 shadow-lg group-hover:scale-110 transition-transform">
-                      <item.icon className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
-                    </div>
-                    <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
-                    <p className="text-gray-400 text-xs md:text-sm">{item.desc}</p>
+                {qrTypes.map((item, index) => (
+                  <div key={index} className="flex-shrink-0 w-full md:w-1/3 px-1.5 md:px-3">
+                    <Link href={item.link}>
+                      <div className="card-premium overflow-hidden h-full flex flex-col group">
+                        <div className="relative h-32 md:h-40 flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-500 to-cyan-500">
+                          <item.icon className="w-12 h-12 md:w-16 md:h-16 text-white drop-shadow-lg transition-transform duration-300 group-hover:scale-110" />
+                        </div>
+                        <div className="p-3 md:p-4 flex-1 flex flex-col">
+                          <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
+                          <p className="text-gray-500 text-xs md:text-sm">{item.desc}</p>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </motion.div>
-            ))}
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-center gap-2 mt-4 md:mt-6">
+              <button
+                onClick={() => setQrIndex(i => Math.max(0, i - 1))}
+                disabled={qrIndex === 0}
+                className="p-2 rounded-full btn-secondary disabled:opacity-40"
+                aria-label="Önceki"
+              >
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+              <button
+                onClick={() => setQrIndex(i => Math.min(maxQrIndex, i + 1))}
+                disabled={qrIndex >= maxQrIndex}
+                className="p-2 rounded-full btn-secondary disabled:opacity-40"
+                aria-label="Sonraki"
+              >
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+            </div>
           </div>
         </motion.div>
 
@@ -196,10 +239,10 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
             </p>
             <Link
               href="/"
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold rounded-xl md:rounded-2xl text-sm md:text-base"
+              className="btn-primary w-full text-sm md:text-base group"
             >
               QR Kod Oluştur
-              <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </motion.div>
@@ -209,7 +252,7 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-16"
+          className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-16"
         >
           {[
             { icon: FileText, value: posts.length.toString(), label: 'Blog Yazısı' },
@@ -283,3 +326,4 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
     </main>
   );
 }
+

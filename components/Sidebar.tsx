@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-import { X, Globe2, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink, ChevronDown } from 'lucide-react';
+import { X, Globe2, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink, ChevronDown, Star } from 'lucide-react';
 
 import ShareButton from './ShareButton';
 
@@ -43,6 +43,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const mainItems = [
 
     { href: '/', label: 'Ana Sayfa', icon: Globe2, color: 'text-amber-500' },
+
+    { href: '/lux-studio', label: 'Lux Studio', icon: Star, color: 'text-purple-500' },
 
   ];
 
@@ -184,6 +186,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
               const isActive = pathname === item.href;
 
+              const isLux = item.href === '/lux-studio';
+
               return (
 
                 <Link
@@ -198,7 +202,9 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
                     isActive
 
-                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-blue-700 font-bold'
+                      ? (isLux
+                        ? 'bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 text-purple-700 font-bold'
+                        : 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-blue-700 font-bold')
 
                       : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
 
@@ -206,7 +212,9 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
                   style={isActive ? {
 
-                    boxShadow: '0 2px 12px rgba(59,130,246,0.18), inset 0 1px 0 rgba(255,255,255,0.8)',
+                    boxShadow: isLux
+                      ? '0 2px 12px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.8)'
+                      : '0 2px 12px rgba(59,130,246,0.18), inset 0 1px 0 rgba(255,255,255,0.8)',
 
                   } : {}}
 
@@ -214,11 +222,11 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
                   {isActive && (
 
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-gradient-to-b from-blue-500 to-indigo-500" />
+                    <span className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-gradient-to-b ${isLux ? 'from-purple-500 to-indigo-500' : 'from-blue-500 to-indigo-500'}`} />
 
                   )}
 
-                  <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600 drop-shadow-sm' : item.color}`} />
+                  <item.icon className={`w-4 h-4 ${isActive ? (isLux ? 'text-purple-600 drop-shadow-sm' : 'text-blue-600 drop-shadow-sm') : item.color}`} />
 
                   <span className="font-semibold text-sm">{item.label}</span>
 
