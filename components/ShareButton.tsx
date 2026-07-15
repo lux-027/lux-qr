@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { Share2, X, Copy, Check, QrCode, Link2 } from 'lucide-react';
+import { X, Copy, Check, QrCode, Link2 } from 'lucide-react';
 import { showNotification } from '@/components/Notification';
 
 const SITE_URL = 'https://luxqrpro.site';
@@ -11,9 +11,11 @@ const SITE_DESC = 'Dijital içeriklerinizi saniyeler içinde yüksek kaliteli QR
 
 interface ShareButtonProps {
   variant?: 'outline' | 'solid';
+  className?: string;
 }
 
-export default function ShareButton({ variant = 'outline' }: ShareButtonProps) {
+export default function ShareButton({ variant = 'outline', className = '' }: ShareButtonProps) {
+  const gradientId = useId().replace(/:/g, '');
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -80,28 +82,24 @@ export default function ShareButton({ variant = 'outline' }: ShareButtonProps) {
         onClick={() => setOpen(true)}
         className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 flex-shrink-0 ${
           variant === 'solid'
-            ? 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-md shadow-blue-500/25 border border-transparent'
+            ? 'bg-white hover:bg-gray-50 border border-gray-200 shadow-sm'
             : 'bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200'
-        }`}
+        } ${className}`}
         title="Siteyi Paylaş"
       >
-        {variant === 'solid' ? (
-          <Share2 className="w-5 h-5" strokeWidth={1.5} />
-        ) : (
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="share-btn-gradient" x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#3b82f6" />
-                <stop offset="1" stopColor="#06b6d4" />
-              </linearGradient>
-            </defs>
-            <circle cx="18" cy="5" r="3" stroke="url(#share-btn-gradient)" strokeWidth="1.5" />
-            <circle cx="6" cy="12" r="3" stroke="url(#share-btn-gradient)" strokeWidth="1.5" />
-            <circle cx="18" cy="19" r="3" stroke="url(#share-btn-gradient)" strokeWidth="1.5" />
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="url(#share-btn-gradient)" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="url(#share-btn-gradient)" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        )}
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#3b82f6" />
+              <stop offset="1" stopColor="#06b6d4" />
+            </linearGradient>
+          </defs>
+          <circle cx="18" cy="5" r="3" stroke={`url(#${gradientId})`} strokeWidth="1.5" />
+          <circle cx="6" cy="12" r="3" stroke={`url(#${gradientId})`} strokeWidth="1.5" />
+          <circle cx="18" cy="19" r="3" stroke={`url(#${gradientId})`} strokeWidth="1.5" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke={`url(#${gradientId})`} strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke={`url(#${gradientId})`} strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
       </button>
 
       {/* Modal backdrop — rendered in body via portal */}

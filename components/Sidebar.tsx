@@ -197,7 +197,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
             </Link>
 
             <div className="hidden md:block">
-              <ShareButton variant="solid" />
+              <ShareButton variant="solid" className="ml-2 w-9 h-9" />
             </div>
 
           </div>
