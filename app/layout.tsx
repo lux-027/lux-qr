@@ -21,10 +21,13 @@ export const metadata: Metadata = {
   authors: [{ name: "LuxQr Team" }],
   icons: {
     icon: [
-      { url: "/luxqrlogo1.png", type: "image/png" }
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-48x48.png", type: "image/png", sizes: "48x48" },
+      { url: "/icon-96x96.png", type: "image/png", sizes: "96x96" },
+      { url: "/icon-144x144.png", type: "image/png", sizes: "144x144" }
     ],
     apple: [
-      { url: "/luxqrlogo1.png", type: "image/png" }
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
     ]
   },
   openGraph: {
@@ -58,7 +61,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <meta charSet="UTF-8" />
-        <link rel="icon" href="/luxqrlogo1.png" type="image/png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="canonical" href="https://luxqrpro.site/" />
         <meta name="mobile-web-app-capable" content="yes" />
