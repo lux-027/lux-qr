@@ -9,14 +9,6 @@ export const metadata: Metadata = {
     description: 'Kağıt kartvizitleri bırakın. iOS ve Android uyumlu, tüm iletişim bilgilerinizi içeren modern dijital vCard QR kodunuzu hemen tasarlayın.',
     url: 'https://www.luxqrpro.site/qr/kartvizit',
     siteName: 'LuxQR',
-    images: [
-      {
-        url: 'https://www.luxqrpro.site/logo.svg',
-        width: 1200,
-        height: 630,
-        alt: 'LuxQR Logo',
-      },
-    ],
     locale: 'tr_TR',
     type: 'website',
   },
@@ -24,7 +16,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Ücretsiz Dijital vCard Kartvizit QR Kodu Oluştur - LuxQR',
     description: 'Kağıt kartvizitleri bırakın. iOS ve Android uyumlu, tüm iletişim bilgilerinizi içeren modern dijital vCard QR kodunuzu hemen tasarlayın.',
-    images: ['https://www.luxqrpro.site/logo.svg'],
   },
 };
 

@@ -32,14 +32,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: post.description,
         url: `https://luxqrpro.site/blog/${post.slug}`,
         siteName: 'LuxQr',
-        images: [
-          {
-            url: `/api/og/blog/${post.slug}`,
-            width: 1200,
-            height: 630,
-            alt: post.title,
-          },
-        ],
         type: 'article',
         locale: 'tr_TR',
       },
@@ -47,7 +39,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         card: 'summary_large_image',
         title: post.title,
         description: post.description,
-        images: [`/api/og/blog/${post.slug}`],
         creator: '@luxqrpro',
       },
     };

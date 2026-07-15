@@ -6,12 +6,14 @@ import Sidebar from './Sidebar';
 import MobileHeader from './MobileHeader';
 
 export default function LayoutWrapper({ children, footer }: { children: React.ReactNode; footer?: React.ReactNode }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const pathname = usePathname();
+  const isLuxStudio = pathname === '/lux-studio';
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(isLuxStudio);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(isLuxStudio);
 
   const hideChrome = pathname.startsWith('/view/') || pathname.startsWith('/menu/');
-  const hideSidebarFooter = pathname === '/lux-studio';
+  const hideFooter = pathname === '/lux-studio';
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -24,17 +26,15 @@ export default function LayoutWrapper({ children, footer }: { children: React.Re
   return (
     <>
       <MobileHeader isOpen={isSidebarOpen} onMenuClick={toggleSidebar} />
-      {!hideSidebarFooter && (
-        <Sidebar
-          isOpen={isSidebarOpen}
-          setIsOpen={setIsSidebarOpen}
-          isCollapsed={isSidebarCollapsed}
-          setIsCollapsed={setIsSidebarCollapsed}
-        />
-      )}
-      <div className={`pt-16 md:pt-0 transition-all duration-300 ${hideSidebarFooter || isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64'}`}>
+      <Sidebar
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+      />
+      <div className={`pt-16 md:pt-0 transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64'}`}>
         {children}
-        {!hideSidebarFooter && footer}
+        {!hideFooter && footer}
       </div>
     </>
   );

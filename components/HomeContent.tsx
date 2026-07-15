@@ -547,7 +547,7 @@ function ExtraContent({ openFaq, setOpenFaq, faqCategories }: { openFaq: string 
             </h2>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 md:gap-6 relative">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 relative">
             {/* Connector line (desktop only) */}
             <div className="hidden md:block absolute top-10 left-1/3 right-1/3 h-px bg-gradient-to-r from-orange-500/40 via-amber-500/60 to-orange-500/40 z-0" />
 
@@ -562,7 +562,7 @@ function ExtraContent({ openFaq, setOpenFaq, faqCategories }: { openFaq: string 
                 </div>
               </div>
               <h3 className="text-gray-900 font-bold text-base md:text-lg mb-2">Tür Seçin</h3>
-              <p className="text-gray-700 text-xs md:text-sm leading-relaxed">WiFi, kartvizit, sosyal medya, fiyat listesi, ses, metin veya dosya — ihtiyacınıza uygun QR türünü seçin.</p>
+              <p className="text-gray-700 text-xs md:text-sm leading-relaxed">İhtiyacınıza uygun QR türünü seçin.</p>
               <div className="mt-4 flex flex-wrap justify-center gap-1.5">
                 {['WiFi', 'vCard', 'Sosyal Medya', 'Fiyat Listesi', 'Bio Link'].map(t => (
                   <span key={t} className="px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200 text-gray-600 text-[10px] font-medium">{t}</span>
@@ -581,7 +581,7 @@ function ExtraContent({ openFaq, setOpenFaq, faqCategories }: { openFaq: string 
                 </div>
               </div>
               <h3 className="text-gray-900 font-bold text-base md:text-lg mb-2">Bilgileri Girin</h3>
-              <p className="text-gray-700 text-xs md:text-sm leading-relaxed">Formları doldurun ya da dosyanızı sürükleyip bırakın. Verileriniz şifreli olarak işlenir, güvenliğiniz önceliğimizdir.</p>
+              <p className="text-gray-700 text-xs md:text-sm leading-relaxed">Formları doldurun veya dosyanızı yükleyin.</p>
               <div className="mt-4 w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-left">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-amber-400" />
@@ -597,7 +597,7 @@ function ExtraContent({ openFaq, setOpenFaq, faqCategories }: { openFaq: string 
             </div>
 
             {/* Step 3 */}
-            <div className="relative z-10 card-premium p-3 md:p-7 flex flex-col items-center text-center group hover:border-emerald-500/40 transition-all">
+            <div className="relative z-10 card-premium p-3 md:p-7 flex flex-col items-center text-center group hover:border-emerald-500/40 transition-all col-span-2 md:col-span-1">
               <div className="relative mb-5">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-xl shadow-emerald-500/30 group-hover:shadow-emerald-500/50 transition-all">
                   <svg className="w-8 h-8 md:w-10 md:h-10 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.243m-4.243 0a1 1 0 00-1 1M9 17h2m2 0h2M3 21l1.5-1.5M21 21l-1.5-1.5M3 3l1.5 1.5M21 3l-1.5 1.5" /></svg>
@@ -607,7 +607,7 @@ function ExtraContent({ openFaq, setOpenFaq, faqCategories }: { openFaq: string 
                 </div>
               </div>
               <h3 className="text-gray-900 font-bold text-base md:text-lg mb-2">QR Kodunuzu Alın</h3>
-              <p className="text-gray-700 text-xs md:text-sm leading-relaxed">Saniyeler içinde yüksek çözünürlüklü QR kodunuz hazır. İndirin, paylaşın veya baskıya gönderin.</p>
+              <p className="text-gray-700 text-xs md:text-sm leading-relaxed">QR kodunuzu saniyeler içinde indirin ve paylaşın.</p>
               <div className="mt-4 flex items-center justify-center gap-3">
                 <div className="flex flex-col items-center gap-1">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">

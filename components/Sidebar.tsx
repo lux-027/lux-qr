@@ -176,7 +176,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
         <button
           type="button"
           onClick={() => setIsCollapsed?.(!isCollapsed)}
-          className="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white text-white shadow-2xl items-center justify-center hover:scale-110 hover:shadow-blue-500/30 transition-all"
+          className={`hidden ${isCollapsed ? 'md:hidden' : 'md:flex'} absolute -right-5 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white text-white shadow-2xl items-center justify-center hover:scale-110 hover:shadow-blue-500/30 transition-all`}
           aria-label="Sol barı daralt"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -196,7 +196,9 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
             </Link>
 
-            <ShareButton />
+            <div className="hidden md:block">
+              <ShareButton />
+            </div>
 
           </div>
 

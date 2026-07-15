@@ -74,69 +74,75 @@ export default function ShareButton() {
       {/* Trigger button */}
       <button
         onClick={() => setOpen(true)}
-        className="relative ml-2 w-8 h-8 flex items-center justify-center rounded-xl text-white transition-all duration-200 hover:-translate-y-0.5 overflow-hidden flex-shrink-0"
-        style={{
-          background: 'linear-gradient(135deg,#6366f1,#8b5cf6,#06b6d4)',
-          boxShadow: '0 3px 14px rgba(99,102,241,0.40), inset 0 1px 0 rgba(255,255,255,0.2)',
-        }}
+        className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200 transition-colors duration-200 flex-shrink-0"
         title="Siteyi Paylaş"
       >
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'linear-gradient(180deg,rgba(255,255,255,0.15) 0%,transparent 60%)' }} />
-        <Share2 className="w-3.5 h-3.5 relative z-10" />
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="share-btn-gradient" x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#3b82f6" />
+              <stop offset="1" stopColor="#06b6d4" />
+            </linearGradient>
+          </defs>
+          <circle cx="18" cy="5" r="3" stroke="url(#share-btn-gradient)" strokeWidth="1.5" />
+          <circle cx="6" cy="12" r="3" stroke="url(#share-btn-gradient)" strokeWidth="1.5" />
+          <circle cx="18" cy="19" r="3" stroke="url(#share-btn-gradient)" strokeWidth="1.5" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="url(#share-btn-gradient)" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="url(#share-btn-gradient)" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
       </button>
 
       {/* Modal backdrop — rendered in body via portal */}
       {mounted && open && createPortal(
         <div
-          className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center sm:p-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
           style={{ background: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(8px)' }}
           onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
           {/* Modal card */}
-          <div className="relative w-full sm:max-w-[360px] rounded-t-3xl sm:rounded-3xl overflow-hidden"
+          <div className="relative w-[92%] max-w-[320px] rounded-3xl overflow-hidden"
             style={{
               background: '#ffffff',
               boxShadow: '0 -8px 40px rgba(0,0,0,0.18), 0 24px 64px rgba(0,0,0,0.12)',
             }}>
 
             {/* ── App header ── */}
-            <div className="flex items-center gap-3 px-5 pt-5 pb-4"
+            <div className="flex items-center gap-3 px-4 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4"
               style={{ background: 'linear-gradient(135deg,#4f46e5 0%,#7c3aed 60%,#0891b2 100%)' }}>
               {/* close X */}
               <button onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 w-7 h-7 rounded-full flex items-center justify-center"
                 style={{ background: 'rgba(255,255,255,0.20)' }}>
                 <X className="w-3.5 h-3.5 text-white" />
               </button>
               {/* logo */}
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg"
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg"
                 style={{ background: 'rgba(255,255,255,0.18)', border: '1.5px solid rgba(255,255,255,0.30)' }}>
-                <QrCode className="w-6 h-6 text-white drop-shadow" />
+                <QrCode className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow" />
               </div>
               <div className="min-w-0">
-                <p className="text-white font-black text-base leading-tight">LuxQr</p>
-                <p className="text-white/70 text-xs font-medium leading-tight">Ücretsiz QR Kod Platformu</p>
+                <p className="text-white font-black text-sm sm:text-base leading-tight">LuxQr</p>
+                <p className="text-white/70 text-[11px] sm:text-xs font-medium leading-tight">Ücretsiz QR Kod Platformu</p>
                 <p className="text-white/50 text-[10px] font-mono mt-0.5 truncate">{SITE_URL}</p>
               </div>
             </div>
 
             {/* ── PAYLAŞ label ── */}
-            <div className="pt-5 pb-3 px-5">
-              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-gray-400 text-center">Paylaş</p>
+            <div className="pt-4 pb-2 px-4 sm:pt-5 sm:pb-3 sm:px-5">
+              <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.16em] text-gray-400 text-center">Paylaş</p>
             </div>
 
             {/* ── Share icon grid ── */}
-            <div className="grid grid-cols-4 gap-2 px-5 pb-5">
+            <div className="grid grid-cols-4 gap-2 px-4 pb-4 sm:px-5 sm:pb-5">
               {shareOptions.map(({ label, bg, logo, href }) => (
                 href ? (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"
                     className="flex flex-col items-center gap-2 group">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-transform duration-150 group-hover:scale-105"
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md transition-transform duration-150 group-hover:scale-105"
                       style={{ background: bg }}>
                       {logo}
                     </div>
-                    <span className="text-[11px] text-gray-600 font-medium">{label}</span>
+                    <span className="text-[10px] sm:text-[11px] text-gray-600 font-medium">{label}</span>
                   </a>
                 ) : (
                   <button key={label}
@@ -146,18 +152,18 @@ export default function ShareButton() {
                       }
                     }}
                     className="flex flex-col items-center gap-2 group">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-transform duration-150 group-hover:scale-105"
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md transition-transform duration-150 group-hover:scale-105"
                       style={{ background: bg }}>
                       {logo}
                     </div>
-                    <span className="text-[11px] text-gray-600 font-medium">{label}</span>
+                    <span className="text-[10px] sm:text-[11px] text-gray-600 font-medium">{label}</span>
                   </button>
                 )
               ))}
             </div>
 
             {/* ── URL copy row ── */}
-            <div className="mx-5 mb-4 flex items-center gap-2 px-3 py-2.5 rounded-xl"
+            <div className="mx-4 mb-3 sm:mx-5 sm:mb-4 flex items-center gap-2 px-3 py-2.5 rounded-xl"
               style={{ background: '#f3f4f6', border: '1px solid #e5e7eb' }}>
               <Link2 className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
               <span className="text-xs text-gray-500 font-mono flex-1 truncate">{SITE_URL}</span>

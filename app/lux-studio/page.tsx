@@ -91,16 +91,16 @@ export default function LuxStudioPage() {
 
       <div className="relative z-10 w-full max-w-5xl">
         {/* Title */}
-        <div className="text-center mb-10 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight drop-shadow-lg">
+        <div className="text-center mb-6 md:mb-12">
+          <h1 className="text-2xl md:text-5xl font-black text-white tracking-tight drop-shadow-lg">
             Lux<span className="text-purple-400">Studio</span>
           </h1>
-          <p className="text-white/60 text-sm md:text-base mt-2">İki marka, bir vizyon</p>
+          <p className="text-white/60 text-xs md:text-base mt-1 md:mt-2">İki marka, bir vizyon</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-8">
           {/* LuxQr */}
-          <div className="group relative flex flex-col items-center text-center p-8 rounded-3xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <div className="group relative flex flex-col items-center text-center p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
             <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative flex flex-col items-center">
               <Image
@@ -108,18 +108,18 @@ export default function LuxStudioPage() {
                 alt="LuxQr Logo"
                 width={120}
                 height={120}
-                className="w-28 h-28 md:w-32 md:h-32 mb-6 drop-shadow-2xl rounded-2xl"
+                className="w-20 h-20 md:w-32 md:h-32 mb-4 md:mb-6 drop-shadow-2xl rounded-2xl"
                 unoptimized
               />
-              <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2">
+              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2">
                 Lux<span className="text-purple-400">Qr</span>
               </h2>
-              <p className="text-white/60 text-sm md:text-base mb-6 max-w-xs">
+              <p className="text-white/60 text-xs md:text-base mb-4 md:mb-6 max-w-xs">
                 Modern, ücretsiz ve güvenli QR kod çözümleri.
               </p>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-gray-900 font-semibold text-sm hover:bg-white/90 hover:scale-105 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-white text-gray-900 font-semibold text-xs md:text-sm hover:bg-white/90 hover:scale-105 transition-all"
               >
                 <QrCode className="w-4 h-4" />
                 QR Oluştur
@@ -128,7 +128,7 @@ export default function LuxStudioPage() {
           </div>
 
           {/* LUX INC */}
-          <div className="group relative flex flex-col items-center text-center p-8 rounded-3xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <div className="group relative flex flex-col items-center text-center p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
             <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative flex flex-col items-center">
               <Image
@@ -136,21 +136,21 @@ export default function LuxStudioPage() {
                 alt="LUX INC Logo"
                 width={120}
                 height={120}
-                className="w-28 h-28 md:w-32 md:h-32 mb-6 drop-shadow-2xl rounded-2xl"
+                className="w-20 h-20 md:w-32 md:h-32 mb-4 md:mb-6 drop-shadow-2xl rounded-2xl"
                 unoptimized
               />
-              <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2">
+              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2">
                 LUX <span className="text-white/40 mx-1">|</span>{' '}
                 <span className="text-gray-800">INC</span>
               </h2>
-              <p className="text-white/60 text-sm md:text-base mb-6 max-w-xs">
+              <p className="text-white/60 text-xs md:text-base mb-4 md:mb-6 max-w-xs">
                 Ana markamız. Dijital stüdyo çözümleri için LUX INC.
               </p>
               <Link
                 href="https://www.instagram.com/lux.studio.inc/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-gray-900 font-semibold text-sm hover:bg-white/90 hover:scale-105 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-white text-gray-900 font-semibold text-xs md:text-sm hover:bg-white/90 hover:scale-105 transition-all"
               >
                 <Instagram className="w-4 h-4" />
                 Instagram&apos;dan takip edin
@@ -160,8 +160,8 @@ export default function LuxStudioPage() {
         </div>
 
         {/* Ortak Çalışma */}
-        <div className="relative z-10 mt-12 md:mt-16 text-center px-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-purple-200 text-xs md:text-sm">
+        <div className="relative z-10 mt-8 md:mt-16 text-center px-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-purple-200 text-[10px] md:text-sm">
             <Handshake className="w-4 h-4 md:w-5 md:h-5 text-purple-300" />
             <span>LuxQr x LUX INC — Ortak çalışma</span>
           </div>

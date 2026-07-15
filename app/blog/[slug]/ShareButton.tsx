@@ -24,10 +24,10 @@ export default function ShareButton({ title, description, slug }: ShareButtonPro
   return (
     <button
       onClick={handleShare}
-      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
+      className="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200 transition-colors duration-200"
+      title="Paylaş"
     >
-      <Share2 className="w-4 h-4" />
-      Paylaş
+      <Share2 className="w-4 h-4" strokeWidth={1.5} />
     </button>
   );
 }

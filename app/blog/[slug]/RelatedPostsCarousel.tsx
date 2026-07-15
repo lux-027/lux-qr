@@ -57,12 +57,22 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
     return () => stopAutoSlide();
   }, [loading, blogs.length]);
 
+  const getTotalPages = () => Math.max(1, blogs.length);
+
+  const getSlideStep = () => {
+    if (!sliderRef.current || blogs.length === 0) return 0;
+    const firstChild = sliderRef.current.firstElementChild as HTMLElement | null;
+    if (!firstChild) return 0;
+    const gap = parseFloat(getComputedStyle(sliderRef.current).gap) || 16;
+    return firstChild.clientWidth + gap;
+  };
+
   const handleScroll = () => {
     if (!sliderRef.current || blogs.length === 0) return;
-    const cardWidth = sliderRef.current.scrollWidth / blogs.length;
-    const scrollPosition = sliderRef.current.scrollLeft;
-    const dotIndex = Math.round(scrollPosition / cardWidth);
-    setActiveDot(Math.min(dotIndex, blogs.length - 1));
+    const step = getSlideStep();
+    if (step === 0) return;
+    const dotIndex = Math.round(sliderRef.current.scrollLeft / step);
+    setActiveDot(Math.max(0, Math.min(dotIndex, getTotalPages() - 1)));
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -91,43 +101,43 @@ export default function RelatedPostsCarousel({ currentSlug }: RelatedPostsCarous
   };
 
   const scroll = (direction: 'left' | 'right') => {
-    if (sliderRef.current) {
-      const scrollAmount = sliderRef.current.clientWidth;
-      sliderRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
+    const step = getSlideStep();
+    if (step === 0) return;
+    const totalPages = getTotalPages();
+    const newIndex = direction === 'left'
+      ? Math.max(0, activeDot - 1)
+      : Math.min(totalPages - 1, activeDot + 1);
+    goToSlide(newIndex);
   };
 
   const goToSlide = (index: number) => {
-    if (sliderRef.current && blogs.length > 0) {
-      const cardWidth = sliderRef.current.scrollWidth / blogs.length;
-      const targetScroll = index * cardWidth;
-      sliderRef.current.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-      });
-      setActiveDot(index);
-    }
+    if (!sliderRef.current || blogs.length === 0) return;
+    const step = getSlideStep();
+    if (step === 0) return;
+    const totalPages = getTotalPages();
+    const clamped = Math.max(0, Math.min(index, totalPages - 1));
+    sliderRef.current.scrollTo({
+      left: clamped * step,
+      behavior: 'smooth'
+    });
+    setActiveDot(clamped);
   };
 
   const startAutoSlide = () => {
     stopAutoSlide();
     if (blogs.length > 0) {
       intervalRef.current = setInterval(() => {
-        if (sliderRef.current) {
-          const cardWidth = sliderRef.current.scrollWidth / blogs.length;
-          const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
-
-          if (sliderRef.current.scrollLeft >= maxScroll - cardWidth) {
-            sliderRef.current.scrollLeft = 0;
-          } else {
-            sliderRef.current.scrollBy({
-              left: cardWidth,
-              behavior: 'smooth'
-            });
-          }
+        if (!sliderRef.current) return;
+        const step = getSlideStep();
+        if (step === 0) return;
+        const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+        if (sliderRef.current.scrollLeft >= maxScroll - step / 2) {
+          sliderRef.current.scrollLeft = 0;
+        } else {
+          sliderRef.current.scrollBy({
+            left: step,
+            behavior: 'smooth'
+          });
         }
       }, 5000);
     }
