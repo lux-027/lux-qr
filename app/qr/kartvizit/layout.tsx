@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Ücretsiz Dijital vCard Kartvizit QR Kodu Oluştur - LuxQR',
     description: 'Kağıt kartvizitleri bırakın. iOS ve Android uyumlu, tüm iletişim bilgilerinizi içeren modern dijital vCard QR kodunuzu hemen tasarlayın.',
-    url: 'https://www.luxqrpro.site/qr/kartvizit',
+    url: 'https://luxqrpro.site/qr/kartvizit',
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',

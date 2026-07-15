@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         }
       } catch {}
     }
-    const viewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.luxqrpro.site'}/view/${qrId}`;
+    const viewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://luxqrpro.site'}/view/${qrId}`;
     const qrCode: QrCodeData = {
       id: qrId,
       content: content || '',

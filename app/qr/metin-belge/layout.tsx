@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'PDF, Belge, Resim ve Metin QR Kod Dönüştürücü - LuxQR',
     description: 'PDF, Word, resim, video ve metin dosyalarınızı saniyeler içinde QR koda dönüştürün, dijital dökümantasyon hızını maksimuma çıkarın.',
-    url: 'https://www.luxqrpro.site/qr/metin-belge',
+    url: 'https://luxqrpro.site/qr/metin-belge',
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',

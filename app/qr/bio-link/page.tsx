@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Bio Link / Link Ağacı QR Kod Oluşturucu | LuxQr",
     description: "Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın.",
-    url: "https://www.luxqrpro.site/qr/bio-link",
+    url: "https://luxqrpro.site/qr/bio-link",
     type: "website",
   },
   twitter: {

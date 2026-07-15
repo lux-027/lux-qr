@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { Share2, X, Copy, Check, QrCode, Link2 } from 'lucide-react';
 import { showNotification } from '@/components/Notification';
 
-const SITE_URL = 'https://www.luxqrpro.site';
+const SITE_URL = 'https://luxqrpro.site';
 const SITE_TITLE = 'LuxQr - Modern QR Kod Platformu';
 const SITE_DESC = 'Dijital içeriklerinizi saniyeler içinde yüksek kaliteli QR kodlara dönüştürün!';
 

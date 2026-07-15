@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'MP3 ve Ses Dosyası QR Kod Dönüştürücü - LuxQR',
     description: 'Podcast, sesli not ve müzik dosyalarınızı (MP3, WAV) buluta yükleyip menülere veya sergilere özel sesli QR kodlar üretin.',
-    url: 'https://www.luxqrpro.site/qr/ses-dosyasi',
+    url: 'https://luxqrpro.site/qr/ses-dosyasi',
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',

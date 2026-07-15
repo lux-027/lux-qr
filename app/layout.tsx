@@ -11,7 +11,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], display: 'swap' });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.luxqrpro.site'),
+  metadataBase: new URL('https://luxqrpro.site'),
   title: {
     default: "LuxQr - Ücretsiz QR Kod Oluşturucu | Metin, WiFi, Kartvizit, Sosyal Medya",
     template: "%s | LuxQr"
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu | Metin, WiFi, Kartvizit, Sosyal Medya",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Ücretsiz ve güvenli QR kod oluşturma platformu.",
-    url: "https://www.luxqrpro.site",
+    url: "https://luxqrpro.site",
     siteName: "LuxQR",
     locale: "tr_TR",
     type: "website",
@@ -39,6 +39,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+  },
+  alternates: {
+    canonical: './',
   },
   other: {
     "google-adsense-account": "ca-pub-6964506660604767",
@@ -57,7 +60,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <link rel="icon" href="/luxqrlogo1.png" type="image/png" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="canonical" href="https://www.luxqrpro.site/" />
+        <link rel="canonical" href="https://luxqrpro.site/" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -72,7 +75,7 @@ export default function RootLayout({
               "@type": "WebApplication",
               "name": "LuxQr - Ücretsiz QR Kod Oluşturucu",
               "description": "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-              "url": "https://www.luxqrpro.site",
+              "url": "https://luxqrpro.site",
               "applicationCategory": "UtilityApplication",
               "operatingSystem": "Web",
               "offers": {
@@ -98,7 +101,7 @@ export default function RootLayout({
               "author": {
                 "@type": "Organization",
                 "name": "LuxQr Team",
-                "url": "https://www.luxqrpro.site"
+                "url": "https://luxqrpro.site"
               }
             })
           }}
@@ -112,8 +115,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "LuxQr",
-              "url": "https://www.luxqrpro.site",
-              "logo": "https://www.luxqrpro.site/luxqrlogo1.png",
+              "url": "https://luxqrpro.site",
+              "logo": "https://luxqrpro.site/luxqrlogo1.png",
               "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
               "sameAs": [
                 "https://www.facebook.com/luxqr",

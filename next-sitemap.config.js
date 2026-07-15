@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://www.luxqrpro.site',
+  siteUrl: 'https://luxqrpro.site',
   generateRobotsTxt: true,
   outDir: 'out',
   changefreq: 'daily',

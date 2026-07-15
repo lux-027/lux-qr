@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Metin QR Kod Oluşturucu | LuxQr",
     description: "Metin içeriğiniz için ücretsiz QR kod oluşturun.",
-    url: "https://www.luxqrpro.site/qr/metin",
+    url: "https://luxqrpro.site/qr/metin",
     type: "website",
   },
   twitter: {

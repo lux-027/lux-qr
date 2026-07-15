@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Fiyat Listesi QR Kod Oluşturucu | LuxQr",
     description: "Restoran menüsü, hizmet listesi veya ürün fiyatlarınız için ücretsiz QR kod oluşturun.",
-    url: "https://www.luxqrpro.site/qr/fiyat-listesi",
+    url: "https://luxqrpro.site/qr/fiyat-listesi",
     type: "website",
   },
   twitter: {

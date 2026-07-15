@@ -21,6 +21,16 @@ const nextConfig = {
   compress: true,
   swcMinify: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.luxqrpro.site' }],
+        destination: 'https://luxqrpro.site/:path*',
+        permanent: true,
+      },
+    ];
+  },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kartvizit QR Kod Oluşturucu | vCard Dijital Kartvizit | LuxQr",
     description: "Profesyonel dijital kartvizit QR kodu oluşturun. vCard formatında kartvizit bilgilerinizi QR koda dönüştürün.",
-    url: "https://www.luxqrpro.site/qr/kartvizit",
+    url: "https://luxqrpro.site/qr/kartvizit",
     type: "website",
   },
   twitter: {

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "WiFi QR Kod Oluşturucu | WiFi Ağ Paylaşımı | LuxQr",
     description: "WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın. Şifreli ve şifresiz WiFi ağları için QR kod oluşturun.",
-    url: "https://www.luxqrpro.site/qr/wifi",
+    url: "https://luxqrpro.site/qr/wifi",
     type: "website",
   },
   twitter: {

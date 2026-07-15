@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Hızlı ve Güvenli WiFi QR Kodu Oluşturucu - LuxQR',
     description: 'İşletmeniz veya eviniz için şifre yazma derdine son veren, tek tıkla otomatik bağlanan güvenli WiFi QR kodları oluşturun.',
-    url: 'https://www.luxqrpro.site/qr/wifi',
+    url: 'https://luxqrpro.site/qr/wifi',
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',

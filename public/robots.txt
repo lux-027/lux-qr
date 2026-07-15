@@ -13,4 +13,4 @@ Allow: /blog
 Disallow: /api/
 Disallow: /view/
 
-Sitemap: https://www.luxqrpro.site/sitemap.xml
+Sitemap: https://luxqrpro.site/sitemap.xml
