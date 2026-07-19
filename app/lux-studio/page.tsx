@@ -45,7 +45,16 @@ export default function LuxStudioPage() {
   }, []);
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-12">
+    <main
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-12 rounded-none"
+      style={{ borderRadius: 0 }}
+    >
+      <style>{`
+        html, body {
+          border-radius: 0 !important;
+        }
+      `}</style>
+
       {/* Desktop back button */}
       <button
         type="button"
@@ -59,7 +68,8 @@ export default function LuxStudioPage() {
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #1a1025 100%)',
+          background: 'linear-gradient(135deg, #050409 0%, #110f1c 50%, #07050a 100%)',
+          borderRadius: 0,
         }}
       />
 
@@ -86,14 +96,26 @@ export default function LuxStudioPage() {
       </div>
 
       {/* nebula glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-600/20 blur-[100px] pointer-events-none z-0" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-purple-900/10 blur-[120px] pointer-events-none z-0" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[320px] h-[320px] rounded-full bg-indigo-900/10 blur-[100px] pointer-events-none z-0" />
 
       <div className="relative z-10 w-full max-w-5xl">
         {/* Title */}
         <div className="text-center mb-6 md:mb-12">
           <h1 className="text-2xl md:text-5xl font-black text-white tracking-tight drop-shadow-lg">
-            Lux<span className="text-purple-400">Studio</span>
+            Lux
+            <span
+              className="ml-1 md:ml-2 font-black tracking-tight"
+              style={{
+                background: 'linear-gradient(90deg, #c084fc, #60a5fa, #22d3ee)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 14px rgba(192,132,252,0.55))',
+              }}
+            >
+              Studio
+            </span>
           </h1>
           <p className="text-white/60 text-xs md:text-base mt-1 md:mt-2">İki marka, bir vizyon</p>
         </div>
@@ -139,12 +161,19 @@ export default function LuxStudioPage() {
                 className="w-20 h-20 md:w-32 md:h-32 mb-4 md:mb-6 drop-shadow-2xl rounded-2xl"
                 unoptimized
               />
-              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2">
-                LUX <span className="text-white/40 mx-1">|</span>{' '}
-                <span className="text-gray-800">INC</span>
+              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2 flex items-center justify-center gap-2 md:gap-3">
+                LUX
+                <span
+                  className="inline-block bg-white"
+                  style={{ width: '0.12em', height: '0.9em' }}
+                />
+                <span className="text-black">INC</span>
               </h2>
-              <p className="text-white/60 text-xs md:text-base mb-4 md:mb-6 max-w-xs">
-                Ana markamız. Dijital stüdyo çözümleri için LUX INC.
+              <p className="text-white/50 text-[11px] md:text-sm mb-2 md:mb-3 max-w-xs font-medium">
+                Ana markamız. Dijital stüdyo çözümleri için
+              </p>
+              <p className="text-white/60 text-[10px] md:text-xs mb-4 md:mb-6 max-w-xs tracking-widest font-semibold">
+                LUX | INC
               </p>
               <Link
                 href="https://www.instagram.com/lux.studio.inc/"
