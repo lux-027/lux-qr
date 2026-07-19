@@ -7,6 +7,16 @@ module.exports = {
   priority: 1.0,
   sitemapSize: 7000,
   exclude: ['/api/*', '/view/*'],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/', '/view/'],
+      },
+    ],
+    additionalSitemaps: ['https://luxqrpro.site/sitemap.xml'],
+  },
   transform: async (config, path) => {
     // Higher priority for QR creation pages
     let priority = config.priority;
@@ -31,6 +41,7 @@ module.exports = {
       { loc: '/qr/wifi', priority: 0.9, changefreq: 'weekly' },
       { loc: '/qr/sosyal-medya', priority: 0.9, changefreq: 'weekly' },
       { loc: '/qr/ses-dosyasi', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/lux-studio', priority: 0.6, changefreq: 'monthly' },
     ];
     
     return qrPages;
