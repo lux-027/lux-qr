@@ -14,7 +14,7 @@ export default function Footer() {
 
   const qrLinks = [
     { href: '/qr/metin', label: 'Metin', icon: Type, color: 'text-blue-400' },
-    { href: '/qr/metin-belge', label: 'Resim/Video/Belge', icon: ImageIcon, color: 'text-violet-400' },
+    { href: '/qr/resim-video-belge', label: 'Resim/Video/Belge', icon: ImageIcon, color: 'text-violet-400' },
     { href: '/qr/kartvizit', label: 'Dijital Kartvizit', icon: CreditCard, color: 'text-cyan-400' },
     { href: '/qr/wifi', label: 'WiFi', icon: Wifi, color: 'text-emerald-400' },
     { href: '/qr/sosyal-medya', label: 'Sosyal Medya', icon: Share2, color: 'text-pink-400' },
@@ -45,7 +45,7 @@ export default function Footer() {
           {/* Brand Block */}
           <div className="md:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
-              <Image src="/luxqrlogo1.png" alt="LuxQr" width={40} height={40} className="rounded-2xl shadow-lg shadow-blue-500/30" />
+              <Image src="/luxqrlogo2.png" alt="LuxQr" width={40} height={40} className="rounded-2xl shadow-lg shadow-blue-500/30" />
               <div>
                 <p className="text-gray-900 font-bold text-xl">LuxQr</p>
                 <p className="text-gray-600 text-xs">Modern QR Kod Çözümleri</p>
@@ -88,7 +88,7 @@ export default function Footer() {
                   </p>
                   {/* RGB underline */}
                   <div className="mt-1 h-[3px] rounded-full w-full"
-                    style={{ background: 'linear-gradient(90deg,#6366f1,#8b5cf6,#ec4899,#f97316,#06b6d4,#6366f1)', backgroundSize: '200% 100%', animation: 'gradient-shift 6s linear infinite' }} />
+                    style={{ background: 'linear-gradient(90deg,#6366f1,#8b5cf6,#ec4899,#f97316,#06b6d4,#6366f1)' }} />
                 </div>
 
                 {/* live indicator */}
@@ -197,7 +197,7 @@ export default function Footer() {
               style={{ background: 'linear-gradient(180deg,rgba(255,255,255,0.5) 0%,transparent 100%)' }} />
             {/* left — brand */}
             <div className="relative z-10 flex items-center gap-2.5">
-              <Image src="/luxqrlogo1.png" alt="LuxQr" width={28} height={28} className="rounded-lg shadow-md" />
+              <Image src="/luxqrlogo2.png" alt="LuxQr" width={28} height={28} className="rounded-lg shadow-md" />
               <span className="text-gray-800 text-xs font-semibold">
                 © 2026 <span className="font-black text-gray-900">LuxQr</span>
                 <span className="text-gray-500 font-normal ml-1">— Tüm hakları saklıdır.</span>

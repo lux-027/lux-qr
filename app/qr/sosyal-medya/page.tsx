@@ -10,10 +10,12 @@ export const metadata: Metadata = {
     description: "Instagram, TikTok, Facebook ve YouTube sayfalarınız için QR kod oluşturun. Link-in-bio çözümleri ile tüm sosyal medya hesaplarınızı tek noktada toplayın.",
     url: "https://luxqrpro.site/qr/sosyal-medya",
     type: "website",
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     title: "Sosyal Medya QR Kod Oluşturucu | Instagram, TikTok, Facebook, YouTube",
     description: "Instagram, TikTok, Facebook ve YouTube sayfalarınız için QR kod oluşturun. Link-in-bio çözümleri ile tüm sosyal medya hesaplarınızı tek noktada toplayın.",
+    images: '/luxqrlogo2.png',
   },
 };
 

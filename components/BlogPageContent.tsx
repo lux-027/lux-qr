@@ -18,7 +18,7 @@ interface BlogPageContentProps {
 
 const allQrTypes = [
   { title: 'Metin', desc: 'Metin içeriğinizi QR koda dönüştürün', link: '/qr/metin', image: 'https://images.unsplash.com/photo-1770368787728-73c60309cb42?w=800&q=80&fm=webp' },
-  { title: 'Resim / Video / Belge', desc: 'PDF, fotoğraf ve video dosyalarınıza QR ile ulaşım', link: '/qr/metin-belge', image: 'https://images.unsplash.com/photo-1762859370515-dfddfb7fe1d6?w=800&q=80&fm=webp' },
+  { title: 'Resim / Video / Belge', desc: 'PDF, fotoğraf ve video dosyalarınıza QR ile ulaşım', link: '/qr/resim-video-belge', image: 'https://images.unsplash.com/photo-1762859370515-dfddfb7fe1d6?w=800&q=80&fm=webp' },
   { title: 'Kartvizit', desc: 'Dijital vCard ile profesyonel bağlantılar', link: '/qr/kartvizit', image: 'https://images.unsplash.com/photo-1636247498719-a8a04ed961a4?w=800&q=80&fm=webp' },
   { title: 'WiFi', desc: 'Ağ şifresini tek tarama ile paylaşın', link: '/qr/wifi', image: 'https://images.unsplash.com/photo-1606420187127-dae7c868fa7a?w=800&q=80&fm=webp' },
   { title: 'Sosyal Medya', desc: 'Takipçilerinizi tek linke yönlendirin', link: '/qr/sosyal-medya', image: 'https://images.unsplash.com/photo-1622549037543-49cf1ca0babc?w=800&q=80&fm=webp' },

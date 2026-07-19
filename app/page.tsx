@@ -10,10 +10,12 @@ export const metadata: Metadata = {
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Ücretsiz ve güvenli QR kod oluşturma platformu.",
     url: "https://luxqrpro.site",
     type: "website",
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+    images: '/luxqrlogo2.png',
   },
 };
 

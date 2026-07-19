@@ -32,7 +32,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
   const pathname = usePathname();
 
-  const basicHrefs = ['/qr/metin', '/qr/metin-belge', '/qr/ses-dosyasi', '/qr/wifi', '/qr/iban'];
+  const basicHrefs = ['/qr/metin', '/qr/resim-video-belge', '/qr/ses-dosyasi', '/qr/wifi', '/qr/iban'];
 
   const advancedHrefs = ['/qr/kartvizit', '/qr/sosyal-medya', '/qr/fiyat-listesi', '/qr/bio-link'];
 
@@ -90,7 +90,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
     { href: '/qr/metin', label: 'Metin', icon: Type, color: 'text-blue-600' },
 
-    { href: '/qr/metin-belge', label: 'Resim/Video/Belge', icon: ImageIcon, color: 'text-violet-600' },
+    { href: '/qr/resim-video-belge', label: 'Resim/Video/Belge', icon: ImageIcon, color: 'text-violet-600' },
 
     { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-500' },
 
@@ -190,7 +190,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
             <Link href="/" className="flex items-center gap-3">
 
-              <Image src="/luxqrlogo1.png" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
+              <Image src="/luxqrlogo2.png" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
 
               <span className="text-2xl font-bold text-gradient">LuxQr</span>
 

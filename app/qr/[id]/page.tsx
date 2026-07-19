@@ -935,7 +935,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             {(() => {
                 const basicLinks = [
                   { href: '/qr/metin', label: 'Metin', icon: Type, color: 'text-blue-400' },
-                  { href: '/qr/metin-belge', label: 'Resim / Video / Belge', icon: FileText, color: 'text-violet-400' },
+                  { href: '/qr/resim-video-belge', label: 'Resim / Video / Belge', icon: FileText, color: 'text-violet-400' },
                   { href: '/qr/ses-dosyasi', label: 'Ses Dosyası', icon: Mic, color: 'text-orange-400' },
                   { href: '/qr/wifi', label: 'WiFi', icon: Wifi, color: 'text-emerald-400' },
                   { href: '/qr/iban', label: 'IBAN', icon: Landmark, color: 'text-yellow-400' },
@@ -1114,7 +1114,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 </button>
 
                 <button
-                  onClick={() => router.push('/qr/metin-belge')}
+                  onClick={() => router.push('/qr/resim-video-belge')}
                   className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-gray-900 px-4 md:px-6 py-2 rounded-2xl transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 text-sm md:text-base"
                 >
                   <Plus className="w-4 h-4 md:w-5 md:h-5" />

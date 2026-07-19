@@ -279,7 +279,7 @@ export default function FAQPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
               { icon: FileText,   title: 'Metin',            desc: 'Metin içeriği',       link: '/qr/metin',       from: '#3b82f6', to: '#6366f1', glow: 'rgba(59,130,246,0.22)',  accent: '#3b82f6' },
-              { icon: FileText,   title: 'Resim/Belge',      desc: 'PDF ve dosya paylaşımı', link: '/qr/metin-belge', from: '#8b5cf6', to: '#ec4899', glow: 'rgba(139,92,246,0.22)', accent: '#8b5cf6' },
+              { icon: FileText,   title: 'Resim/Belge',      desc: 'PDF ve dosya paylaşımı', link: '/qr/resim-video-belge', from: '#8b5cf6', to: '#ec4899', glow: 'rgba(139,92,246,0.22)', accent: '#8b5cf6' },
               { icon: Users,      title: 'Kartvizit',        desc: 'Dijital vCard',        link: '/qr/kartvizit',   from: '#06b6d4', to: '#3b82f6', glow: 'rgba(6,182,212,0.22)',   accent: '#06b6d4' },
               { icon: Zap,        title: 'WiFi',             desc: 'Ağ paylaşımı',         link: '/qr/wifi',        from: '#10b981', to: '#06b6d4', glow: 'rgba(16,185,129,0.22)', accent: '#10b981' },
             ].map(({ icon: Icon, title, desc, link, from, to, glow, accent }) => (

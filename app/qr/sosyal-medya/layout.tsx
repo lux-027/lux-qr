@@ -11,11 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Sosyal Medya Link-in-Bio QR Kodu Oluşturma - LuxQR',
     description: 'Instagram, TikTok, Facebook ve YouTube hesaplarınızı tek bir şık ekranda toplayan Link-in-Bio QR kodları ile etkileşiminizi artırın.',
+    images: '/luxqrlogo2.png',
   },
 };
 

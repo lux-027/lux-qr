@@ -11,11 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQr',
     locale: 'tr_TR',
     type: 'website',
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Sıkça Sorulan Sorular | LuxQr',
     description: 'LuxQr QR kod oluşturucu hakkında merak edilen tüm soruların yanıtları.',
+    images: '/luxqrlogo2.png',
   },
 };
 

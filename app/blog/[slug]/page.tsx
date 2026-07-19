@@ -34,12 +34,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         siteName: 'LuxQr',
         type: 'article',
         locale: 'tr_TR',
+        images: '/luxqrlogo2.png',
       },
       twitter: {
         card: 'summary_large_image',
         title: post.title,
         description: post.description,
         creator: '@luxqrpro',
+        images: '/luxqrlogo2.png',
       },
     };
   } catch (error) {

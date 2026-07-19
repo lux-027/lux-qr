@@ -25,6 +25,15 @@ const nextConfig = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   },
+  async redirects() {
+    return [
+      {
+        source: '/qr/metin-belge',
+        destination: '/qr/resim-video-belge',
+        permanent: true,
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig

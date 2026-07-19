@@ -8,12 +8,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Resim, Video, Belge QR Kod Oluşturucu | LuxQr",
     description: "Resim, video ve belge dosyalarınız için ücretsiz QR kod oluşturun.",
-    url: "https://luxqrpro.site/qr/metin-belge",
+    url: "https://luxqrpro.site/qr/resim-video-belge",
     type: "website",
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     title: "Resim, Video, Belge QR Kod Oluşturucu",
     description: "Resim, video ve belge dosyalarınız için ücretsiz QR kod oluşturun.",
+    images: '/luxqrlogo2.png',
   },
 };
 

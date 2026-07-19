@@ -46,7 +46,7 @@
       "name": "Metin QR",
       "short_name": "Metin",
       "description": "Metin için QR kod oluştur",
-      "url": "/qr/metin-belge",
+      "url": "/qr/resim-video-belge",
       "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
     },
     {

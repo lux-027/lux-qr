@@ -11,11 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQr',
     locale: 'tr_TR',
     type: 'website',
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'İletişim | LuxQr',
     description: 'LuxQr ekibiyle iletişime geçin. QR kod oluşturma, iş birliği ve teknik destek için bize ulaşın.',
+    images: '/luxqrlogo2.png',
   },
 };
 

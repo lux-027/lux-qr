@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import PageWrapper from "@/components/PageWrapper";
 import Script from "next/script";
@@ -8,7 +8,9 @@ import { CounterProvider } from "@/context/CounterContext";
 import { NotificationProvider } from "@/components/Notification";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], display: 'swap' });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+
+const inter = Inter({ subsets: ["latin"], display: 'optional' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://luxqrpro.site'),
@@ -37,11 +39,13 @@ export const metadata: Metadata = {
     siteName: "LuxQR",
     locale: "tr_TR",
     type: "website",
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     card: "summary_large_image",
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+    images: '/luxqrlogo2.png',
   },
   alternates: {
     canonical: './',
@@ -60,6 +64,11 @@ export default function RootLayout({
     <html lang="tr" className="overflow-x-hidden" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -119,7 +128,7 @@ export default function RootLayout({
               "@type": "Organization",
               "name": "LuxQr",
               "url": "https://luxqrpro.site",
-              "logo": "https://luxqrpro.site/luxqrlogo1.png",
+              "logo": "https://luxqrpro.site/luxqrlogo2.png",
               "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
               "sameAs": [
                 "https://www.facebook.com/luxqr",
@@ -140,18 +149,6 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `}
-        </Script>
       </head>
       <body className={`${inter.className} overflow-x-hidden`}>
         <CounterProvider>

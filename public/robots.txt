@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 Allow: /qr/metin
-Allow: /qr/metin-belge
+Allow: /qr/resim-video-belge
 Allow: /qr/ses-dosyasi
 Allow: /qr/kartvizit
 Allow: /qr/wifi

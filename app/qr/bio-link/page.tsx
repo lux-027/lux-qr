@@ -10,10 +10,12 @@ export const metadata: Metadata = {
     description: "Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın.",
     url: "https://luxqrpro.site/qr/bio-link",
     type: "website",
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     title: "Bio Link / Link Ağacı QR Kod Oluşturucu",
     description: "Tüm sosyal medya ve web linklerinizi tek bir sayfada toplayın.",
+    images: '/luxqrlogo2.png',
   },
 };
 

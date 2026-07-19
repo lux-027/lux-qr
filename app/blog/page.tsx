@@ -18,12 +18,14 @@ export const metadata: Metadata = {
     siteName: 'LuxQr',
     type: 'website',
     locale: 'tr_TR',
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'LuxQr Blog - QR Kod Rehberi ve Güncel Haberler',
     description: 'QR kod oluşturma ipuçları, kullanım rehberleri ve en son teknoloji haberleri.',
     creator: '@luxqrpro',
+    images: '/luxqrlogo2.png',
   },
 };
 

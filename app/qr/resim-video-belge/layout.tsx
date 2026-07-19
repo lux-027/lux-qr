@@ -7,15 +7,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'PDF, Belge, Resim ve Metin QR Kod Dönüştürücü - LuxQR',
     description: 'PDF, Word, resim, video ve metin dosyalarınızı saniyeler içinde QR koda dönüştürün, dijital dökümantasyon hızını maksimuma çıkarın.',
-    url: 'https://luxqrpro.site/qr/metin-belge',
+    url: 'https://luxqrpro.site/qr/resim-video-belge',
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',
+    images: '/luxqrlogo2.png',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'PDF, Belge, Resim ve Metin QR Kod Dönüştürücü - LuxQR',
     description: 'PDF, Word, resim, video ve metin dosyalarınızı saniyeler içinde QR koda dönüştürün, dijital dökümantasyon hızını maksimuma çıkarın.',
+    images: '/luxqrlogo2.png',
   },
 };
 

@@ -36,7 +36,7 @@ module.exports = {
   },
   additionalPaths: async (config) => {
     const qrPages = [
-      { loc: '/qr/metin-belge', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/qr/resim-video-belge', priority: 0.9, changefreq: 'weekly' },
       { loc: '/qr/kartvizit', priority: 0.9, changefreq: 'weekly' },
       { loc: '/qr/wifi', priority: 0.9, changefreq: 'weekly' },
       { loc: '/qr/sosyal-medya', priority: 0.9, changefreq: 'weekly' },

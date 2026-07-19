@@ -13,7 +13,7 @@ const BlogSlider = dynamic(() => import('@/components/BlogSlider'), {
 
 const basicQrCategories = [
   { title: 'Metin',             description: 'Metin içeriğinizi QR koda dönüştürün',                              icon: Type,        href: '/qr/metin',         color: 'from-blue-500 to-purple-500',   iconColor: '#6366f1' },
-  { title: 'Resim/Video/Belge', description: 'Resim, video ve belge yükleyerek QR kod oluşturun',                 icon: ImageIcon,   href: '/qr/metin-belge',   color: 'from-purple-500 to-pink-500',   iconColor: '#a855f7' },
+  { title: 'Resim/Video/Belge', description: 'Resim, video ve belge yükleyerek QR kod oluşturun',                 icon: ImageIcon,   href: '/qr/resim-video-belge',   color: 'from-purple-500 to-pink-500',   iconColor: '#a855f7' },
   { title: 'Ses Dosyası',       description: 'Ses dosyalarınız yükleyerek QR kod oluşturun',                      icon: Mic,         href: '/qr/ses-dosyasi',   color: 'from-green-500 to-emerald-500', iconColor: '#22c55e' },
   { title: 'WiFi',              description: 'WiFi ağ bilgilerinizi QR kod ile kolayca paylaşın',                 icon: Wifi,        href: '/qr/wifi',          color: 'from-pink-500 to-rose-500',     iconColor: '#ec4899' },
   { title: 'IBAN',              description: 'IBAN bilgilerinizi QR kod ile kolayca paylaşın',                    icon: Landmark,    href: '/qr/iban',          color: 'from-blue-500 to-cyan-500',     iconColor: '#3b82f6' },
