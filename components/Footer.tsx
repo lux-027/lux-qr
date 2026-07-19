@@ -45,7 +45,7 @@ export default function Footer() {
           {/* Brand Block */}
           <div className="md:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
-              <Image src="/luxqrlogo2.png" alt="LuxQr" width={40} height={40} className="rounded-2xl shadow-lg shadow-blue-500/30" />
+              <Image src="/favicon.svg" alt="LuxQr" width={40} height={40} className="rounded-2xl shadow-lg shadow-blue-500/30" />
               <div>
                 <p className="text-gray-900 font-bold text-xl">LuxQr</p>
                 <p className="text-gray-600 text-xs">Modern QR Kod Çözümleri</p>
@@ -197,7 +197,7 @@ export default function Footer() {
               style={{ background: 'linear-gradient(180deg,rgba(255,255,255,0.5) 0%,transparent 100%)' }} />
             {/* left — brand */}
             <div className="relative z-10 flex items-center gap-2.5">
-              <Image src="/luxqrlogo2.png" alt="LuxQr" width={28} height={28} className="rounded-lg shadow-md" />
+              <Image src="/favicon.svg" alt="LuxQr" width={28} height={28} className="rounded-lg shadow-md" />
               <span className="text-gray-800 text-xs font-semibold">
                 © 2026 <span className="font-black text-gray-900">LuxQr</span>
                 <span className="text-gray-500 font-normal ml-1">— Tüm hakları saklıdır.</span>

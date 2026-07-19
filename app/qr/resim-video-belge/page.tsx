@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     description: "Resim, video ve belge dosyalarınız için ücretsiz QR kod oluşturun.",
     url: "https://luxqrpro.site/qr/resim-video-belge",
     type: "website",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     title: "Resim, Video, Belge QR Kod Oluşturucu",
     description: "Resim, video ve belge dosyalarınız için ücretsiz QR kod oluşturun.",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Hızlı ve Güvenli WiFi QR Kodu Oluşturucu - LuxQR',
     description: 'İşletmeniz veya eviniz için şifre yazma derdine son veren, tek tıkla otomatik bağlanan güvenli WiFi QR kodları oluşturun.',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

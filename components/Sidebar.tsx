@@ -190,7 +190,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
             <Link href="/" className="flex items-center gap-3">
 
-              <Image src="/luxqrlogo2.png" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
+              <Image src="/favicon.svg" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
 
               <span className="text-2xl font-bold text-gradient">LuxQr</span>
 

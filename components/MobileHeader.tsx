@@ -14,7 +14,7 @@ export default function MobileHeader({ isOpen, onMenuClick }: MobileHeaderProps)
     <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/08 shadow-sm">
       <div className="flex items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/luxqrlogo2.png" alt="LuxQr" width={32} height={32} className="rounded-lg shadow-md" />
+          <Image src="/favicon.svg" alt="LuxQr" width={32} height={32} className="rounded-lg shadow-md" />
           <span className="text-xl font-bold text-gradient">LuxQr</span>
         </Link>
 

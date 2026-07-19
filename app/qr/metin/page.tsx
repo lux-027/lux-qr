@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     description: "Metin içeriğiniz için ücretsiz QR kod oluşturun.",
     url: "https://luxqrpro.site/qr/metin",
     type: "website",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     title: "Metin QR Kod Oluşturucu",
     description: "Metin içeriğiniz için ücretsiz QR kod oluşturun.",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

@@ -1,6 +1,6 @@
 # Modern browsers targeting for better performance
 # This ensures Next.js doesn't output legacy polyfills
-> 0.5%
 last 2 versions
 not dead
+not op_mini all
 not IE 11

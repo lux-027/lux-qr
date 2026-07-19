@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQr',
     locale: 'tr_TR',
     type: 'website',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'LUX Studio | LuxQr',
     description: 'LuxQr ve LUX INC markalarının yaratıcı merkezi. Dijital stüdyo çözümleri ve QR kod teknolojileri için LUX Studio.',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

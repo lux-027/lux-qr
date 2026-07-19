@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQr',
     locale: 'tr_TR',
     type: 'website',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Kullanım Koşulları | LuxQr',
     description: 'LuxQr kullanım koşulları ve hizmet şartları.',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

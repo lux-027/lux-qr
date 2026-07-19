@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     description: "Profesyonel dijital kartvizit QR kodu oluşturun. vCard formatında kartvizit bilgilerinizi QR koda dönüştürün.",
     url: "https://luxqrpro.site/qr/kartvizit",
     type: "website",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     title: "Kartvizit QR Kod Oluşturucu | vCard Dijital Kartvizit",
     description: "Profesyonel dijital kartvizit QR kodu oluşturun. vCard formatında kartvizit bilgilerinizi QR koda dönüştürün.",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

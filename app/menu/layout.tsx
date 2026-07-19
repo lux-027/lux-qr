@@ -9,13 +9,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQr',
     locale: 'tr_TR',
     type: 'website',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Dijital Menü | LuxQr',
     description: 'LuxQr ile oluşturulmuş dijital menü. Restoran, kafe ve hizmet listelerini kolayca görüntüleyin.',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

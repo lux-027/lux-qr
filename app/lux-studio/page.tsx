@@ -126,7 +126,7 @@ export default function LuxStudioPage() {
             <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative flex flex-col items-center">
               <Image
-                src="/luxqrlogo2.png"
+                src="/favicon.svg"
                 alt="LuxQr Logo"
                 width={120}
                 height={120}
@@ -154,7 +154,7 @@ export default function LuxStudioPage() {
             <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative flex flex-col items-center">
               <Image
-                src="/luxstudio_logo.png"
+                src="/favicon.svg"
                 alt="LUX INC Logo"
                 width={120}
                 height={120}

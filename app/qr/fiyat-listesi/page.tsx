@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     description: "Restoran menüsü, hizmet listesi veya ürün fiyatlarınız için ücretsiz QR kod oluşturun.",
     url: "https://luxqrpro.site/qr/fiyat-listesi",
     type: "website",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     title: "Fiyat Listesi QR Kod Oluşturucu",
     description: "Restoran menüsü, hizmet listesi veya ürün fiyatlarınız için ücretsiz QR kod oluşturun.",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

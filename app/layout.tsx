@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   authors: [{ name: "LuxQr Team" }],
   icons: {
     icon: [
+      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
       { url: "/favicon.ico", sizes: "any" },
       { url: "/icon-48x48.png", type: "image/png", sizes: "48x48" },
       { url: "/icon-96x96.png", type: "image/png", sizes: "96x96" },
@@ -39,13 +40,13 @@ export const metadata: Metadata = {
     siteName: "LuxQR",
     locale: "tr_TR",
     type: "website",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: "summary_large_image",
     title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
     description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   alternates: {
     canonical: './',
@@ -70,8 +71,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
         <meta charSet="UTF-8" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -128,7 +127,7 @@ export default function RootLayout({
               "@type": "Organization",
               "name": "LuxQr",
               "url": "https://luxqrpro.site",
-              "logo": "https://luxqrpro.site/luxqrlogo2.png",
+              "logo": "https://luxqrpro.site/favicon.svg",
               "description": "Türkiye'nin en gelişmiş QR kod oluşturucu",
               "sameAs": [
                 "https://www.facebook.com/luxqr",

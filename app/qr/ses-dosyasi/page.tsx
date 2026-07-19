@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     description: "Ses dosyalarınız yükleyerek QR kod oluşturun. Podcast bölümleri, sesli rehberler ve müzik dosyalarınız için QR kod.",
     url: "https://luxqrpro.site/qr/ses-dosyasi",
     type: "website",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     title: "Ses Dosyası QR Kod Oluşturucu | MP3, WAV, M4A",
     description: "Ses dosyalarınız yükleyerek QR kod oluşturun. Podcast bölümleri, sesli rehberler ve müzik dosyalarınız için QR kod.",
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

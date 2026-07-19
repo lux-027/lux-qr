@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MP3 ve Ses Dosyası QR Kod Dönüştürücü - LuxQR',
     description: 'Podcast, sesli not ve müzik dosyalarınızı (MP3, WAV) buluta yükleyip menülere veya sergilere özel sesli QR kodlar üretin.',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 

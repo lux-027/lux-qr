@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     siteName: 'LuxQR',
     locale: 'tr_TR',
     type: 'website',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ücretsiz Dijital vCard Kartvizit QR Kodu Oluştur - LuxQR',
     description: 'Kağıt kartvizitleri bırakın. iOS ve Android uyumlu, tüm iletişim bilgilerinizi içeren modern dijital vCard QR kodunuzu hemen tasarlayın.',
-    images: '/luxqrlogo2.png',
+    images: '/favicon.svg',
   },
 };
 
