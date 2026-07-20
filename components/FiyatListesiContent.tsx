@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import {
@@ -10,7 +10,6 @@ import {
   MousePointerClick, FolderOpen, PlusCircle, Sparkles,
   MapPin, Phone, Globe, Instagram, Link2
 } from 'lucide-react';
-import { useRef } from 'react';
 
 interface MenuItem {
   id: string;
@@ -70,6 +69,11 @@ export default function FiyatListesiContent() {
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   const [discountModal, setDiscountModal] = useState<{ catId: string; itemId: string; tempVal: string } | null>(null);
   const [itemModal, setItemModal] = useState<{ catId: string; item: MenuItem; isNew: boolean } | null>(null);
+  const [managerOpen, setManagerOpen] = useState(false);
+  const [managerSelectedCatId, setManagerSelectedCatId] = useState<string | null>(null);
+  const [newCatName, setNewCatName] = useState('');
+  const managerCatImgRef = useRef<HTMLInputElement | null>(null);
+  const [pendingManagerCatId, setPendingManagerCatId] = useState<string | null>(null);
   const itemModalImgRef = useRef<HTMLInputElement | null>(null);
   const [itemModalUploading, setItemModalUploading] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
@@ -243,19 +247,36 @@ export default function FiyatListesiContent() {
     },
   ];
 
+  const demoAddresses = ['İstiklal Caddesi No: 45', 'Atatürk Bulvarı No: 12', 'Sahil Yolu No: 8', 'Çarşı Meydanı No: 3', 'Bahçeli Sokak No: 21'];
+  const demoCities = ['İstanbul', 'Ankara', 'İzmir', 'Antalya', 'Bursa'];
+  const demoInstagrams = ['cafeluxdemo', 'lux_cafe', 'kahve_duragi', 'lezzet_mekani', 'restoran_34', 'butikmenu'];
+  const demoWebsites = ['https://luxqrpro.site', 'https://ornekisletme.com', 'https://menudemo.net', 'https://qrmenum.com'];
+  const demoLogos = [
+    'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400&q=80',
+    'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400&q=80',
+    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80',
+    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80',
+  ];
+  const randomPhone = () => {
+    const prefix = ['+9053', '+9054', '+9055'][Math.floor(Math.random() * 3)];
+    const rest = Math.floor(1000000 + Math.random() * 9000000).toString();
+    return `${prefix}${rest}`;
+  };
+
   const fillDemo = () => {
     const scenario = demoScenarios[Math.floor(Math.random() * demoScenarios.length)];
+    const city = demoCities[Math.floor(Math.random() * demoCities.length)];
     setPriceList({
       brandName: scenario.brandName,
       brandDescription: scenario.brandDescription,
       currency: scenario.currency,
-      logoUrl: '',
-      address: '',
-      city: '',
-      mapsUrl: '',
-      phone: '',
-      instagram: '',
-      website: '',
+      logoUrl: demoLogos[Math.floor(Math.random() * demoLogos.length)],
+      address: demoAddresses[Math.floor(Math.random() * demoAddresses.length)],
+      city,
+      mapsUrl: `https://maps.google.com/?q=${encodeURIComponent(city)}`,
+      phone: randomPhone(),
+      instagram: demoInstagrams[Math.floor(Math.random() * demoInstagrams.length)],
+      website: demoWebsites[Math.floor(Math.random() * demoWebsites.length)],
       categories: scenario.categories.map((cat) => ({
         id: generateId(),
         name: cat.name,
@@ -303,16 +324,17 @@ export default function FiyatListesiContent() {
     );
   };
 
-  const addCategory = () => {
+  const addCategory = (name = '') => {
     const newId = generateId();
     setPriceList((prev) => ({
       ...prev,
       categories: [
         ...prev.categories,
-        { id: newId, name: '', imageUrl: '', items: [] },
+        { id: newId, name, imageUrl: '', items: [] },
       ],
     }));
     setOpenCategories((prev) => [...prev, newId]);
+    return newId;
   };
 
   const handleCatImageUpload = async (catId: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -354,6 +376,13 @@ export default function FiyatListesiContent() {
     setPriceList((prev) => ({
       ...prev,
       categories: prev.categories.map((c) => (c.id === catId ? { ...c, name } : c)),
+    }));
+  };
+
+  const clearCategoryImage = (catId: string) => {
+    setPriceList((prev) => ({
+      ...prev,
+      categories: prev.categories.map((c) => (c.id === catId ? { ...c, imageUrl: '' } : c)),
     }));
   };
 
@@ -776,7 +805,7 @@ export default function FiyatListesiContent() {
         </div>
       </motion.div>
 
-      {/* Categories */}
+      {/* Categories Overview */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <div className="card-premium p-4 md:p-10">
           <div className="flex items-center justify-between mb-6 md:mb-8">
@@ -786,11 +815,14 @@ export default function FiyatListesiContent() {
               </div>
               <div>
                 <h3 className="text-lg md:text-2xl font-bold text-gray-900">Kategoriler ve Ürünler</h3>
-                <p className="text-gray-600 text-xs md:text-sm mt-0.5">Her kategori için ürün, fiyat ve resim ekleyin</p>
+                <p className="text-gray-600 text-xs md:text-sm mt-0.5">Önce kategorileri oluşturun, ardından ürünleri ekleyin</p>
               </div>
             </div>
             <button
-              onClick={addCategory}
+              onClick={() => {
+                setManagerOpen(true);
+                if (!managerSelectedCatId && priceList.categories.length > 0) setManagerSelectedCatId(priceList.categories[0].id);
+              }}
               className="group relative overflow-hidden flex items-center gap-2 pl-3 pr-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
               style={{
                 background: 'linear-gradient(135deg,#f97316,#f59e0b)',
@@ -801,143 +833,34 @@ export default function FiyatListesiContent() {
               <span className="w-6 h-6 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,255,255,0.2)' }}>
                 <Plus className="w-3.5 h-3.5 text-white" />
               </span>
-              <span className="text-white drop-shadow-sm">Kategori Ekle</span>
+              <span className="text-white drop-shadow-sm">Ürünleri Ekle</span>
             </button>
           </div>
 
-          <div className="space-y-4">
-            {priceList.categories.map((cat, catIdx) => {
-              const isOpen = openCategories.includes(cat.id);
-              return (
-                <div key={cat.id} className="rounded-xl overflow-hidden border border-gray-300/50">
-
-                  {/* ── Kategori Başlığı ── */}
-                  <div
-                    className={`flex items-center gap-2 px-3 py-3 cursor-pointer transition-all ${
-                      isOpen ? 'bg-gray-200' : 'bg-gray-100 hover:bg-gray-100'
-                    }`}
-                    onClick={() => { if (cat.name.trim()) toggleCategory(cat.id); }}
-                  >
-                    <span className="text-orange-400 flex-shrink-0">
-                      {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </span>
-
-                    {/* Kategori Resmi */}
-                    <div className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        ref={(el) => { catInputRefs.current[cat.id] = el; }}
-                        onChange={(e) => handleCatImageUpload(cat.id, e)}
-                      />
-                      {cat.imageUrl ? (
-                        <div className="relative group">
-                          <img src={cat.imageUrl} alt={cat.name} className="w-10 h-10 rounded-lg object-cover border border-gray-300" />
-                          {catUploading === cat.id && (
-                            <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
-                              <Loader2 className="w-3 h-3 text-gray-900 animate-spin" />
-                            </div>
-                          )}
-                          <button
-                            onClick={() => setPriceList((prev) => ({ ...prev, categories: prev.categories.map((c) => c.id === cat.id ? { ...c, imageUrl: '' } : c) }))}
-                            className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center"
-                          >
-                            <XIcon className="w-2.5 h-2.5 text-gray-900" />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => catInputRefs.current[cat.id]?.click()}
-                          className="w-10 h-10 rounded-lg border border-dashed border-slate-500 hover:border-orange-400/60 flex items-center justify-center text-gray-500 hover:text-orange-400 transition-all"
-                          title="Kategori resmi ekle"
-                        >
-                          <ImagePlus className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-
-                    <input
-                      type="text"
-                      value={cat.name}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => updateCategory(cat.id, e.target.value)}
-                      placeholder="Kategori adı..."
-                      className="flex-1 bg-transparent text-gray-900 font-semibold placeholder-slate-500 focus:outline-none text-sm cursor-text"
-                    />
-
-                    <span className="text-xs text-gray-500 bg-slate-600/50 px-2 py-0.5 rounded-full flex-shrink-0">
-                      {cat.items.length} ürün
-                    </span>
-
-                    <button
-                      onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); }}
-                      className="text-gray-600 hover:text-red-400 transition-all flex-shrink-0 ml-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+          {priceList.categories.length === 0 ? (
+            <div className="text-center py-10 rounded-2xl border border-dashed border-gray-300 bg-gray-50">
+              <Package className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+              <p className="text-sm font-semibold text-gray-700">Henüz kategori yok</p>
+              <p className="text-xs text-gray-500 mt-1">“Ürünleri Ekle” butonuyla kategori ve ürün ekleyebilirsiniz</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {priceList.categories.map((cat) => (
+                <div key={cat.id} className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-gray-100 border border-gray-200 shadow-sm group">
+                  {cat.imageUrl ? (
+                    <img src={cat.imageUrl} alt={cat.name} className="absolute inset-0 w-full h-full object-cover" />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-amber-50" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white font-bold text-sm leading-tight drop-shadow-md line-clamp-1">{cat.name}</p>
+                    <p className="text-white/85 text-xs mt-0.5">{cat.items.length} ürün</p>
                   </div>
-
-                  {/* ── Ürün Listesi ── */}
-                  <AnimatePresence>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="bg-white/80 p-2.5 space-y-2">
-                          {cat.items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-3 bg-gray-100 border border-gray-200 hover:border-gray-300 rounded-xl px-3 py-2.5 transition-all">
-                              {item.imageUrl ? (
-                                <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-gray-300 flex-shrink-0" />
-                              ) : (
-                                <div className="w-10 h-10 rounded-lg bg-gray-200 border border-gray-300 flex items-center justify-center flex-shrink-0">
-                                  <Package className="w-4 h-4 text-gray-500" />
-                                </div>
-                              )}
-                              <div className="flex-1 min-w-0">
-                                <p className="text-gray-900 text-sm font-medium truncate">{item.name || <span className="text-gray-500 italic">İsimsiz ürün</span>}</p>
-                                <div className="flex items-center gap-2 mt-0.5">
-                                  {item.price ? (
-                                    <span className="text-amber-400 text-xs font-bold">{priceList.currency} {item.price}</span>
-                                  ) : (
-                                    <span className="text-gray-600 text-xs">Fiyat girilmedi</span>
-                                  )}
-                                  {item.discount && Number(item.discount) > 0 && (
-                                    <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-1.5 py-0.5 rounded-full font-bold">%{item.discount}</span>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-1.5 flex-shrink-0">
-                                <button onClick={() => openEditItemModal(cat.id, item)} className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 border border-transparent hover:border-blue-500/20 transition-all" title="Düzenle">
-                                  <Pencil className="w-3.5 h-3.5" />
-                                </button>
-                                <button onClick={() => removeItem(cat.id, item.id)} className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-600 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all" title="Sil">
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-
-                          {/* Ürün Ekle Butonu */}
-                          <button
-                            onClick={() => addItem(cat.id)}
-                            className="flex items-center gap-1.5 w-full justify-center py-2.5 text-orange-400 hover:text-gray-900 text-xs font-semibold transition-all border border-orange-500/40 hover:border-orange-500 bg-orange-500/10 hover:bg-orange-500/25 rounded-lg mt-1 shadow-[0_0_12px_rgba(249,115,22,0.15)] hover:shadow-[0_0_18px_rgba(249,115,22,0.3)]"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                            Ürün Ekle
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
 
@@ -1175,7 +1098,7 @@ export default function FiyatListesiContent() {
       <AnimatePresence>
         {itemModal && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
             onClick={() => setItemModal(null)}
           >
             <motion.div
@@ -1287,6 +1210,284 @@ export default function FiyatListesiContent() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Category / Product manager modal */}
+      <CategoryManagerModal
+        open={managerOpen}
+        onClose={() => setManagerOpen(false)}
+        priceList={priceList}
+        onAddItem={addItem}
+        onEditItem={openEditItemModal}
+        removeItem={removeItem}
+        removeCategory={removeCategory}
+        updateCategory={updateCategory}
+        clearCategoryImage={clearCategoryImage}
+        addCategory={addCategory}
+        handleCatImageUpload={handleCatImageUpload}
+        catUploading={catUploading}
+      />
+    </div>
+  );
+}
+
+function CategoryManagerModal({
+  open,
+  onClose,
+  priceList,
+  onAddItem,
+  onEditItem,
+  removeItem,
+  removeCategory,
+  updateCategory,
+  clearCategoryImage,
+  addCategory,
+  handleCatImageUpload,
+  catUploading,
+}: {
+  open: boolean;
+  onClose: () => void;
+  priceList: PriceListData;
+  onAddItem: (catId: string) => void;
+  onEditItem: (catId: string, item: MenuItem) => void;
+  removeItem: (catId: string, itemId: string) => void;
+  removeCategory: (catId: string) => void;
+  updateCategory: (catId: string, name: string) => void;
+  clearCategoryImage: (catId: string) => void;
+  addCategory: (name?: string) => string;
+  handleCatImageUpload: (catId: string, e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  catUploading: string | null;
+}) {
+  const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
+  const [newCatName, setNewCatName] = useState('');
+  const catImgRef = useRef<HTMLInputElement | null>(null);
+  const [pendingCatId, setPendingCatId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setSelectedCatId(null);
+      setNewCatName('');
+      return;
+    }
+    if (priceList.categories.length > 0) {
+      setSelectedCatId((prev) => {
+        const exists = priceList.categories.find((c) => c.id === prev);
+        return exists ? prev : priceList.categories[0].id;
+      });
+    }
+  }, [open, priceList.categories]);
+
+  if (!open) return null;
+
+  const selectedCat = priceList.categories.find((c) => c.id === selectedCatId);
+
+  const handleAddCategory = () => {
+    const name = newCatName.trim();
+    if (!name) return;
+    const id = addCategory(name);
+    setSelectedCatId(id);
+    setNewCatName('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleAddCategory();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="w-full max-w-4xl h-[85vh] md:h-[80vh] bg-white border border-gray-200 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50/50">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-md shadow-orange-500/20">
+              <Layers className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-gray-900">Kategori ve Ürün Yönetimi</h3>
+              <p className="text-xs text-gray-500">Kategorileri oluşturun, ürünleri ekleyin ve düzenleyin</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">
+            <XIcon className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 flex flex-col md:flex-row min-h-0">
+          {/* Left: categories */}
+          <div className="md:w-72 border-b md:border-b-0 md:border-r border-gray-200 flex flex-col min-h-0">
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={newCatName}
+                  onChange={(e) => setNewCatName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Yeni kategori adı"
+                  className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-400 transition-all"
+                />
+                <button
+                  onClick={handleAddCategory}
+                  disabled={!newCatName.trim()}
+                  className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-2 space-y-1">
+              {priceList.categories.length === 0 && (
+                <div className="text-center py-8 text-gray-400 text-xs px-3">
+                  Henüz kategori yok. Yukarıdan kategori ekleyin.
+                </div>
+              )}
+              {priceList.categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  onClick={() => setSelectedCatId(cat.id)}
+                  className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer transition-all ${
+                    selectedCatId === cat.id
+                      ? 'bg-orange-50 border border-orange-200'
+                      : 'hover:bg-gray-50 border border-transparent'
+                  }`}
+                >
+                  {cat.imageUrl ? (
+                    <img src={cat.imageUrl} alt={cat.name} className="w-9 h-9 rounded-lg object-cover border border-gray-100" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-100 to-amber-50 flex items-center justify-center text-orange-500">
+                      <Layers className="w-4 h-4" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800 truncate">{cat.name}</p>
+                    <p className="text-[10px] text-gray-500">{cat.items.length} ürün</p>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeCategory(cat.id);
+                    }}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: selected category products */}
+          <div className="flex-1 flex flex-col min-h-0 bg-white">
+            {selectedCat ? (
+              <>
+                <div className="p-4 border-b border-gray-200">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    ref={catImgRef}
+                    onChange={(e) => {
+                      if (pendingCatId) handleCatImageUpload(pendingCatId, e);
+                    }}
+                  />
+                  <div className="flex items-center gap-3">
+                    {selectedCat.imageUrl ? (
+                      <div className="relative group flex-shrink-0">
+                        <img src={selectedCat.imageUrl} alt={selectedCat.name} className="w-14 h-14 rounded-xl object-cover border border-gray-200" />
+                        {catUploading === selectedCat.id && (
+                          <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
+                            <Loader2 className="w-4 h-4 text-white animate-spin" />
+                          </div>
+                        )}
+                        <button
+                          onClick={() => clearCategoryImage(selectedCat.id)}
+                          className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full hidden group-hover:flex items-center justify-center shadow"
+                        >
+                          <XIcon className="w-3 h-3 text-white" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setPendingCatId(selectedCat.id);
+                          catImgRef.current?.click();
+                        }}
+                        className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-300 hover:border-orange-400/60 flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-orange-500 transition-all flex-shrink-0"
+                      >
+                        {catUploading === selectedCat.id ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImagePlus className="w-5 h-5" />}
+                      </button>
+                    )}
+                    <input
+                      type="text"
+                      value={selectedCat.name}
+                      onChange={(e) => updateCategory(selectedCat.id, e.target.value)}
+                      placeholder="Kategori adı"
+                      className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-semibold text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-400 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                  {selectedCat.items.map((item) => (
+                    <div key={item.id} className="flex items-center gap-3 bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-xl px-3 py-2.5 transition-all">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-gray-200 flex-shrink-0" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0">
+                          <Package className="w-4 h-4 text-gray-400" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{item.name || <span className="text-gray-400 italic">İsimsiz ürün</span>}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {item.price ? (
+                            <span className="text-amber-600 text-xs font-bold">{priceList.currency} {item.price}</span>
+                          ) : (
+                            <span className="text-gray-400 text-xs">Fiyat girilmedi</span>
+                          )}
+                          {item.discount && Number(item.discount) > 0 && (
+                            <span className="text-[10px] bg-red-100 text-red-600 border border-red-200 px-1.5 py-0.5 rounded-full font-bold">%{item.discount}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        <button
+                          onClick={() => onEditItem(selectedCat.id, item)}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all"
+                          title="Düzenle"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => removeItem(selectedCat.id, item.id)}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all"
+                          title="Sil"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <button
+                    onClick={() => onAddItem(selectedCat.id)}
+                    className="flex items-center gap-1.5 w-full justify-center py-2.5 text-orange-600 hover:text-gray-900 text-sm font-semibold transition-all border border-orange-500/40 hover:border-orange-500 bg-orange-50 hover:bg-orange-100 rounded-xl"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Ürün Ekle
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-gray-400">
+                <Layers className="w-12 h-12 mb-3 opacity-30" />
+                <p className="text-sm font-semibold">Bir kategori seçin</p>
+                <p className="text-xs mt-1">Sol panelden kategori seçerek ürün ekleyebilirsiniz</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
