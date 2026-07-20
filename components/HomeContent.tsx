@@ -215,7 +215,7 @@ export default function HomeContent() {
                 profesyonel QR kodlar
               </span>
             </p>
-            <p className="text-gray-600 text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed">
+            <p className="text-gray-600 text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed px-4">
               WiFi, kartvizit, sosyal medya, fiyat listesi ve daha fazlası — ücretsiz, hızlı, güvenli.
             </p>
 

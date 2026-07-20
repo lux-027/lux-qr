@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import {
   Plus, Trash2, ChevronDown, ChevronUp, Tag, Package,
   ShoppingBag, Store, Clock, ArrowRight, Loader2, CheckCircle, Zap,
-  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode, Percent, Pencil
+  ImagePlus, X as XIcon, FileText, DollarSign, Layers, Wand2, QrCode, Percent, Pencil,
+  MousePointerClick, FolderOpen, PlusCircle, Sparkles,
+  MapPin, Phone, Globe, Instagram, Link2
 } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -33,6 +35,12 @@ interface PriceListData {
   currency: string;
   logoUrl: string;
   categories: Category[];
+  address: string;
+  city: string;
+  mapsUrl: string;
+  phone: string;
+  instagram: string;
+  website: string;
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
@@ -78,6 +86,12 @@ export default function FiyatListesiContent() {
     currency: 'TL',
     logoUrl: '',
     categories: [],
+    address: '',
+    city: '',
+    mapsUrl: '',
+    phone: '',
+    instagram: '',
+    website: '',
   });
 
   const demoScenarios: Array<{ brandName: string; brandDescription: string; currency: string; categories: Array<{ name: string; imageUrl: string; items: Array<{ name: string; price: string; discount: string; description: string; imageUrl: string }> }> }> = [
@@ -236,6 +250,12 @@ export default function FiyatListesiContent() {
       brandDescription: scenario.brandDescription,
       currency: scenario.currency,
       logoUrl: '',
+      address: '',
+      city: '',
+      mapsUrl: '',
+      phone: '',
+      instagram: '',
+      website: '',
       categories: scenario.categories.map((cat) => ({
         id: generateId(),
         name: cat.name,
@@ -585,6 +605,69 @@ export default function FiyatListesiContent() {
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
               />
             </div>
+
+            {/* Location */}
+            <div className="pt-2 border-t border-gray-100">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
+                <MapPin className="w-4 h-4 text-emerald-500" />
+                Konum (İsteğe Bağlı)
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  value={priceList.address}
+                  onChange={(e) => setPriceList((p) => ({ ...p, address: e.target.value }))}
+                  placeholder="Adres"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
+                />
+                <input
+                  type="text"
+                  value={priceList.city}
+                  onChange={(e) => setPriceList((p) => ({ ...p, city: e.target.value }))}
+                  placeholder="Şehir"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
+                />
+              </div>
+              <input
+                type="text"
+                value={priceList.mapsUrl}
+                onChange={(e) => setPriceList((p) => ({ ...p, mapsUrl: e.target.value }))}
+                placeholder="Google Maps linki (isteğe bağlı)"
+                className="w-full mt-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
+              />
+            </div>
+
+            {/* Contact */}
+            <div className="pt-2 border-t border-gray-100">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
+                <Phone className="w-4 h-4 text-blue-500" />
+                İletişim (İsteğe Bağlı)
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input
+                  type="tel"
+                  value={priceList.phone}
+                  onChange={(e) => setPriceList((p) => ({ ...p, phone: e.target.value }))}
+                  placeholder="Telefon"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
+                />
+                <input
+                  type="text"
+                  value={priceList.instagram}
+                  onChange={(e) => setPriceList((p) => ({ ...p, instagram: e.target.value }))}
+                  placeholder="Instagram @kullanici"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
+                />
+                <input
+                  type="text"
+                  value={priceList.website}
+                  onChange={(e) => setPriceList((p) => ({ ...p, website: e.target.value }))}
+                  placeholder="Web sitesi"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
                 <DollarSign className="w-4 h-4 text-emerald-400" />
@@ -604,51 +687,98 @@ export default function FiyatListesiContent() {
         </div>
       </motion.div>
 
+      {/* How to use — standalone 3D steps */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="mb-6 md:mb-8"
+      >
+        <div className="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-br from-white/95 via-white/85 to-slate-50/90 border border-white/60 shadow-2xl">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex items-center gap-3 mb-6">
+            <div className="p-2.5 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg shadow-orange-500/30">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-lg md:text-2xl font-black text-gray-900">Nasıl Kullanılır?</h2>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              {
+                step: '01',
+                title: 'Kategori Oluştur',
+                desc: 'Fiyat listenize uygun kategori ekleyin (ör. Kahvaltı, Elektronik).',
+                icon: MousePointerClick,
+                from: '#3b82f6',
+                to: '#06b6d4',
+                shadow: 'rgba(59,130,246,0.35)',
+              },
+              {
+                step: '02',
+                title: 'Kategoriyi Aç',
+                desc: 'Eklediğiniz satıra tıklayarak ürün ekleme alanını açın.',
+                icon: FolderOpen,
+                from: '#f97316',
+                to: '#f59e0b',
+                shadow: 'rgba(249,115,22,0.35)',
+              },
+              {
+                step: '03',
+                title: 'Ürün Ekle',
+                desc: 'Ürün adı, fiyatı, resmi ve indirimini girerek listeyi doldurun.',
+                icon: PlusCircle,
+                from: '#10b981',
+                to: '#06b6d4',
+                shadow: 'rgba(16,185,129,0.35)',
+              },
+              {
+                step: '04',
+                title: 'QR Yap & Paylaş',
+                desc: 'Oluşturulan QR kodu indirin, paylaşın veya yazdırın.',
+                icon: QrCode,
+                from: '#a855f7',
+                to: '#ec4899',
+                shadow: 'rgba(168,85,247,0.35)',
+              },
+            ].map(({ step, title, desc, icon: Icon, from, to, shadow }) => (
+              <div key={step} style={{ perspective: '1000px' }} className="group">
+                <motion.div
+                  className="relative h-full rounded-2xl p-5 md:p-6 bg-gradient-to-br from-white/90 to-slate-50/80 border border-white/60 shadow-xl transition-shadow duration-300 group-hover:shadow-2xl overflow-hidden"
+                  style={{ transformStyle: 'preserve-3d' }}
+                  whileHover={{ rotateX: -6, rotateY: 6, y: -8, transition: { duration: 0.35 } }}
+                >
+                  <div className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${from}, ${to})` }} />
+                  <div
+                    className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%)' }}
+                  />
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-5">
+                      <div
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
+                        style={{ background: `linear-gradient(135deg, ${from}, ${to})`, boxShadow: `0 8px 24px ${shadow}` }}
+                      >
+                        <Icon className="w-6 h-6 text-white drop-shadow" />
+                      </div>
+                      <span className="text-2xl font-black text-gray-200/80">{step}</span>
+                    </div>
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">{title}</h3>
+                    <p className="text-gray-600 text-xs md:text-sm leading-relaxed mt-auto">{desc}</p>
+                  </div>
+                </motion.div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+
       {/* Categories */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <div className="card-premium p-4 md:p-10">
-          {/* How to use — 3D step cards */}
-          <div className="mb-7">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded-xl flex items-center justify-center shadow-lg"
-                style={{ background: 'linear-gradient(135deg,#f97316,#f59e0b)', boxShadow: '0 4px 12px rgba(249,115,22,0.4)' }}>
-                <span className="text-white text-xs font-black">?</span>
-              </div>
-              <span className="text-sm font-bold text-gray-900 tracking-wide">Nasıl Kullanılır?</span>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { step: '1', title: 'Kategori Oluştur', desc: 'Kategori Ekle butonuna bas, isim gir', from: '#3b82f6', to: '#06b6d4', glow: 'rgba(59,130,246,0.35)', accent: '#3b82f6' },
-                { step: '2', title: 'Kategoriyi Aç', desc: 'Satıra tıkla, + Ürün Ekle çıkar', from: '#f97316', to: '#f59e0b', glow: 'rgba(249,115,22,0.35)', accent: '#f97316' },
-                { step: '3', title: 'Ürün Ekle', desc: 'Ad, fiyat, resim ve indirim gir', from: '#10b981', to: '#06b6d4', glow: 'rgba(16,185,129,0.35)', accent: '#10b981' },
-              ].map(({ step, title, desc, from, to, glow, accent }) => (
-                <div key={step} className="relative flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl overflow-hidden"
-                  style={{
-                    background: 'rgba(255,255,255,0.85)',
-                    border: `1.5px solid ${accent}33`,
-                    boxShadow: `0 8px 24px ${glow}, 0 2px 6px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)`,
-                    backdropFilter: 'blur(10px)',
-                  }}>
-                  {/* top shine */}
-                  <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-2xl pointer-events-none"
-                    style={{ background: 'linear-gradient(180deg,rgba(255,255,255,0.5) 0%,transparent 100%)' }} />
-                  {/* top border accent */}
-                  <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
-                    style={{ background: `linear-gradient(90deg,${from},${to})` }} />
-                  {/* glow number badge */}
-                  <div className="relative z-10 w-9 h-9 rounded-2xl flex items-center justify-center mb-2 shadow-lg"
-                    style={{
-                      background: `linear-gradient(135deg,${from},${to})`,
-                      boxShadow: `0 6px 16px ${glow}, inset 0 1px 0 rgba(255,255,255,0.3)`,
-                    }}>
-                    <span className="text-white font-black text-sm drop-shadow">{step}</span>
-                  </div>
-                  <p className="relative z-10 text-gray-900 text-[11px] sm:text-xs font-bold leading-tight mb-1">{title}</p>
-                  <p className="relative z-10 text-gray-500 text-[9px] sm:text-[10px] leading-snug">{desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
           <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg shadow-orange-500/30">
@@ -904,13 +1034,13 @@ export default function FiyatListesiContent() {
           <div className="grid grid-cols-4 md:grid-cols-4 gap-1.5 md:gap-3">
             {[
               { url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80', label: 'Restoran', color: 'from-orange-500/80 to-amber-500/80' },
-              { url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', label: 'Giyim', color: 'from-blue-500/80 to-cyan-500/80' },
-              { url: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400&q=80', label: 'Elektronik', color: 'from-purple-500/80 to-pink-500/80' },
+              { url: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80', label: 'Giyim', color: 'from-blue-500/80 to-cyan-500/80' },
+              { url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80', label: 'Elektronik', color: 'from-purple-500/80 to-pink-500/80' },
               { url: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80', label: 'Güzellik', color: 'from-rose-500/80 to-pink-500/80' },
-              { url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', label: 'Hizmet', color: 'from-emerald-500/80 to-teal-500/80' },
-              { url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80', label: 'Mobilya', color: 'from-yellow-500/80 to-orange-500/80' },
-              { url: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?w=400&q=80', label: 'Spor', color: 'from-green-500/80 to-emerald-500/80' },
-              { url: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&q=80', label: 'Teknoloji', color: 'from-indigo-500/80 to-blue-500/80' },
+              { url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80', label: 'Spor', color: 'from-green-500/80 to-emerald-500/80' },
+              { url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80', label: 'Teknoloji', color: 'from-indigo-500/80 to-blue-500/80' },
+              { url: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80', label: 'Kafe', color: 'from-amber-500/80 to-orange-500/80' },
+              { url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', label: 'Aksesuar', color: 'from-emerald-500/80 to-teal-500/80' },
             ].map((item, i) => (
               <div key={i} className="relative rounded-xl overflow-hidden group aspect-square">
                 <img

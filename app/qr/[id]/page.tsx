@@ -39,8 +39,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     const luxCenterLogo = getLuxCenterLogo(logoTextColor);
 
     const qr = new QRCodeStyling({
-      width: 256,
-      height: 256,
+      width: 1024,
+      height: 1024,
       data,
       margin: 8,
       qrOptions: { errorCorrectionLevel: 'H' },
@@ -85,7 +85,12 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           
           // Generate bank QR code from EPC content
           if (data.data.contentType === 'iban') {
-            const bankQrData = await QRCode.toDataURL(data.data.content);
+            const bankQrData = await QRCode.toDataURL(data.data.content, {
+              width: 1024,
+              margin: 2,
+              color: { dark: '#000000', light: '#ffffff' },
+              type: 'image/png',
+            });
             setBankQrDataUrl(bankQrData);
           }
         } else {
@@ -227,6 +232,28 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const isBasicQrType = (data: any) => {
+    if (!data) return null;
+    const { contentType, content, fileName } = data;
+    if (contentType === 'iban') return true;
+    if (contentType === 'image' || contentType === 'video') return true;
+    if (contentType === 'file') {
+      const audioExts = ['.mp3', '.m4a', '.wav', '.ogg', '.aac', '.flac', '.wma'];
+      // Ses dosyası veya diğer dosyalar Temel QR grubunda
+      return fileName ? true : true;
+    }
+    if (contentType === 'text' && typeof content === 'string') {
+      if (content.startsWith('BEGIN:VCARD')) return false;
+      if (content.startsWith('WIFI:')) return true;
+      const lowerContent = content.toLowerCase();
+      const socialDomains = ['instagram.com', 'tiktok.com', 'facebook.com', 'youtube.com', 'x.com', 'twitter.com', 'linkedin.com', 'threads.net'];
+      if (socialDomains.some((domain) => lowerContent.includes(domain))) return false;
+      return true;
+    }
+    if (contentType === 'price-list' || contentType === 'bio-link') return false;
+    return null;
   };
 
   const handleShareQR = async () => {
@@ -946,25 +973,28 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                   { href: '/qr/fiyat-listesi', label: 'Fiyat Listesi', icon: ShoppingBag, color: 'text-rose-400' },
                   { href: '/qr/bio-link', label: 'Bio Link', icon: ExternalLink, color: 'text-emerald-400' },
                 ];
-                const renderLinks = (links: any[]) =>
-                  links.map((item) => (
-                    <Link key={item.href} href={item.href} className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900 text-xs md:text-sm transition-colors">
-                      <item.icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${item.color} flex-shrink-0`} />
-                      <span>{item.label}</span>
-                    </Link>
-                  ));
+                const isBasic = isBasicQrType(qrData);
+                if (isBasic === null) return null;
+                const title = isBasic ? 'Temel QR' : 'Gelişmiş QR';
+                const links = isBasic ? basicLinks : advancedLinks;
                 return (
                   <div className="space-y-3">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Temel QR</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">{title}</p>
                       <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
-                        {renderLinks(basicLinks)}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Gelişmiş QR</p>
-                      <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
-                        {renderLinks(advancedLinks)}
+                        {links.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              className="flex items-center gap-2 md:gap-3 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900 text-xs md:text-sm transition-colors"
+                            >
+                              <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${item.color} flex-shrink-0`} />
+                              <span>{item.label}</span>
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -973,7 +1003,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             <div className="mt-3 md:mt-6 pt-2 md:pt-4 border-t border-gray-200 flex flex-col items-center hidden md:flex">
               <QrCode className="w-16 h-16 text-gray-900/10 mb-2" />
               <p className="text-xs text-gray-600 text-center">
-                Farklı QR kod türleri oluşturun ve paylaşın
+                Aynı QR türünde yeni bir kod oluşturun
               </p>
             </div>
           </div>

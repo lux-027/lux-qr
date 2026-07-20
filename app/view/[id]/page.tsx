@@ -32,7 +32,8 @@ import {
   Tag,
   Package,
   Menu,
-  ChevronLeft
+  ChevronLeft,
+  Info
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -742,7 +743,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   <div className="mt-auto pt-8">
                     <p className="text-gray-500 text-xs flex items-center gap-1">
                       <LinkIcon className="w-3 h-3" />
-                      {bio.username}.xxx
+                      luxqrpro.site/view/{bio.username}
                     </p>
                   </div>
                 )}
@@ -787,14 +788,18 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg">
           <div className="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
             <Link href="/" className="flex items-center gap-2 text-white">
-              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                <QrCode className="w-5 h-5 text-white" />
-              </div>
+              <img
+                src="/lux-inc-logo.png"
+                alt="LuxQr"
+                className="w-9 h-9 object-contain"
+                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                decoding="async"
+              />
               <span className="text-xl font-black tracking-tight">LuxQr</span>
             </Link>
             <Link
               href="/"
-              className="text-sm font-semibold text-white/90 hover:text-white bg-white/15 hover:bg-white/25 px-4 py-2 rounded-xl transition-all"
+              className="text-sm font-semibold text-white px-4 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 transition-all"
             >
               QR Oluştur
             </Link>
@@ -814,14 +819,16 @@ export default function ViewPage({ params }: { params: { id: string } }) {
               {pl?.logoUrl ? (
                 <div className="relative">
                   <div className="absolute inset-0 bg-orange-50 blur-2xl rounded-full scale-150" />
-                  <img src={pl.logoUrl} alt={pl.brandName} className="relative w-20 h-20 rounded-2xl object-cover border-2 border-gray-100 shadow-xl" />
+                  <img src={pl.logoUrl} alt={pl.brandName} className="relative w-28 h-28 rounded-2xl object-cover border-2 border-gray-100 shadow-xl" />
                 </div>
               ) : (
                 <div className="relative">
                   <div className="absolute inset-0 bg-orange-50 blur-2xl rounded-full scale-150" />
-                  <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-xl">
-                    <ShoppingBag className="w-8 h-8 text-gray-900" />
-                  </div>
+                  <img
+                    src="/lux-inc-logo.png"
+                    alt={pl.brandName}
+                    className="relative w-24 h-24 rounded-2xl object-contain bg-white border-2 border-gray-100 shadow-xl p-2"
+                  />
                 </div>
               )}
             </div>
@@ -921,18 +928,138 @@ export default function ViewPage({ params }: { params: { id: string } }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
-              className="bg-gray-50 border border-gray-200 rounded-3xl p-5"
+              className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-3xl p-5 shadow-sm"
             >
               <div className="flex items-center gap-2 mb-4">
-                <Package className="w-4 h-4 text-blue-600" />
-                <h2 className="text-sm font-semibold text-gray-900">Kategoriler</h2>
+                <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 shadow-md shadow-blue-500/20">
+                  <Package className="w-4 h-4 text-white" />
+                </div>
+                <h2 className="text-sm font-bold text-gray-900">Kategoriler</h2>
+                <span className="ml-auto text-[10px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                  {pl.categories.length} kategori
+                </span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {pl.categories.map((cat: any, i: number) => (
-                  <span key={i} className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-gray-600 text-xs">
-                    {cat.name} <span className="text-gray-600">({cat.items?.length || 0})</span>
-                  </span>
+                  <div
+                    key={i}
+                    className="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-gray-200 shadow-sm cursor-default"
+                  >
+                    {cat.imageUrl ? (
+                      <img
+                        src={cat.imageUrl}
+                        alt={cat.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <p className="text-white font-bold text-sm leading-tight drop-shadow-md line-clamp-1">
+                        {cat.name}
+                      </p>
+                      <p className="text-white/85 text-xs mt-0.5">
+                        {cat.items?.length || 0} ürün
+                      </p>
+                    </div>
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-white text-[10px] font-bold">{i + 1}</span>
+                    </div>
+                  </div>
                 ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Location & Contact */}
+          {(pl.address || pl.phone || pl.instagram || pl.website) && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.22 }}
+              className="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-1.5 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 shadow-md shadow-emerald-500/20">
+                  <MapPin className="w-4 h-4 text-white" />
+                </div>
+                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Konum</h2>
+              </div>
+
+              {pl.address && (
+                <>
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-gray-200 shadow-inner bg-gray-100 mb-4">
+                    <iframe
+                      title="Konum Haritası"
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                        pl.address + (pl.city ? ', ' + pl.city : '')
+                      )}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                      className="absolute inset-0 w-full h-full border-0"
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  </div>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    {pl.address}{pl.city ? `, ${pl.city}` : ''}
+                  </p>
+                  <a
+                    href={
+                      pl.mapsUrl ||
+                      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pl.address + (pl.city ? ', ' + pl.city : ''))}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-3 rounded-2xl transition-all"
+                  >
+                    <MapPin className="w-4 h-4" /> Haritada Aç
+                  </a>
+                </>
+              )}
+            </motion.div>
+          )}
+
+          {/* About */}
+          {(pl?.brandDescription || pl?.phone || pl?.instagram || pl?.website) && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.24 }}
+              className="bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl p-5 text-white shadow-sm"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Info className="w-4 h-4" />
+                <h2 className="text-sm font-bold uppercase tracking-wider">Hakkımızda</h2>
+              </div>
+              {pl?.brandDescription && (
+                <p className="text-sm text-white/90 leading-relaxed mb-4">{pl.brandDescription}</p>
+              )}
+              <div className="space-y-2">
+                {pl?.phone && (
+                  <a href={`tel:${pl.phone}`} className="flex items-center gap-2 text-sm text-white/90 hover:text-white transition-colors">
+                    <Phone className="w-4 h-4" /> {pl.phone}
+                  </a>
+                )}
+                {pl?.instagram && (
+                  <a
+                    href={pl.instagram.startsWith('http') ? pl.instagram : `https://instagram.com/${pl.instagram.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-white/90 hover:text-white transition-colors"
+                  >
+                    <Instagram className="w-4 h-4" /> {pl.instagram}
+                  </a>
+                )}
+                {pl?.website && (
+                  <a
+                    href={pl.website.startsWith('http') ? pl.website : `https://${pl.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-white/90 hover:text-white transition-colors"
+                  >
+                    <Globe className="w-4 h-4" /> {pl.website}
+                  </a>
+                )}
               </div>
             </motion.div>
           )}
@@ -941,7 +1068,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.24 }}
+            transition={{ delay: 0.26 }}
             className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-100 rounded-3xl p-5 text-center"
           >
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -959,20 +1086,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             </Link>
           </motion.div>
 
-          {/* Create own QR button */}
-          <div className="text-center mt-6">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg shadow-purple-500/25 transition-all hover:scale-[1.02]"
-            >
-              <QrCode className="w-5 h-5" />
-              Kendi QR Kodunu Oluştur
-            </Link>
-          </div>
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-gray-100 py-6">
+        <footer className="bg-white border-t border-gray-100 py-6">
           <div className="max-w-lg mx-auto px-4 text-center">
             <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
               <QrCode className="w-4 h-4 text-blue-500" />
@@ -1014,16 +1131,6 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           {renderContent()}
         </div>
 
-        {/* Create own QR button */}
-        <div className="max-w-4xl w-full mt-8 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg shadow-purple-500/25 transition-all hover:scale-[1.02]"
-          >
-            <QrCode className="w-5 h-5" />
-            Kendi QR Kodunu Oluştur
-          </Link>
-        </div>
       </div>
 
       {/* Footer */}
