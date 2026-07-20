@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, X, Menu, ChevronRight, Sparkles, ArrowLeft, MapPin, Phone, Home, LayoutGrid, Info, ExternalLink, Navigation, CheckCircle, Handshake, Globe, Users, Building, Coffee, UtensilsCrossed, Store, Smartphone, Scissors } from 'lucide-react';
+import { ShoppingBag, X, Menu, ChevronRight, Sparkles, ArrowLeft, MapPin, Phone, Home, LayoutGrid, Info, ExternalLink, Navigation, CheckCircle, Handshake, Globe, Users, Building, Coffee, UtensilsCrossed, Store, Smartphone, Scissors, Share2 } from 'lucide-react';
+import { showNotification } from '@/components/Notification';
 
 interface MenuItem {
   id: string;
@@ -152,6 +153,37 @@ export default function MenuPage({ params }: { params: { id: string } }) {
 
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = fallbackImg;
+  };
+
+  const handleShare = async () => {
+    if (!pl) return;
+    const url = `${window.location.origin}/menu/${params.id}`;
+    const shareData: any = {
+      title: pl.brandName || 'LuxQr Menü',
+      text: `${pl.brandName || 'Menü'}'yu görüntülemek için tıklayın.`,
+      url,
+    };
+    if (pl.logoUrl) {
+      try {
+        const res = await fetch(pl.logoUrl);
+        const blob = await res.blob();
+        const ext = blob.type?.split('/')[1] || 'jpg';
+        const file = new File([blob], `logo.${ext}`, { type: blob.type });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          shareData.files = [file];
+        }
+      } catch {}
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        showNotification('Menü linki kopyalandı', 'success');
+      } catch {}
+    }
   };
 
   return (
@@ -327,16 +359,25 @@ export default function MenuPage({ params }: { params: { id: string } }) {
             </span>
           </div>
 
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2.5 bg-gradient-to-br from-orange-500 to-amber-500 text-white rounded-xl shadow-md shadow-orange-500/20 hover:shadow-lg hover:from-orange-600 hover:to-amber-600 transition-all"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="4" y1="6" x2="20" y2="6" />
-              <line x1="4" y1="12" x2="12" y2="12" />
-              <line x1="4" y1="18" x2="20" y2="18" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleShare}
+              className="p-2.5 bg-white border border-gray-200 text-gray-600 rounded-xl shadow-sm hover:text-orange-600 hover:border-orange-300 transition-all"
+              title="Menüyü Paylaş"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2.5 bg-gradient-to-br from-orange-500 to-amber-500 text-white rounded-xl shadow-md shadow-orange-500/20 hover:shadow-lg hover:from-orange-600 hover:to-amber-600 transition-all"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="12" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
