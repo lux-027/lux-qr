@@ -5,6 +5,7 @@ import { Type, ImageIcon, Video, FileText, Upload, QrCode, Clock, Shield, Zap, I
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import { supabase } from '@/lib/supabase';
 
 export default function MetinBelgeContent() {
   const router = useRouter();
@@ -126,6 +127,89 @@ export default function MetinBelgeContent() {
     }
   };
 
+  const directUploadToSupabase = async (fileToUpload: File): Promise<{ success: boolean; url?: string; error?: string }> => {
+    try {
+      const fileExt = fileToUpload.name.split('.').pop();
+      const uniqueId = crypto.randomUUID();
+      const fileName = `${Date.now()}-${uniqueId}.${fileExt}`;
+      const safeFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+
+      const { data, error } = await supabase.storage
+        .from('luxqr-files')
+        .upload(safeFileName, fileToUpload, {
+          contentType: fileToUpload.type,
+          upsert: true,
+          cacheControl: '3600'
+        });
+
+      if (error) {
+        console.error('Direct Supabase upload error:', error);
+        return { success: false, error: error.message };
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('luxqr-files')
+        .getPublicUrl(safeFileName);
+
+      if (!urlData?.publicUrl) {
+        return { success: false, error: 'Public URL alınamadı' };
+      }
+
+      return { success: true, url: urlData.publicUrl };
+    } catch (err: any) {
+      console.error('Direct upload exception:', err);
+      return { success: false, error: err.message || 'Yükleme hatası' };
+    }
+  };
+
+  const uploadFile = async (fileToUpload: File): Promise<{ success: boolean; url?: string; error?: string }> => {
+    // Files larger than 4MB should use direct Supabase upload to bypass Vercel's 4.5MB body limit
+    const DIRECT_UPLOAD_THRESHOLD = 4 * 1024 * 1024; // 4MB
+    
+    if (fileToUpload.size > DIRECT_UPLOAD_THRESHOLD) {
+      return directUploadToSupabase(fileToUpload);
+    }
+
+    // Small files can still go through the API route
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+
+    const controller = new AbortController();
+    const timeoutDuration = selectedType === 'video' ? 300000 : 120000;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
+
+    try {
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!uploadResponse.ok) {
+        const errorText = await uploadResponse.text();
+        console.error('Upload failed:', uploadResponse.status, errorText);
+        return { success: false, error: `Dosya yüklenemedi: ${uploadResponse.status}` };
+      }
+
+      const uploadData = await uploadResponse.json();
+
+      if (!uploadData.success) {
+        return { success: false, error: uploadData.error || 'Dosya yüklenemedi' };
+      }
+
+      return { success: true, url: uploadData.url };
+    } catch (error: any) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        return { success: false, error: 'Dosya yüklenirken zaman aşımı oluştu' };
+      }
+      console.error('Upload error:', error);
+      return { success: false, error: 'Dosya yüklenirken bir hata oluştu' };
+    }
+  };
+
   const handleGenerate = async () => {
     if (selectedType === 'image' && !file && files.length === 0) {
       setShowError(true);
@@ -151,51 +235,22 @@ export default function MetinBelgeContent() {
       let filePath = null;
 
       if (files.length > 0 && selectedType === 'image') {
-        // Multiple images - upload all files
+        // Multiple images - upload all files using smart upload (direct for >4MB)
         const uploadedFiles = [];
         
-        for (const file of files) {
-          const formData = new FormData();
-          formData.append('file', file);
-
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 120000);
-
+        for (const fileItem of files) {
           setUploadStatus(`Resim yükleniyor... (${uploadedFiles.length + 1}/${files.length})`);
 
-          try {
-            const uploadResponse = await fetch('/api/upload', {
-              method: 'POST',
-              body: formData,
-              signal: controller.signal,
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!uploadResponse.ok) {
-              const errorText = await uploadResponse.text();
-              console.error('Upload failed:', uploadResponse.status, errorText);
-              showNotification(`Dosya yüklenemedi: ${uploadResponse.status}`, 'error');
-              return;
-            }
-
-            const uploadData = await uploadResponse.json();
-
-            if (!uploadData.success) {
-              showNotification(uploadData.error || 'Dosya yüklenemedi', 'error');
-              return;
-            }
-
-            uploadedFiles.push({
-              name: file.name,
-              url: uploadData.url
-            });
-          } catch (error) {
-            clearTimeout(timeoutId);
-            console.error('Upload error:', error);
-            showNotification('Dosya yüklenirken bir hata oluştu', 'error');
+          const result = await uploadFile(fileItem);
+          if (!result.success) {
+            showNotification(result.error || 'Dosya yüklenemedi', 'error');
             return;
           }
+
+          uploadedFiles.push({
+            name: fileItem.name,
+            url: result.url!
+          });
         }
 
         // Use the first file URL as the main content
@@ -204,54 +259,18 @@ export default function MetinBelgeContent() {
         // Store all file URLs in a structured format
         filePath = JSON.stringify(uploadedFiles);
       } else if (file) {
-        // Dosyayı Supabase'a yükle
-        const formData = new FormData();
-        formData.append('file', file);
-
-        // Add timeout to prevent hanging - increased for video files
-        const timeoutDuration = selectedType === 'video' ? 300000 : 120000; // 5 minutes for video, 2 minutes for others
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
-
+        // Single file upload using smart upload (direct for >4MB)
         setUploadStatus('Dosya yükleniyor...');
 
-        try {
-          const uploadResponse = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData,
-            signal: controller.signal,
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!uploadResponse.ok) {
-            const errorText = await uploadResponse.text();
-            console.error('Upload failed:', uploadResponse.status, errorText);
-            showNotification(`Dosya yüklenemedi: ${uploadResponse.status}`, 'error');
-            return;
-          }
-
-          const uploadData = await uploadResponse.json();
-
-          if (!uploadData.success) {
-            showNotification(uploadData.error || 'Dosya yüklenemedi', 'error');
-            return;
-          }
-
-          content = uploadData.url;
-          fileName = file.name;
-          filePath = uploadData.url;
-        } catch (error: any) {
-          clearTimeout(timeoutId);
-          if (error.name === 'AbortError') {
-            const timeoutMinutes = selectedType === 'video' ? '5 dakika' : '2 dakika';
-            showNotification(`Dosya yüklenirken zaman aşımı oluştu (${timeoutMinutes})`, 'error');
-          } else {
-            console.error('Upload error:', error);
-            showNotification('Dosya yüklenirken bir hata oluştu', 'error');
-          }
+        const result = await uploadFile(file);
+        if (!result.success) {
+          showNotification(result.error || 'Dosya yüklenemedi', 'error');
           return;
         }
+
+        content = result.url!;
+        fileName = file.name;
+        filePath = result.url!;
       }
 
       const response = await fetch('/api/generate', {
@@ -394,11 +413,11 @@ export default function MetinBelgeContent() {
             return (
               <motion.div
                 key={type}
-                onClick={() => handleTypeChange(type as any)}
-                whileHover={{ y: -4, scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+                onClick={() => !loading && handleTypeChange(type as any)}
+                whileHover={loading ? {} : { y: -4, scale: 1.03 }}
+                whileTap={loading ? {} : { scale: 0.97 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                className="relative cursor-pointer rounded-2xl overflow-hidden p-4 md:p-6"
+                className={`relative rounded-2xl overflow-hidden p-4 md:p-6 ${loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
                 style={{
                   background: isActive ? activeBg : 'rgba(255,255,255,0.85)',
                   border: `1.5px solid ${isActive ? activeBorder : 'rgba(209,213,219,0.8)'}`,
@@ -474,8 +493,10 @@ export default function MetinBelgeContent() {
                 )}
                 <div className="flex gap-3">
                   <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`flex-1 border-2 border-dashed rounded-2xl p-4 md:p-8 text-center cursor-pointer transition-colors ${
+                    onClick={() => !loading && fileInputRef.current?.click()}
+                    className={`flex-1 border-2 border-dashed rounded-2xl p-4 md:p-8 text-center transition-colors ${
+                      loading ? 'pointer-events-none opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    } ${
                       showError ? 'border-red-500' : 'border-gray-300 hover:border-blue-500/50'
                     }`}
                   >
@@ -593,8 +614,9 @@ export default function MetinBelgeContent() {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
+              disabled={loading}
               placeholder="QR kod hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -616,7 +638,8 @@ export default function MetinBelgeContent() {
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-2xl border transition-all ${
+                  disabled={loading}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-2xl border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >

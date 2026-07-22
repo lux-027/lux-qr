@@ -293,8 +293,9 @@ export default function BioLinkContent() {
                     type="text"
                     value={data.title}
                     onChange={(e) => setData((p) => ({ ...p, title: e.target.value }))}
+                    disabled={isGenerating}
                     placeholder="ör: LuxQr&apos;nin Linkleri"
-                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
+                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div>
@@ -303,8 +304,9 @@ export default function BioLinkContent() {
                     type="text"
                     value={data.username}
                     onChange={(e) => setData((p) => ({ ...p, username: e.target.value.replace(/\s+/g, '') }))}
+                    disabled={isGenerating}
                     placeholder="luxqr"
-                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
+                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -526,8 +528,9 @@ export default function BioLinkContent() {
                         type="text"
                         value={link.title}
                         onChange={(e) => updateLink(link.id, 'title', e.target.value)}
+                        disabled={isGenerating}
                         placeholder="Başlık (ör: Instagram)"
-                        className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
+                        className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                       <input
                         type="text"
@@ -537,8 +540,9 @@ export default function BioLinkContent() {
                           const v = e.target.value.trim();
                           if (v && !v.match(/^https?:\/\//)) updateLink(link.id, 'url', `https://${v}`);
                         }}
+                        disabled={isGenerating}
                         placeholder="https://..."
-                        className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50"
+                        className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
                     <button
@@ -631,7 +635,8 @@ export default function BioLinkContent() {
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as typeof expiration)}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-xl border transition-all ${
+                  disabled={isGenerating}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-xl border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >

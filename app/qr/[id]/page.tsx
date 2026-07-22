@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Info, Type, ShoppingBag, ExternalLink, Plus, MoreHorizontal, X } from 'lucide-react';
+import { Check, Download, Share2, Copy, Printer, QrCode, ArrowRight, Home, Wifi, FileText, Image as ImageIcon, Video, File as FileIcon, Link as LinkIcon, Building2, Phone, Mail, Globe, MapPin, Lock, Key, EyeOff, Instagram, Facebook, Youtube, User, ChevronLeft, ChevronRight, Landmark, Mic, Type, ShoppingBag, ExternalLink, Plus, MoreHorizontal, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -12,18 +12,18 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
-  const [bankQrDataUrl, setBankQrDataUrl] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [qrData, setQrData] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedQrType, setSelectedQrType] = useState<'normal' | 'bank'>('normal');
   const [showOtherActions, setShowOtherActions] = useState(false);
   const [qrColor, setQrColor] = useState<'black' | 'neon' | 'sunset' | 'arctic' | 'berry'>('black');
 
-  const getLuxCenterLogo = (textColor: string) =>
-    `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="100"><rect width="220" height="100" rx="28" fill="#ffffff"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" fill="${textColor}" letter-spacing="12">L U X</text></svg>`) : ''}`;
+  const getLuxCenterLogo = () => {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="140" height="140"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3B82F6"/><stop offset="50%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect width="32" height="32" rx="6" fill="url(#g)"/><rect x="6" y="6" width="8" height="8" rx="1" fill="white"/><rect x="8" y="8" width="4" height="4" rx="0.5" fill="url(#g)"/><rect x="18" y="6" width="8" height="8" rx="1" fill="white"/><rect x="20" y="8" width="4" height="4" rx="0.5" fill="url(#g)"/><rect x="6" y="18" width="8" height="8" rx="1" fill="white"/><rect x="8" y="20" width="4" height="4" rx="0.5" fill="url(#g)"/><rect x="14" y="14" width="4" height="4" rx="0.5" fill="white"/></svg>`;
+    return `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(svg) : ''}`;
+  };
 
   const colorThemes: Record<typeof qrColor, { stops: { offset: number; color: string }[]; label: string }> = {
     black: { label: 'Siyah', stops: [{ offset: 0, color: '#000000' }, { offset: 0.5, color: '#374151' }, { offset: 1, color: '#000000' }] },
@@ -35,8 +35,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
   const generateStyledQR = async (data: string): Promise<string> => {
     const gradientStops = colorThemes[qrColor].stops;
-    const logoTextColor = gradientStops[1]?.color || '#000000';
-    const luxCenterLogo = getLuxCenterLogo(logoTextColor);
+    const luxCenterLogo = getLuxCenterLogo();
 
     const qr = new QRCodeStyling({
       width: 1024,
@@ -82,17 +81,6 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           setQrCodeUrl(`${window.location.origin}/qr/${params.id}`);
           const styledQrData = await generateStyledQR(data.data.viewUrl || data.data.content);
           setQrDataUrl(styledQrData);
-          
-          // Generate bank QR code from EPC content
-          if (data.data.contentType === 'iban') {
-            const bankQrData = await QRCode.toDataURL(data.data.content, {
-              width: 1024,
-              margin: 2,
-              color: { dark: '#000000', light: '#ffffff' },
-              type: 'image/png',
-            });
-            setBankQrDataUrl(bankQrData);
-          }
         } else {
           console.error('QR code not found or invalid response:', data);
           setError(data.error || 'QR kod bulunamadı');
@@ -120,13 +108,6 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     const link = document.createElement('a');
     link.href = qrDataUrl;
     link.download = 'qr-code.png';
-    link.click();
-  };
-
-  const handleBankQrDownload = () => {
-    const link = document.createElement('a');
-    link.href = bankQrDataUrl;
-    link.download = 'bank-qr-code.png';
     link.click();
   };
 
@@ -187,19 +168,22 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           </head>
           <body>
             <div class="logo">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="5" height="5" x="3" y="3" rx="1"></rect>
-                <rect width="5" height="5" x="16" y="3" rx="1"></rect>
-                <rect width="5" height="5" x="3" y="16" rx="1"></rect>
-                <path d="M21 16h-3a2 2 0 0 0-2 2v3"></path>
-                <path d="M21 21v.01"></path>
-                <path d="M12 7v3a2 2 0 0 1-2 2H7"></path>
-                <path d="M3 12h.01"></path>
-                <path d="M12 3h.01"></path>
-                <path d="M12 16v.01"></path>
-                <path d="M16 12h1"></path>
-                <path d="M21 12v.01"></path>
-                <path d="M12 21v-1"></path>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+                <defs>
+                  <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+                <rect width="32" height="32" rx="6" fill="url(#faviconGradient)"/>
+                <rect x="6" y="6" width="8" height="8" rx="1" fill="white"/>
+                <rect x="8" y="8" width="4" height="4" rx="0.5" fill="url(#faviconGradient)"/>
+                <rect x="18" y="6" width="8" height="8" rx="1" fill="white"/>
+                <rect x="20" y="8" width="4" height="4" rx="0.5" fill="url(#faviconGradient)"/>
+                <rect x="6" y="18" width="8" height="8" rx="1" fill="white"/>
+                <rect x="8" y="20" width="4" height="4" rx="0.5" fill="url(#faviconGradient)"/>
+                <rect x="14" y="14" width="4" height="4" rx="0.5" fill="white"/>
               </svg>
               LuxQr
             </div>
@@ -941,7 +925,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-3">
-            <QrCode className="w-12 h-12 text-blue-400" />
+            <img src="/favicon.svg" alt="LuxQr" className="w-12 h-12 rounded-lg" />
             <h1 className="text-4xl font-bold text-gray-900">LuxQr</h1>
           </div>
         </motion.div>
@@ -1013,53 +997,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             <div className="flex flex-col items-center">
               <h3 className="text-xl font-bold text-gray-800 mb-4">QR Kod</h3>
               
-              {/* Toggle Buttons - Only for IBAN */}
-              {qrData?.contentType === 'iban' && bankQrDataUrl && (
-                <div className="flex gap-2 mb-6 w-full">
-                  <button
-                    onClick={() => setSelectedQrType('normal')}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all ${
-                      selectedQrType === 'normal' 
-                        ? 'bg-blue-500 text-gray-900 shadow-lg shadow-blue-500/30' 
-                        : 'bg-white text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    <QrCode className="w-5 h-5" />
-                    <span className="text-sm font-medium">Normal QR</span>
-                    <div className="relative group">
-                      <Info className="w-4 h-4 cursor-help" />
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-gray-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        <p className="font-semibold mb-1">Normal QR</p>
-                        <p>Bu QR kodu normal tarayıcılarla okutunca view sayfasına açılır. Tüm bilgileri görüntüleyebilirsiniz.</p>
-                      </div>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => setSelectedQrType('bank')}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all ${
-                      selectedQrType === 'bank' 
-                        ? 'bg-green-500 text-gray-900 shadow-lg shadow-green-500/30' 
-                        : 'bg-white text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    <Landmark className="w-5 h-5" />
-                    <span className="text-sm font-medium">Banka QR</span>
-                    <div className="relative group">
-                      <Info className="w-4 h-4 cursor-help" />
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-gray-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        <p className="font-semibold mb-1">Banka QR</p>
-                        <p>Bu QR kodu banka uygulamalarıyla okutunca otomatik olarak IBAN numarasını doldurur. Sadece banka uygulamaları tarafından tanınır.</p>
-                      </div>
-                    </div>
-                  </button>
-                </div>
-              )}
-              
               {/* Normal QR Code */}
-              {selectedQrType === 'normal' && (
-                <div className="mb-6">
-                  <p className="text-sm font-medium text-gray-600 mb-2 text-center">Normal QR (Görüntüleme)</p>
-                  <div className="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-xl">
+              <div className="mb-6">
+                <p className="text-sm font-medium text-gray-600 mb-2 text-center">Normal QR (Görüntüleme)</p>
+                <div className="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-xl">
                     <img
                       src={qrDataUrl}
                       alt="QR Code"
@@ -1121,17 +1062,6 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     </p>
                   </div>
                 </div>
-              )}
-
-              {/* Bank QR Code - Only for IBAN */}
-              {selectedQrType === 'bank' && qrData?.contentType === 'iban' && bankQrDataUrl && (
-                <div className="mb-6">
-                  <p className="text-sm font-medium text-gray-600 mb-2 text-center">Banka QR (Banka Uygulaması)</p>
-                  <div className="bg-white p-4 rounded-xl border-2 border-green-200">
-                    <img src={bankQrDataUrl} alt="Bank QR Code" width={256} height={256} className="w-64 h-64" />
-                  </div>
-                </div>
-              )}
 
               {/* Primary Button Group */}
               <div className="flex flex-wrap gap-3 md:gap-4 justify-center w-full">
@@ -1190,7 +1120,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
                       <div className="p-4 grid gap-2">
                         {[
-                          { onClick: selectedQrType === 'bank' ? handleBankQrDownload : handleDownload, icon: Download, label: 'İndir', bg: 'bg-blue-500 hover:bg-blue-600' },
+                          { onClick: handleDownload, icon: Download, label: 'İndir', bg: 'bg-blue-500 hover:bg-blue-600' },
                           { onClick: handlePrint, icon: Printer, label: 'Yazdır', bg: 'bg-purple-500 hover:bg-purple-600' },
                           { onClick: () => window.open(qrData?.viewUrl || qrCodeUrl, '_blank'), icon: ArrowRight, label: 'Linke Git', bg: 'bg-green-500 hover:bg-green-600' },
                           { onClick: handleShareLink, icon: Share2, label: 'Linki Paylaş', bg: 'bg-orange-500 hover:bg-orange-600' },

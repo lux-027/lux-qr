@@ -877,7 +877,8 @@ export default function FiyatListesiContent() {
                 <button
                   key={opt.value}
                   onClick={() => setExpiration(opt.value)}
-                  className={`py-2.5 rounded-xl border text-xs md:text-sm font-medium transition-all ${
+                  disabled={isGenerating}
+                  className={`py-2.5 rounded-xl border text-xs md:text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === opt.value
                       ? 'bg-blue-500/30 border-blue-500/50 text-gray-900 shadow-[0_0_15px_rgba(59,130,246,0.3)]'
                       : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
@@ -896,9 +897,10 @@ export default function FiyatListesiContent() {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
+              disabled={isGenerating}
               rows={2}
               placeholder="QR kod için ek not..."
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900 text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all resize-none"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900 text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-gray-100 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
         </div>

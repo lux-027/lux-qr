@@ -33,7 +33,10 @@ import {
   Package,
   Menu,
   ChevronLeft,
-  Info
+  ChevronRight,
+  Info,
+  Copy,
+  Check
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -52,6 +55,19 @@ type QrCodeData = {
   viewUrl: string | null;
 };
 
+const NoteBox = ({ note }: { note: string | null }) => {
+  if (!note || note.trim() === '') return null;
+  return (
+    <div className="mt-4 p-3 md:p-4 rounded-xl bg-amber-50 border border-amber-100 flex items-start gap-3 text-left">
+      <Info className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+      <div>
+        <p className="text-amber-700 text-xs font-bold uppercase tracking-wide mb-1">Açıklama</p>
+        <p className="text-gray-800 text-sm md:text-base whitespace-pre-wrap">{note}</p>
+      </div>
+    </div>
+  );
+};
+
 export default function ViewPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [data, setData] = useState<QrCodeData | null>(null);
@@ -59,6 +75,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   const [expired, setExpired] = useState(false);
   const [error, setError] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [copiedIban, setCopiedIban] = useState(false);
+  const [copiedWifi, setCopiedWifi] = useState(false);
+  const [copiedSsid, setCopiedSsid] = useState(false);
 
   useEffect(() => {
     fetchQrCode();
@@ -329,103 +349,135 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                   </div>
                 </div>
               </div>
+              <NoteBox note={data.note} />
             </div>
           );
         }
         if (isWifi) {
           const wifiData = parseWifi(data.content);
-          const handleWifiConnect = () => {
-            try {
-              // Try to connect using WiFi QR code format
-              const wifiUrl = `WIFI:S:${wifiData.ssid};T:${wifiData.security};P:${wifiData.password};H:${wifiData.hidden};;`;
-              
-              // Try to open as a URL (works on some mobile devices)
-              window.location.href = wifiUrl;
-              
-              // Fallback: Show manual connection instructions
-              setTimeout(() => {
-                showNotification('WiFi bağlantısı cihazınız tarafından desteklenmiyor. Lütfen manuel olarak bağlanın.', 'info');
-              }, 1000);
-            } catch (error) {
-              showNotification('WiFi bağlantısı başlatılamadı. Lütfen manuel olarak bağlanın.', 'error');
-            }
+
+          const handleCopySsid = () => {
+            if (!wifiData.ssid) return;
+            navigator.clipboard.writeText(wifiData.ssid).then(() => {
+              setCopiedSsid(true);
+              setTimeout(() => setCopiedSsid(false), 2000);
+            }).catch(() => {
+              showNotification('Kopyalama başarısız', 'error');
+            });
           };
 
-          const handleCopyWifiInfo = () => {
-            const wifiInfo = `Ağ Adı: ${wifiData.ssid}\nŞifre: ${wifiData.password}`;
-            navigator.clipboard.writeText(wifiInfo).then(() => {
-              showNotification('WiFi bilgileri kopyalandı', 'success');
+          const handleCopyPassword = () => {
+            if (!wifiData.password) return;
+            navigator.clipboard.writeText(wifiData.password).then(() => {
+              setCopiedWifi(true);
+              setTimeout(() => setCopiedWifi(false), 2000);
             }).catch(() => {
               showNotification('Kopyalama başarısız', 'error');
             });
           };
 
           return (
-            <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-6">
-                {contentIcon}
+            <div className="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-xl shadow-gray-200/50 overflow-hidden relative">
+              {/* Decorative gradient header */}
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500" />
+
+              <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">
+                <div className="w-11 h-11 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                  <Wifi className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{wifiData.ssid || 'WiFi Ağı'}</h3>
-                  <p className="text-sm text-gray-600">WiFi Ağ Bilgisi</p>
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-900">{wifiData.ssid || 'WiFi Ağı'}</h3>
+                  <p className="text-gray-500 text-xs md:text-sm">WiFi Ağ Bilgileri</p>
                 </div>
               </div>
-              <div className="bg-gray-100 rounded-lg p-6">
-                <div className="flex flex-wrap gap-6">
-                  {wifiData.ssid && (
-                    <div className="flex items-center gap-3">
-                      <Wifi className="w-5 h-5 text-cyan-600" />
-                      <div>
-                        <p className="text-gray-600 text-sm">Ağ Adı (SSID)</p>
-                        <p className="text-gray-900 font-medium">{wifiData.ssid}</p>
-                      </div>
-                    </div>
-                  )}
-                  {wifiData.security && (
-                    <div className="flex items-center gap-3">
-                      <Lock className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="text-gray-600 text-sm">Güvenlik Türü</p>
-                        <p className="text-gray-900 font-medium">{wifiData.security}</p>
-                      </div>
-                    </div>
-                  )}
-                  {wifiData.password && (
-                    <div className="flex items-center gap-3">
-                      <Key className="w-5 h-5 text-purple-600" />
-                      <div>
-                        <p className="text-gray-600 text-sm">Şifre</p>
-                        <p className="text-gray-900 font-medium">{wifiData.password}</p>
-                      </div>
+
+              <div className="space-y-4 md:space-y-5">
+                {wifiData.ssid && (
+                  <div className="p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-gray-500 text-xs font-medium uppercase tracking-wide">Ağ Adı (SSID)</p>
                       <button
-                        onClick={handleCopyWifiInfo}
-                        className="ml-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                        title="WiFi bilgilerini kopyala"
+                        onClick={handleCopySsid}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-cyan-700 text-xs font-semibold hover:bg-cyan-50 transition-colors"
                       >
-                        <Download className="w-4 h-4 text-gray-600 hover:text-gray-900" />
+                        {copiedSsid ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            Kopyalandı
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            Kopyala
+                          </>
+                        )}
                       </button>
                     </div>
-                  )}
-                  {wifiData.hidden !== undefined && (
-                    <div className="flex items-center gap-3">
-                      <EyeOff className="w-5 h-5 text-orange-500" />
-                      <div>
-                        <p className="text-gray-600 text-sm">Gizli Ağ</p>
-                        <p className="text-gray-900 font-medium">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
-                      </div>
+                    <p className="text-gray-900 text-sm md:text-base font-semibold break-all">{wifiData.ssid}</p>
+                  </div>
+                )}
+
+                {wifiData.security && (
+                  <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <Lock className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Güvenlik Türü</p>
+                      <p className="text-gray-900 text-sm md:text-base font-semibold">{wifiData.security}</p>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
+
+                {wifiData.password && (
+                  <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-cyan-700 text-xs font-bold uppercase tracking-wide">Şifre</p>
+                      <button
+                        onClick={handleCopyPassword}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-cyan-200 text-cyan-700 text-xs font-semibold hover:bg-cyan-100 transition-colors"
+                      >
+                        {copiedWifi ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            Kopyalandı
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            Kopyala
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-gray-900 text-sm md:text-base font-mono tracking-wider break-all">{wifiData.password}</p>
+                  </div>
+                )}
+
+                {wifiData.hidden !== undefined && (
+                  <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <EyeOff className="w-5 h-5 text-indigo-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Gizli Ağ</p>
+                      <p className="text-gray-900 text-sm md:text-base font-semibold">{wifiData.hidden ? 'Evet' : 'Hayır'}</p>
+                    </div>
+                  </div>
+                )}
+
+                {data.note && data.note.trim() !== '' && (
+                  <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-amber-50 border border-amber-100">
+                    <Info className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-amber-700 text-xs font-bold uppercase tracking-wide mb-1">Açıklama</p>
+                      <p className="text-gray-800 text-sm md:text-base whitespace-pre-wrap">{data.note}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-              
-              {/* WiFi Connect Button */}
-              <div className="mt-6">
-                <button
-                  onClick={handleWifiConnect}
-                  className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-6 py-3 rounded-2xl transition-all hover:scale-105 hover:shadow-lg w-full justify-center"
-                >
-                  <Wifi className="w-5 h-5" />
-                  <span className="font-medium">WiFi'ye Bağlan</span>
-                </button>
+
+              <div className="mt-5 md:mt-6 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-start gap-3">
+                <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <p className="text-gray-500 text-xs md:text-sm leading-relaxed">
+                  Şifreyi kopyalamak için <span className="font-semibold text-gray-700">Kopyala</span> butonunu kullanın. Cihazınızın WiFi ayarlarından manuel olarak bağlanabilirsiniz.
+                </p>
               </div>
             </div>
           );
@@ -545,6 +597,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                     <User className="w-4 h-4" />
                     Rehbere Ekle
                   </a>
+                  <NoteBox note={data.note} />
                 </div>
               </div>
             </div>
@@ -569,35 +622,98 @@ export default function ViewPage({ params }: { params: { id: string } }) {
             ) : (
               <p className="text-gray-900 whitespace-pre-wrap text-lg leading-relaxed">{displayContent}</p>
             )}
+            <NoteBox note={data.note} />
           </div>
         );
-      case 'image':
+      case 'image': {
+        // Check if filePath is a JSON string (multiple images)
+        let imageUrls: string[] = [];
+        try {
+          if (data.filePath) {
+            const parsed = JSON.parse(data.filePath);
+            if (Array.isArray(parsed)) {
+              imageUrls = parsed.map((item: any) => item.url);
+            }
+          }
+        } catch (e) {
+          // Not a JSON string, use single image
+          imageUrls = [data.filePath || data.content];
+        }
+        
+        if (imageUrls.length === 0) {
+          imageUrls = [data.filePath || data.content];
+        }
+
         return (
-          <div className="rounded-2xl overflow-hidden border-2 border-gray-200 backdrop-blur-sm">
-            <img
-              src={data.filePath || data.content}
-              alt={data.fileName || 'Image'}
-              className="w-full h-auto max-h-[600px] object-contain bg-black"
-              onError={(e) => {
-                console.error('Image load error:', e);
-                console.error('Image source:', data.filePath || data.content);
-              }}
-            />
+          <div className="space-y-4">
+            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 backdrop-blur-sm relative">
+              {imageUrls.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : imageUrls.length - 1))}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentImageIndex((prev) => (prev < imageUrls.length - 1 ? prev + 1 : 0))}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+              <img
+                src={imageUrls[currentImageIndex]}
+                alt={data.fileName || `Image ${currentImageIndex + 1}`}
+                className="w-full h-auto max-h-[600px] object-contain bg-black"
+                onError={(e) => {
+                  console.error('Image load error:', e);
+                  console.error('Image source:', imageUrls[currentImageIndex]);
+                }}
+              />
+              {imageUrls.length > 1 && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
+                  {currentImageIndex + 1} / {imageUrls.length}
+                </div>
+              )}
+            </div>
+            <NoteBox note={data.note} />
           </div>
         );
+      }
       case 'video':
         return (
-          <div className="rounded-2xl overflow-hidden border-2 border-gray-200 backdrop-blur-sm">
-            <video
-              src={data.filePath || data.content}
-              controls
-              autoPlay
-              className="w-full h-auto max-h-[600px] bg-black"
-              onError={(e) => {
-                console.error('Video load error:', e);
-                console.error('Video source:', data.filePath || data.content);
-              }}
-            />
+          <div className="space-y-4">
+            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 backdrop-blur-sm">
+              <video
+                src={data.filePath || data.content}
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full h-auto max-h-[600px] bg-black"
+                onError={(e) => {
+                  console.error('Video load error:', e);
+                  console.error('Video source:', data.filePath || data.content);
+                }}
+              >
+                <source src={data.filePath || data.content} type="video/mp4" />
+                <source src={data.filePath || data.content} type="video/quicktime" />
+                Tarayıcınız video oynatmayı desteklemiyor.
+              </video>
+              <div className="p-3 bg-gray-50 flex items-center justify-between">
+                <span className="text-gray-600 text-sm">{data.fileName || 'Video'}</span>
+                <a
+                  href={data.filePath || data.content}
+                  download={data.fileName || 'video.mp4'}
+                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                >
+                  <Download className="w-4 h-4" />
+                  İndir
+                </a>
+              </div>
+            </div>
+            <NoteBox note={data.note} />
           </div>
         );
       case 'file':
@@ -621,6 +737,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 </a>
               )}
             </div>
+            <NoteBox note={data.note} />
           </div>
         );
       case 'iban':
@@ -659,29 +776,89 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           console.error('IBAN parse error:', e);
         }
         
+        const handleCopyIban = () => {
+          if (!ibanNumber) return;
+          navigator.clipboard.writeText(ibanNumber);
+          setCopiedIban(true);
+          setTimeout(() => setCopiedIban(false), 2000);
+        };
+
         return (
-          <div className="bg-gray-50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 md:p-6">
-            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-              <Landmark className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
-              <h3 className="text-base md:text-lg font-semibold text-gray-900">IBAN</h3>
-            </div>
-            <div className="bg-gray-100 rounded-lg p-3 md:p-4 space-y-2">
-              {bankName !== 'Bilinmiyor' && (
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">Banka Adı</p>
-                  <p className="text-gray-900 text-sm md:text-base">{bankName}</p>
-                </div>
-              )}
-              <div>
-                <p className="text-gray-600 text-xs mb-1">IBAN Numarası</p>
-                <p className="text-gray-900 text-sm md:text-base font-mono tracking-wider">{ibanNumber}</p>
+          <div className="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-xl shadow-gray-200/50 overflow-hidden relative">
+            {/* Decorative gradient header */}
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
+            
+            <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">
+              <div className="w-11 h-11 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                <Landmark className="w-6 h-6 md:w-8 md:h-8 text-white" />
               </div>
-              {accountHolder !== 'Bilinmiyor' && (
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">Hesap Sahibi</p>
-                  <p className="text-gray-900 text-sm md:text-base">{accountHolder}</p>
+              <div>
+                <h3 className="text-lg md:text-2xl font-bold text-gray-900">IBAN Bilgileri</h3>
+                <p className="text-gray-500 text-xs md:text-sm">Havale / EFT için bilgiler</p>
+              </div>
+            </div>
+
+            <div className="space-y-4 md:space-y-5">
+              {bankName !== 'Bilinmiyor' && (
+                <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
+                  <Building2 className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Banka Adı</p>
+                    <p className="text-gray-900 text-sm md:text-base font-semibold">{bankName}</p>
+                  </div>
                 </div>
               )}
+
+              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-emerald-700 text-xs font-bold uppercase tracking-wide">IBAN Numarası</p>
+                  <button
+                    onClick={handleCopyIban}
+                    disabled={!ibanNumber}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-emerald-200 text-emerald-700 text-xs font-semibold hover:bg-emerald-100 transition-colors disabled:opacity-50"
+                  >
+                    {copiedIban ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        Kopyalandı
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        Kopyala
+                      </>
+                    )}
+                  </button>
+                </div>
+                <p className="text-gray-900 text-base md:text-xl font-mono tracking-[0.08em] break-all">{ibanNumber || '-'}</p>
+              </div>
+
+              {accountHolder !== 'Bilinmiyor' && (
+                <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
+                  <User className="w-5 h-5 text-teal-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Hesap Sahibi</p>
+                    <p className="text-gray-900 text-sm md:text-base font-semibold">{accountHolder}</p>
+                  </div>
+                </div>
+              )}
+
+              {userNote && userNote.trim() !== '' && (
+                <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-amber-50 border border-amber-100">
+                  <Info className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-amber-700 text-xs font-bold uppercase tracking-wide mb-1">Açıklama</p>
+                    <p className="text-gray-800 text-sm md:text-base whitespace-pre-wrap">{userNote}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-5 md:mt-6 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-start gap-3">
+              <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+              <p className="text-gray-500 text-xs md:text-sm leading-relaxed">
+                IBAN numarasını kopyalamak için yukarıdaki <span className="font-semibold text-gray-700">Kopyala</span> butonunu kullanabilirsiniz. Banka uygulamanızda havale/EFT yaparken bu numarayı kullanın.
+              </p>
             </div>
           </div>
         );
@@ -749,6 +926,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
                 )}
               </div>
             </div>
+            <NoteBox note={data.note} />
           </div>
         );
       }
@@ -756,6 +934,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
         return (
           <div className="p-8 rounded-2xl bg-gray-50 backdrop-blur-sm border border-gray-200">
             <p className="text-gray-900 whitespace-pre-wrap text-lg leading-relaxed">{displayContent}</p>
+            <NoteBox note={data.note} />
           </div>
         );
     }

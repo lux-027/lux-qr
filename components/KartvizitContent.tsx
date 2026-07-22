@@ -288,7 +288,8 @@ END:VCARD`;
                   setFormData({ ...formData, firstName: e.target.value });
                   setShowError(false);
                 }}
-                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base ${
+                disabled={loading}
+                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                   showError && !formData.firstName ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
                 }`}
                 placeholder="Adınız"
@@ -307,7 +308,8 @@ END:VCARD`;
                   setFormData({ ...formData, lastName: e.target.value });
                   setShowError(false);
                 }}
-                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base ${
+                disabled={loading}
+                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                   showError && !formData.lastName ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
                 }`}
                 placeholder="Soyadınız"
@@ -326,7 +328,8 @@ END:VCARD`;
                   handlePhoneChange(e);
                   setShowError(false);
                 }}
-                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base ${
+                disabled={loading}
+                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                   showError && !formData.phone ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
                 }`}
                 placeholder="0516 XXX XX XX"
@@ -345,7 +348,8 @@ END:VCARD`;
                   setFormData({ ...formData, email: e.target.value });
                   setShowError(false);
                 }}
-                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base ${
+                disabled={loading}
+                className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                   showError && !formData.email ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
                 }`}
                 placeholder="email@example.com"
@@ -361,7 +365,8 @@ END:VCARD`;
                 type="text"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                className="w-full bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                disabled={loading}
+                className="w-full bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Şirket adı"
               />
             </div>
@@ -432,7 +437,8 @@ END:VCARD`;
                 type="url"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                className="w-full bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                disabled={loading}
+                className="w-full bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="https://example.com"
               />
             </div>
@@ -446,7 +452,8 @@ END:VCARD`;
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base"
+                disabled={loading}
+                className="w-full bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Şehir, Ülke"
               />
             </div>
@@ -460,8 +467,9 @@ END:VCARD`;
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
+                disabled={loading}
                 placeholder="QR kartviziti hakkında açıklama veya not ekleyin... (opsiyonel)"
-                className="w-full h-24 bg-white/80 border border-gray-200 rounded-xl p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none"
+                className="w-full h-24 bg-white/80 border border-gray-200 rounded-xl p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
           </div>
@@ -484,7 +492,8 @@ END:VCARD`;
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
+                  disabled={loading}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >

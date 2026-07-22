@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Copy, Check, QrCode, Link2 } from 'lucide-react';
+import { X, Copy, Check, Link2 } from 'lucide-react';
 import { showNotification } from '@/components/Notification';
 
 const SITE_URL = 'https://luxqrpro.site';
@@ -128,7 +128,7 @@ export default function ShareButton({ variant = 'outline', className = '' }: Sha
               {/* logo */}
               <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg"
                 style={{ background: 'rgba(255,255,255,0.18)', border: '1.5px solid rgba(255,255,255,0.30)' }}>
-                <QrCode className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white drop-shadow" />
+                <img src="/favicon.svg" alt="LuxQr" className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 drop-shadow" />
               </div>
               <div className="min-w-0">
                 <p className="text-white font-black text-sm sm:text-base md:text-lg leading-tight">LuxQr</p>

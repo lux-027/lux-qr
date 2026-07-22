@@ -149,8 +149,10 @@ export default function SosyalMedyaContent() {
           className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8"
         >
           <div
-            onClick={() => handlePlatformChange('instagram')}
-            className={`card-premium p-3 md:p-6 cursor-pointer transition-all ${
+            onClick={() => !loading && handlePlatformChange('instagram')}
+            className={`card-premium p-3 md:p-6 transition-all ${
+              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+            } ${
               selectedPlatform === 'instagram'
                 ? 'border-blue-500/50'
                 : 'hover:border-blue-500/50'
@@ -162,8 +164,10 @@ export default function SosyalMedyaContent() {
           </div>
 
           <div
-            onClick={() => handlePlatformChange('tiktok')}
-            className={`card-premium p-3 md:p-6 cursor-pointer transition-all ${
+            onClick={() => !loading && handlePlatformChange('tiktok')}
+            className={`card-premium p-3 md:p-6 transition-all ${
+              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+            } ${
               selectedPlatform === 'tiktok'
                 ? 'border-blue-500/50'
                 : 'hover:border-blue-500/50'
@@ -175,8 +179,10 @@ export default function SosyalMedyaContent() {
           </div>
 
           <div
-            onClick={() => handlePlatformChange('facebook')}
-            className={`card-premium p-3 md:p-6 cursor-pointer transition-all ${
+            onClick={() => !loading && handlePlatformChange('facebook')}
+            className={`card-premium p-3 md:p-6 transition-all ${
+              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+            } ${
               selectedPlatform === 'facebook'
                 ? 'border-blue-500/50'
                 : 'hover:border-blue-500/50'
@@ -188,8 +194,10 @@ export default function SosyalMedyaContent() {
           </div>
 
           <div
-            onClick={() => handlePlatformChange('youtube')}
-            className={`card-premium p-3 md:p-6 cursor-pointer transition-all ${
+            onClick={() => !loading && handlePlatformChange('youtube')}
+            className={`card-premium p-3 md:p-6 transition-all ${
+              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+            } ${
               selectedPlatform === 'youtube'
                 ? 'border-blue-500/50'
                 : 'hover:border-blue-500/50'
@@ -223,6 +231,7 @@ export default function SosyalMedyaContent() {
               type="url"
               value={url}
               onChange={handleUrlChange}
+              disabled={loading}
               placeholder={
                 selectedPlatform === 'instagram'
                   ? 'https://instagram.com/kullaniciadi'
@@ -232,7 +241,7 @@ export default function SosyalMedyaContent() {
                   ? 'https://facebook.com/kullaniciadi'
                   : 'https://youtube.com/@kanaladi'
               }
-              className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base ${
+              className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                 validationError ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
               }`}
             />
@@ -250,8 +259,9 @@ export default function SosyalMedyaContent() {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
+              disabled={loading}
               placeholder="QR sosyal medya profili hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -273,7 +283,8 @@ export default function SosyalMedyaContent() {
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
+                  disabled={loading}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >

@@ -69,7 +69,7 @@ export default function SesDosyasiContent() {
         stream.getTracks().forEach(track => track.stop());
       };
 
-      mediaRecorderRef.current.start();
+      mediaRecorderRef.current.start(1000); // Collect data every second for reliability
       setIsRecording(true);
       setRecordingTime(0);
       
@@ -86,11 +86,17 @@ export default function SesDosyasiContent() {
 
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+      try {
+        mediaRecorderRef.current.requestData(); // Flush any buffered data before stopping
+        mediaRecorderRef.current.stop();
+      } catch (err) {
+        console.error('Kayıt durdurma hatası:', err);
+      }
       setIsRecording(false);
       
       if (recordingIntervalRef.current) {
         clearInterval(recordingIntervalRef.current);
+        recordingIntervalRef.current = null;
       }
       
       showNotification('Kayıt tamamlandı', 'success');
@@ -106,7 +112,12 @@ export default function SesDosyasiContent() {
   const handleGenerate = async () => {
     if (!file) {
       setShowError(true);
-      showNotification('Lütfen ses dosyası seçin', 'error');
+      showNotification('Lütfen ses dosyası seçin veya ses kaydedin', 'error');
+      return;
+    }
+    if (file.size === 0) {
+      setShowError(true);
+      showNotification('Ses dosyası boş görünüyor, lütfen tekrar kaydedin', 'error');
       return;
     }
     if (uploading) {
@@ -245,8 +256,10 @@ export default function SesDosyasiContent() {
               )}
               <div className="flex gap-3">
                 <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className={`flex-1 border-2 border-dashed rounded-xl p-4 md:p-8 text-center cursor-pointer transition-colors ${
+                  onClick={() => !loading && fileInputRef.current?.click()}
+                  className={`flex-1 border-2 border-dashed rounded-xl p-4 md:p-8 text-center transition-colors ${
+                    loading ? 'pointer-events-none opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  } ${
                     showError ? 'border-red-500' : 'border-gray-300 hover:border-blue-500/50'
                   }`}
                 >
@@ -331,8 +344,9 @@ export default function SesDosyasiContent() {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
+              disabled={loading}
               placeholder="QR ses dosyası hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -354,7 +368,8 @@ export default function SesDosyasiContent() {
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all ${
+                  disabled={loading}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-xl border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === option.value ? option.activeColor : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >

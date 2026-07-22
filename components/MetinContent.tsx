@@ -132,8 +132,9 @@ export default function MetinContent() {
                 setTextContent(e.target.value);
                 setShowError(false);
               }}
+              disabled={loading}
               placeholder="QR koda dönüştürmek istediğiniz metni girin..."
-              className={`w-full h-32 md:h-40 bg-white/80 border rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none resize-none text-sm md:text-base ${
+              className={`w-full h-32 md:h-40 bg-white/80 border rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none resize-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                 showError ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
               }`}
             />
@@ -153,8 +154,9 @@ export default function MetinContent() {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
+              disabled={loading}
               placeholder="QR kod hakkında açıklama veya not ekleyin... (opsiyonel)"
-              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base"
+              className="w-full h-20 md:h-24 bg-white/80 border border-gray-200 rounded-2xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:border-blue-500/50 focus:outline-none resize-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -178,7 +180,8 @@ export default function MetinContent() {
                 <button
                   key={option.value}
                   onClick={() => setExpiration(option.value as any)}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-2xl border transition-all ${
+                  disabled={loading}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 rounded-2xl border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     expiration === option.value
                       ? option.activeColor
                       : 'border-gray-200 text-gray-600 hover:border-gray-300'
