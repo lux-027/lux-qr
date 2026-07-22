@@ -20,10 +20,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const [showOtherActions, setShowOtherActions] = useState(false);
   const [qrColor, setQrColor] = useState<'black' | 'neon' | 'sunset' | 'arctic' | 'berry'>('black');
 
-  const getLuxCenterLogo = () => {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="140" height="140"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3B82F6"/><stop offset="50%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect width="32" height="32" rx="6" fill="url(#g)"/><rect x="6" y="6" width="8" height="8" rx="1" fill="white"/><rect x="8" y="8" width="4" height="4" rx="0.5" fill="url(#g)"/><rect x="18" y="6" width="8" height="8" rx="1" fill="white"/><rect x="20" y="8" width="4" height="4" rx="0.5" fill="url(#g)"/><rect x="6" y="18" width="8" height="8" rx="1" fill="white"/><rect x="8" y="20" width="4" height="4" rx="0.5" fill="url(#g)"/><rect x="14" y="14" width="4" height="4" rx="0.5" fill="white"/></svg>`;
-    return `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(svg) : ''}`;
-  };
+  const getLuxCenterLogo = (textColor: string) =>
+    `data:image/svg+xml;base64,${typeof window !== 'undefined' ? btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="100"><rect width="220" height="100" rx="28" fill="#ffffff"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" fill="${textColor}" letter-spacing="12">L U X</text></svg>`) : ''}`;
 
   const colorThemes: Record<typeof qrColor, { stops: { offset: number; color: string }[]; label: string }> = {
     black: { label: 'Siyah', stops: [{ offset: 0, color: '#000000' }, { offset: 0.5, color: '#374151' }, { offset: 1, color: '#000000' }] },
@@ -35,7 +33,8 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
 
   const generateStyledQR = async (data: string): Promise<string> => {
     const gradientStops = colorThemes[qrColor].stops;
-    const luxCenterLogo = getLuxCenterLogo();
+    const logoTextColor = gradientStops[1]?.color || '#000000';
+    const luxCenterLogo = getLuxCenterLogo(logoTextColor);
 
     const qr = new QRCodeStyling({
       width: 1024,

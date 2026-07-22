@@ -79,6 +79,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   const [copiedIban, setCopiedIban] = useState(false);
   const [copiedWifi, setCopiedWifi] = useState(false);
   const [copiedSsid, setCopiedSsid] = useState(false);
+  const [copiedHolder, setCopiedHolder] = useState(false);
 
   useEffect(() => {
     fetchQrCode();
@@ -783,6 +784,13 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           setTimeout(() => setCopiedIban(false), 2000);
         };
 
+        const handleCopyHolder = () => {
+          if (!accountHolder || accountHolder === 'Bilinmiyor') return;
+          navigator.clipboard.writeText(accountHolder);
+          setCopiedHolder(true);
+          setTimeout(() => setCopiedHolder(false), 2000);
+        };
+
         return (
           <div className="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-xl shadow-gray-200/50 overflow-hidden relative">
             {/* Decorative gradient header */}
@@ -834,12 +842,28 @@ export default function ViewPage({ params }: { params: { id: string } }) {
               </div>
 
               {accountHolder !== 'Bilinmiyor' && (
-                <div className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
-                  <User className="w-5 h-5 text-teal-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Hesap Sahibi</p>
-                    <p className="text-gray-900 text-sm md:text-base font-semibold">{accountHolder}</p>
+                <div className="p-3 md:p-4 rounded-xl bg-gray-50 border border-gray-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-gray-500 text-xs font-medium uppercase tracking-wide">Hesap Sahibi</p>
+                    <button
+                      onClick={handleCopyHolder}
+                      disabled={!accountHolder}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-teal-700 text-xs font-semibold hover:bg-teal-50 transition-colors disabled:opacity-50"
+                    >
+                      {copiedHolder ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          Kopyalandı
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          Kopyala
+                        </>
+                      )}
+                    </button>
                   </div>
+                  <p className="text-gray-900 text-sm md:text-base font-semibold">{accountHolder}</p>
                 </div>
               )}
 
