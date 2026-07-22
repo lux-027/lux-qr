@@ -35,15 +35,35 @@ module.exports = {
     }
   },
   additionalPaths: async (config) => {
-    const qrPages = [
-      { loc: '/qr/resim-video-belge', priority: 0.9, changefreq: 'weekly' },
-      { loc: '/qr/kartvizit', priority: 0.9, changefreq: 'weekly' },
-      { loc: '/qr/wifi', priority: 0.9, changefreq: 'weekly' },
-      { loc: '/qr/sosyal-medya', priority: 0.9, changefreq: 'weekly' },
-      { loc: '/qr/ses-dosyasi', priority: 0.9, changefreq: 'weekly' },
+    const socialPlatforms = [
+      'instagram', 'tiktok', 'facebook', 'youtube',
+      'twitter', 'linkedin', 'whatsapp', 'pinterest'
+    ];
+
+    const staticPages = [
+      { loc: '/about', priority: 0.7, changefreq: 'monthly' },
+      { loc: '/contact', priority: 0.7, changefreq: 'monthly' },
+      { loc: '/faq', priority: 0.8, changefreq: 'monthly' },
       { loc: '/lux-studio', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/privacy', priority: 0.5, changefreq: 'monthly' },
+      { loc: '/terms', priority: 0.5, changefreq: 'monthly' },
+      { loc: '/blog', priority: 0.8, changefreq: 'weekly' },
+      { loc: '/qr/metin', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/kartvizit', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/resim-video-belge', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/ses-dosyasi', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/wifi', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/sosyal-medya', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/qr/bio-link', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/fiyat-listesi', priority: 0.85, changefreq: 'weekly' },
+      { loc: '/qr/iban', priority: 0.85, changefreq: 'weekly' },
+      ...socialPlatforms.map((p) => ({
+        loc: `/qr/sosyal-medya/${p}`,
+        priority: 0.85,
+        changefreq: 'weekly',
+      })),
     ];
     
-    return qrPages;
+    return staticPages;
   },
 }

@@ -15,11 +15,11 @@ const inter = Inter({ subsets: ["latin"], display: 'optional' });
 export const metadata: Metadata = {
   metadataBase: new URL('https://luxqrpro.site'),
   title: {
-    default: "LuxQr - Ücretsiz QR Kod Oluşturucu | Metin, WiFi, Kartvizit, Sosyal Medya",
+    default: "LuxQr ⚡ Ücretsiz QR Kod Oluştur | WiFi, Kartvizit, Sosyal Medya",
     template: "%s | LuxQr"
   },
-  description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
-  keywords: ["qr kod oluşturucu", "ücretsiz qr kod", "wifi qr kod", "kartvizit qr", "instagram qr", "tiktok qr", "metin qr", "dosya qr", "türkiye qr kod"],
+  description: "Türkiye'nin en hızlı ve ücretsiz QR kod oluşturucusu. Metin, WiFi, kartvizit, sosyal medya, ses ve dosyalarınız için saniyeler içinde QR kod hazırlayın. Şimdi ücretsiz deneyin!",
+  keywords: ["qr kod oluşturucu", "ücretsiz qr kod", "bedava qr kod", "wifi qr kod", "kartvizit qr", "instagram qr", "tiktok qr", "metin qr", "dosya qr", "türkiye qr kod", "online qr kod", "hızlı qr kod", "qr kod yap"],
   authors: [{ name: "LuxQr Team" }],
   icons: {
     icon: [
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     ]
   },
   openGraph: {
-    title: "LuxQr - Ücretsiz QR Kod Oluşturucu | Metin, WiFi, Kartvizit, Sosyal Medya",
-    description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Ücretsiz ve güvenli QR kod oluşturma platformu.",
+    title: "LuxQr ⚡ Ücretsiz QR Kod Oluştur | WiFi, Kartvizit, Sosyal Medya",
+    description: "Türkiye'nin en hızlı ve ücretsiz QR kod oluşturucusu. Metin, WiFi, kartvizit, sosyal medya, ses ve dosyalarınız için saniyeler içinde QR kod hazırlayın.",
     url: "https://luxqrpro.site",
     siteName: "LuxQR",
     locale: "tr_TR",
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "LuxQr - Ücretsiz QR Kod Oluşturucu",
-    description: "Türkiye'nin en gelişmiş QR kod oluşturucu. Metin, resim, video, belge, WiFi, kartvizit, sosyal medya ve ses dosyaları için ücretsiz QR kod oluşturun.",
+    title: "LuxQr ⚡ Ücretsiz QR Kod Oluşturucu",
+    description: "Türkiye'nin en hızlı ve ücretsiz QR kod oluşturucusu. Metin, WiFi, kartvizit, sosyal medya ve ses dosyaları için saniyeler içinde QR kod oluşturun.",
     images: '/favicon.svg',
   },
   alternates: {
@@ -49,6 +49,17 @@ export const metadata: Metadata = {
   },
   other: {
     "google-adsense-account": "ca-pub-6964506660604767",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
   },
 };
 

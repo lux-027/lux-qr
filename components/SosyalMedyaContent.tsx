@@ -1,14 +1,21 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Share2, Instagram, Facebook, Youtube, Clock, Shield, Zap, Video, FileText, Music, QrCode, Timer, AlarmClock, CalendarDays, CalendarRange } from 'lucide-react';
+import { Share2, Instagram, Facebook, Youtube, Clock, Shield, Zap, Video, FileText, Music, QrCode, Timer, AlarmClock, CalendarDays, CalendarRange, X as XIcon, Linkedin, MessageCircle, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import { SOCIAL_PLATFORM_SEO, type SocialPlatform } from '@/lib/socialPlatformSeo';
 
-export default function SosyalMedyaContent() {
+interface SosyalMedyaContentProps {
+  initialPlatform?: SocialPlatform;
+}
+
+export default function SosyalMedyaContent({ initialPlatform }: SosyalMedyaContentProps) {
   const router = useRouter();
-  const [selectedPlatform, setSelectedPlatform] = useState<'instagram' | 'tiktok' | 'facebook' | 'youtube'>('instagram');
+  const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform>(initialPlatform || 'instagram');
+  const activeSeo = SOCIAL_PLATFORM_SEO.find((p) => p.id === selectedPlatform);
+  const isDedicated = !!initialPlatform;
   const [url, setUrl] = useState('');
   const [note, setNote] = useState('');
   const [expiration, setExpiration] = useState<'1day' | '1week' | '1month' | '3months' | '6months' | '12months'>('1day');
@@ -20,16 +27,26 @@ export default function SosyalMedyaContent() {
     
     try {
       const urlObj = new URL(url);
+      const hostname = urlObj.hostname.replace(/^www\./, '');
+      const hasPath = urlObj.pathname.length > 1;
       
       switch (platform) {
         case 'instagram':
-          return urlLower.includes('instagram.com') && urlObj.pathname.length > 1;
+          return urlLower.includes('instagram.com') && hasPath;
         case 'tiktok':
-          return urlLower.includes('tiktok.com') && urlObj.pathname.length > 1;
+          return urlLower.includes('tiktok.com') && hasPath;
         case 'facebook':
-          return urlLower.includes('facebook.com') && urlObj.pathname.length > 1;
+          return urlLower.includes('facebook.com') && hasPath;
         case 'youtube':
-          return urlLower.includes('youtube.com') && urlObj.pathname.length > 1;
+          return urlLower.includes('youtube.com') && hasPath;
+        case 'twitter':
+          return (hostname.includes('twitter.com') || hostname.includes('x.com')) && hasPath;
+        case 'linkedin':
+          return hostname.includes('linkedin.com') && hasPath;
+        case 'whatsapp':
+          return hostname.includes('wa.me') || hostname.includes('whatsapp.com');
+        case 'pinterest':
+          return hostname.includes('pinterest.com') && hasPath;
         default:
           return false;
       }
@@ -38,7 +55,7 @@ export default function SosyalMedyaContent() {
     }
   };
 
-  const handlePlatformChange = (platform: 'instagram' | 'tiktok' | 'facebook' | 'youtube') => {
+  const handlePlatformChange = (platform: SocialPlatform) => {
     setSelectedPlatform(platform);
     setUrl('');
     setNote('');
@@ -133,9 +150,11 @@ export default function SosyalMedyaContent() {
               </div>
               <div className="text-center md:text-left">
                 <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1">
-                  Sosyal Medya <span className="bg-gradient-to-r from-pink-500 to-rose-600 bg-clip-text text-transparent">QR Kodu</span>
+                  {isDedicated ? activeSeo?.label : 'Sosyal Medya'} <span className="bg-gradient-to-r from-pink-500 to-rose-600 bg-clip-text text-transparent">QR Kodu</span>
                 </h1>
-                <p className="text-gray-600 text-sm md:text-base">Instagram, TikTok, Facebook ve YouTube sayfalarınız için QR kod oluşturun</p>
+                <p className="text-gray-600 text-sm md:text-base">
+                  {isDedicated && activeSeo ? activeSeo.description : 'Instagram, TikTok, Facebook, YouTube, LinkedIn, WhatsApp ve daha fazlası için QR kod oluşturun'}
+                </p>
               </div>
             </div>
           </motion.div>
@@ -146,67 +165,165 @@ export default function SosyalMedyaContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-6 md:mb-8"
         >
-          <div
-            onClick={() => !loading && handlePlatformChange('instagram')}
-            className={`card-premium p-3 md:p-6 transition-all ${
-              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
-            } ${
-              selectedPlatform === 'instagram'
-                ? 'border-blue-500/50'
-                : 'hover:border-blue-500/50'
-            }`}
-          >
-            <Instagram className="w-8 h-8 md:w-12 md:h-12 text-pink-400 mb-2 md:mb-4" />
-            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Instagram</h3>
-            <p className="text-gray-600 text-xs md:text-sm hidden md:block">Instagram hesabınız için QR kod</p>
-          </div>
+          {[
+            {
+              id: 'instagram',
+              label: 'Instagram',
+              desc: 'Instagram hesabınız için QR kod',
+              icon: Instagram,
+              gradient: 'linear-gradient(135deg, #ec4899, #e11d48)',
+              glow: 'rgba(236,72,153,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(236,72,153,0.12) 0%, rgba(225,29,72,0.12) 100%)',
+              activeBorder: 'rgba(236,72,153,0.5)',
+              activeGlow: 'rgba(236,72,153,0.25)',
+              badge: 'Reels · Story',
+              badgeColor: 'bg-pink-100 text-pink-700',
+            },
+            {
+              id: 'tiktok',
+              label: 'TikTok',
+              desc: 'TikTok hesabınız için QR kod',
+              icon: Music,
+              gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)',
+              glow: 'rgba(6,182,212,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(59,130,246,0.12) 100%)',
+              activeBorder: 'rgba(6,182,212,0.5)',
+              activeGlow: 'rgba(6,182,212,0.25)',
+              badge: 'Video',
+              badgeColor: 'bg-cyan-100 text-cyan-700',
+            },
+            {
+              id: 'facebook',
+              label: 'Facebook',
+              desc: 'Facebook hesabınız için QR kod',
+              icon: Facebook,
+              gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+              glow: 'rgba(59,130,246,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(37,99,235,0.12) 100%)',
+              activeBorder: 'rgba(59,130,246,0.5)',
+              activeGlow: 'rgba(59,130,246,0.25)',
+              badge: 'Sayfa · Profil',
+              badgeColor: 'bg-blue-100 text-blue-700',
+            },
+            {
+              id: 'youtube',
+              label: 'YouTube',
+              desc: 'YouTube kanalınız için QR kod',
+              icon: Youtube,
+              gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
+              glow: 'rgba(239,68,68,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(220,38,38,0.12) 100%)',
+              activeBorder: 'rgba(239,68,68,0.5)',
+              activeGlow: 'rgba(239,68,68,0.25)',
+              badge: 'Kanal',
+              badgeColor: 'bg-red-100 text-red-700',
+            },
+            {
+              id: 'twitter',
+              label: 'X / Twitter',
+              desc: 'X / Twitter profiliniz için QR kod',
+              icon: XIcon,
+              gradient: 'linear-gradient(135deg, #111827, #374151)',
+              glow: 'rgba(17,24,39,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(17,24,39,0.12) 0%, rgba(55,65,81,0.12) 100%)',
+              activeBorder: 'rgba(17,24,39,0.5)',
+              activeGlow: 'rgba(17,24,39,0.25)',
+              badge: 'Gönderi · Profil',
+              badgeColor: 'bg-gray-200 text-gray-800',
+            },
+            {
+              id: 'linkedin',
+              label: 'LinkedIn',
+              desc: 'LinkedIn profiliniz için QR kod',
+              icon: Linkedin,
+              gradient: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
+              glow: 'rgba(14,165,233,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(14,165,233,0.12) 0%, rgba(2,132,199,0.12) 100%)',
+              activeBorder: 'rgba(14,165,233,0.5)',
+              activeGlow: 'rgba(14,165,233,0.25)',
+              badge: 'Profil · İş',
+              badgeColor: 'bg-sky-100 text-sky-700',
+            },
+            {
+              id: 'whatsapp',
+              label: 'WhatsApp',
+              desc: 'WhatsApp iletişim QR kodu',
+              icon: MessageCircle,
+              gradient: 'linear-gradient(135deg, #22c55e, #16a34a)',
+              glow: 'rgba(34,197,94,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(34,197,94,0.12) 0%, rgba(22,163,74,0.12) 100%)',
+              activeBorder: 'rgba(34,197,94,0.5)',
+              activeGlow: 'rgba(34,197,94,0.25)',
+              badge: 'wa.me',
+              badgeColor: 'bg-green-100 text-green-700',
+            },
+            {
+              id: 'pinterest',
+              label: 'Pinterest',
+              desc: 'Pinterest profiliniz için QR kod',
+              icon: MapPin,
+              gradient: 'linear-gradient(135deg, #ef4444, #b91c1c)',
+              glow: 'rgba(239,68,68,0.45)',
+              activeBg: 'linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(185,28,28,0.12) 100%)',
+              activeBorder: 'rgba(239,68,68,0.5)',
+              activeGlow: 'rgba(239,68,68,0.25)',
+              badge: 'Pin · Pano',
+              badgeColor: 'bg-red-100 text-red-700',
+            },
+          ].map(({ id, label, desc, icon: Icon, gradient, glow, activeBg, activeBorder, activeGlow, badge, badgeColor }) => {
+            const isActive = selectedPlatform === id;
+            return (
+              <motion.div
+                key={id}
+                onClick={() => !loading && handlePlatformChange(id as SocialPlatform)}
+                whileHover={loading ? {} : { y: -4, scale: 1.03 }}
+                whileTap={loading ? {} : { scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                className={`relative rounded-2xl overflow-hidden p-4 md:p-5 ${loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
+                style={{
+                  background: isActive ? activeBg : 'rgba(255,255,255,0.85)',
+                  border: `1.5px solid ${isActive ? activeBorder : 'rgba(209,213,219,0.8)'}`,
+                  boxShadow: isActive
+                    ? `0 8px 32px ${activeGlow}, 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)`
+                    : '0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
+                  backdropFilter: 'blur(12px)',
+                }}
+              >
+                {/* Top shine */}
+                <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-2xl pointer-events-none"
+                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, transparent 100%)' }} />
 
-          <div
-            onClick={() => !loading && handlePlatformChange('tiktok')}
-            className={`card-premium p-3 md:p-6 transition-all ${
-              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
-            } ${
-              selectedPlatform === 'tiktok'
-                ? 'border-blue-500/50'
-                : 'hover:border-blue-500/50'
-            }`}
-          >
-            <Music className="w-8 h-8 md:w-12 md:h-12 text-cyan-400 mb-2 md:mb-4" />
-            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">TikTok</h3>
-            <p className="text-gray-600 text-xs md:text-sm hidden md:block">TikTok hesabınız için QR kod</p>
-          </div>
+                {/* Active indicator bar */}
+                {isActive && (
+                  <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
+                    style={{ background: gradient }} />
+                )}
 
-          <div
-            onClick={() => !loading && handlePlatformChange('facebook')}
-            className={`card-premium p-3 md:p-6 transition-all ${
-              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
-            } ${
-              selectedPlatform === 'facebook'
-                ? 'border-blue-500/50'
-                : 'hover:border-blue-500/50'
-            }`}
-          >
-            <Facebook className="w-8 h-8 md:w-12 md:h-12 text-blue-500 mb-2 md:mb-4" />
-            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">Facebook</h3>
-            <p className="text-gray-600 text-xs md:text-sm hidden md:block">Facebook hesabınız için QR kod</p>
-          </div>
+                <div className="relative z-10 flex flex-col items-center text-center gap-2 md:gap-3">
+                  {/* Icon box */}
+                  <div
+                    className="w-10 h-10 md:w-16 md:h-16 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300"
+                    style={{
+                      background: gradient,
+                      boxShadow: isActive ? `0 6px 20px ${glow}` : `0 4px 12px ${glow.replace('0.45', '0.25')}`,
+                      transform: isActive ? 'rotate(3deg) scale(1.08)' : 'rotate(0deg) scale(1)',
+                    }}
+                  >
+                    <Icon className="w-5 h-5 md:w-8 md:h-8 text-white drop-shadow" />
+                  </div>
 
-          <div
-            onClick={() => !loading && handlePlatformChange('youtube')}
-            className={`card-premium p-3 md:p-6 transition-all ${
-              loading ? 'pointer-events-none opacity-50' : 'cursor-pointer'
-            } ${
-              selectedPlatform === 'youtube'
-                ? 'border-blue-500/50'
-                : 'hover:border-blue-500/50'
-            }`}
-          >
-            <Youtube className="w-8 h-8 md:w-12 md:h-12 text-red-400 mb-2 md:mb-4" />
-            <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">YouTube</h3>
-            <p className="text-gray-600 text-xs md:text-sm hidden md:block">YouTube kanalınız için QR kod</p>
-          </div>
+                  <div>
+                    <h3 className={`text-sm md:text-base font-bold mb-0.5 ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>{label}</h3>
+                    <p className="text-gray-500 text-[10px] md:text-xs leading-snug hidden md:block">{desc}</p>
+                  </div>
+
+                  <span className={`text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full ${badgeColor}`}>{badge}</span>
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         {/* Form Section */}
@@ -222,10 +339,18 @@ export default function SosyalMedyaContent() {
               {selectedPlatform === 'tiktok' && <Music className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />}
               {selectedPlatform === 'facebook' && <Facebook className="w-4 h-4 md:w-5 md:h-5 text-blue-500" />}
               {selectedPlatform === 'youtube' && <Youtube className="w-4 h-4 md:w-5 md:h-5 text-red-400" />}
+              {selectedPlatform === 'twitter' && <XIcon className="w-4 h-4 md:w-5 md:h-5 text-gray-700" />}
+              {selectedPlatform === 'linkedin' && <Linkedin className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />}
+              {selectedPlatform === 'whatsapp' && <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-green-500" />}
+              {selectedPlatform === 'pinterest' && <MapPin className="w-4 h-4 md:w-5 md:h-5 text-red-500" />}
               {selectedPlatform === 'instagram' && 'Instagram URL'}
               {selectedPlatform === 'tiktok' && 'TikTok URL'}
               {selectedPlatform === 'facebook' && 'Facebook URL'}
               {selectedPlatform === 'youtube' && 'YouTube URL'}
+              {selectedPlatform === 'twitter' && 'X / Twitter URL'}
+              {selectedPlatform === 'linkedin' && 'LinkedIn URL'}
+              {selectedPlatform === 'whatsapp' && 'WhatsApp URL'}
+              {selectedPlatform === 'pinterest' && 'Pinterest URL'}
             </label>
             <input
               type="url"
@@ -239,7 +364,15 @@ export default function SosyalMedyaContent() {
                   ? 'https://tiktok.com/@kullaniciadi'
                   : selectedPlatform === 'facebook'
                   ? 'https://facebook.com/kullaniciadi'
-                  : 'https://youtube.com/@kanaladi'
+                  : selectedPlatform === 'youtube'
+                  ? 'https://youtube.com/@kanaladi'
+                  : selectedPlatform === 'twitter'
+                  ? 'https://x.com/kullaniciadi'
+                  : selectedPlatform === 'linkedin'
+                  ? 'https://linkedin.com/in/kullaniciadi'
+                  : selectedPlatform === 'whatsapp'
+                  ? 'https://wa.me/905551234567'
+                  : 'https://pinterest.com/kullaniciadi'
               }
               className={`w-full bg-white/80 border rounded-xl p-3 md:p-4 text-gray-900 placeholder-gray-400 focus:outline-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                 validationError ? 'border-red-500' : 'border-gray-200 focus:border-blue-500/50'
