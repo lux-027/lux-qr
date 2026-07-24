@@ -117,36 +117,30 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
   const handlePrint = () => {
     const printWindow = window.open('', '_blank');
     if (printWindow) {
-      const printDate = new Date().toLocaleDateString('tr-TR');
       printWindow.document.write(`
         <html>
           <head>
-            <title>QR Kod Yazdır</title>
+            <title>LuxQr</title>
             <style>
+              @page {
+                margin: 0;
+              }
               body { 
                 margin: 0; 
                 padding: 40px;
-                position: relative;
+                box-sizing: border-box;
                 display: flex; 
                 flex-direction: column;
                 align-items: center;
-                min-height: 100vh;
+                height: auto;
                 font-family: Arial, sans-serif;
                 background: white;
-              }
-              .date {
-                position: absolute;
-                top: 0;
-                left: 0;
-                font-size: 14px;
-                color: #666;
               }
               .logo {
                 font-size: 32px;
                 font-weight: bold;
                 color: #3b82f6;
-                margin-top: 80px;
-                margin-bottom: 40px;
+                margin: 20px 0;
                 display: flex;
                 align-items: center;
                 gap: 10px;
@@ -156,16 +150,15 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 height: 40px;
               }
               .qr-container {
-                margin: 20px 0;
+                margin: 10px 0;
               }
               .qr-container img {
-                width: 300px;
-                height: 300px;
+                width: 600px;
+                height: 600px;
               }
             </style>
           </head>
           <body>
-            <div class="date">${printDate}</div>
             <div class="logo">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
                 <defs>
