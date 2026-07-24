@@ -31,14 +31,14 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     berry: { label: 'Berry', stops: [{ offset: 0, color: '#c084fc' }, { offset: 0.5, color: '#ec4899' }, { offset: 1, color: '#f43f5e' }] },
   };
 
-  const generateStyledQR = async (data: string): Promise<string> => {
+  const generateStyledQR = async (data: string, size = 1024): Promise<string> => {
     const gradientStops = colorThemes[qrColor].stops;
     const logoTextColor = gradientStops[1]?.color || '#000000';
     const luxCenterLogo = getLuxCenterLogo(logoTextColor);
 
     const qr = new QRCodeStyling({
-      width: 1024,
-      height: 1024,
+      width: size,
+      height: size,
       data,
       margin: 8,
       qrOptions: { errorCorrectionLevel: 'H' },
@@ -103,17 +103,21 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    const data = qrData?.viewUrl || qrData?.content;
+    if (!data) return;
+    const highResUrl = await generateStyledQR(data, 2048);
     const link = document.createElement('a');
-    link.href = qrDataUrl;
+    link.href = highResUrl;
     link.download = 'qr-code.png';
     link.click();
+    setTimeout(() => URL.revokeObjectURL(highResUrl), 60000);
   };
 
   const handlePrint = () => {
     const printWindow = window.open('', '_blank');
     if (printWindow) {
-      const description = qrData?.note || qrData?.content || 'QR Kod';
+      const printDate = new Date().toLocaleDateString('tr-TR');
       printWindow.document.write(`
         <html>
           <head>
@@ -122,19 +126,27 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
               body { 
                 margin: 0; 
                 padding: 40px;
+                position: relative;
                 display: flex; 
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
                 min-height: 100vh;
                 font-family: Arial, sans-serif;
                 background: white;
+              }
+              .date {
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 14px;
+                color: #666;
               }
               .logo {
                 font-size: 32px;
                 font-weight: bold;
                 color: #3b82f6;
-                margin-bottom: 30px;
+                margin-top: 80px;
+                margin-bottom: 40px;
                 display: flex;
                 align-items: center;
                 gap: 10px;
@@ -150,22 +162,10 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                 width: 300px;
                 height: 300px;
               }
-              .description {
-                font-size: 16px;
-                color: #666;
-                text-align: center;
-                max-width: 400px;
-                margin-top: 20px;
-                word-wrap: break-word;
-              }
-              .footer {
-                margin-top: 40px;
-                font-size: 14px;
-                color: #999;
-              }
             </style>
           </head>
           <body>
+            <div class="date">${printDate}</div>
             <div class="logo">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
                 <defs>
@@ -189,8 +189,6 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
             <div class="qr-container">
               <img src="${qrDataUrl}" alt="QR Code" />
             </div>
-            <div class="description">${description}</div>
-            <div class="footer">luxqrpro.site</div>
           </body>
         </html>
       `);
@@ -1096,8 +1094,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={() => setShowOtherActions(false)}
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm pointer-events-none"
                   >
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -1105,7 +1102,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                       exit={{ opacity: 0, scale: 0.95, y: 20 }}
                       transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                       onClick={(e) => e.stopPropagation()}
-                      className="w-full max-w-sm bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl"
+                      className="w-full max-w-sm bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl pointer-events-auto"
                     >
                       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                         <h3 className="text-gray-900 font-bold text-base">Diğer İşlemler</h3>
