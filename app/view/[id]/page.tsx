@@ -1313,10 +1313,10 @@ export default function ViewPage({ params }: { params: { id: string } }) {
       className="min-h-screen bg-white flex flex-col"
     >
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-zinc-900 via-gray-700 to-zinc-800 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-white">
-            <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center">
               <QrCode className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-black tracking-tight">LuxQr</span>
