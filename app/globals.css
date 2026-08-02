@@ -354,6 +354,20 @@ button, input, textarea, select {
 
 
 
+/* ─── Responsive card shrink on laptop / tablet ───────────── */
+
+@media (min-width: 768px) and (max-width: 1280px) {
+
+  .card-premium {
+
+    padding: clamp(0.75rem, 2vw, 1.1rem);
+
+  }
+
+}
+
+
+
 /* ─── Glow Effects ────────────────────────────────────────── */
 
 .neon-glow {

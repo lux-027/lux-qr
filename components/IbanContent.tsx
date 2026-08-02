@@ -5,6 +5,7 @@ import { CreditCard, Clock, Shield, Zap, FileText, Building2, QrCode, Landmark, 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import QRGenerateButton from '@/components/QRGenerateButton';
 
 export default function IbanContent() {
   const router = useRouter();
@@ -249,13 +250,12 @@ export default function IbanContent() {
 
           {/* Action Button */}
           <div className="mt-4 md:mt-6">
-            <button
+            <QRGenerateButton
               onClick={handleGenerate}
-              disabled={loading}
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold py-3 md:py-4 rounded-2xl disabled:opacity-50 text-sm md:text-base"
-            >
-              {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
-            </button>
+              loading={loading}
+              label="QR Kod Oluştur"
+              loadingLabel="Oluşturuluyor..."
+            />
           </div>
         </motion.div>
 

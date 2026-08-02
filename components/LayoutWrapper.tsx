@@ -12,7 +12,7 @@ export default function LayoutWrapper({ children, footer }: { children: React.Re
   const [isSidebarOpen, setIsSidebarOpen] = useState(isLuxStudio);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(isLuxStudio);
 
-  const hideChrome = pathname.startsWith('/view/') || pathname.startsWith('/menu/');
+  const hideChrome = pathname.startsWith('/view/') || pathname.startsWith('/menu/') || pathname === '/lux-studio';
   const hideFooter = pathname === '/lux-studio';
 
   const toggleSidebar = () => {
@@ -32,7 +32,7 @@ export default function LayoutWrapper({ children, footer }: { children: React.Re
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
       />
-      <div className={`pt-16 md:pt-0 transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64'}`}>
+      <div className={`pt-16 md:pt-0 px-4 md:px-10 transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64'}`}>
         {children}
         {!hideFooter && footer}
       </div>

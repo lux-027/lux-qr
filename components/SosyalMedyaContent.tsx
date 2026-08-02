@@ -5,6 +5,7 @@ import { Share2, Instagram, Facebook, Youtube, Clock, Shield, Zap, Video, FileTe
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import QRGenerateButton from '@/components/QRGenerateButton';
 import { SOCIAL_PLATFORM_SEO, type SocialPlatform } from '@/lib/socialPlatformSeo';
 
 interface SosyalMedyaContentProps {
@@ -430,13 +431,13 @@ export default function SosyalMedyaContent({ initialPlatform }: SosyalMedyaConte
 
           {/* Action Button */}
           <div className="mt-4 md:mt-6">
-            <button
+            <QRGenerateButton
               onClick={handleGenerate}
-              disabled={loading || !url.trim()}
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
-            >
-              {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
-            </button>
+              loading={loading}
+              disabled={!url.trim()}
+              label="QR Kod Oluştur"
+              loadingLabel="Oluşturuluyor..."
+            />
           </div>
         </motion.div>
 

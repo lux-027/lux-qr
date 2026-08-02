@@ -5,6 +5,7 @@ import { Type, ImageIcon, Video, FileText, Upload, QrCode, Clock, Shield, Zap, I
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import QRGenerateButton from '@/components/QRGenerateButton';
 import { supabase } from '@/lib/supabase';
 
 export default function MetinBelgeContent() {
@@ -652,13 +653,13 @@ export default function MetinBelgeContent() {
 
           {/* Action Buttons */}
           <div className="mt-4 md:mt-6">
-            <button
+            <QRGenerateButton
               onClick={handleGenerate}
-              disabled={loading || uploading || (selectedType === 'image' ? !file && files.length === 0 : !file)}
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold py-3 md:py-4 rounded-2xl disabled:opacity-50 text-sm md:text-base"
-            >
-              {loading ? uploadStatus || 'Oluşturuluyor...' : uploading ? uploadStatus : 'QR Kod Oluştur'}
-            </button>
+              loading={loading || uploading}
+              disabled={uploading || (selectedType === 'image' ? !file && files.length === 0 : !file)}
+              label="QR Kod Oluştur"
+              loadingLabel={uploading ? uploadStatus || 'Yükleniyor...' : 'Oluşturuluyor...'}
+            />
           </div>
         </motion.div>
 

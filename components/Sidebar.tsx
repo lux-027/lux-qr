@@ -296,7 +296,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
               onClick={() => { setQrOpen(o => !o); setQrOpen2(false); }}
 
-              className="cursor-pointer w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-1 rounded-lg hover:bg-white transition-all"
+              className="cursor-pointer w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-2 rounded-lg border-b border-blue-200/70 pb-2 hover:bg-white transition-all"
 
             >
 
@@ -364,7 +364,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
               onClick={() => { setQrOpen2(o => !o); setQrOpen(false); }}
 
-              className="cursor-pointer w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-1 mt-1 rounded-lg hover:bg-white transition-all"
+              className="cursor-pointer w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-2 mt-1 rounded-lg border-b border-blue-200/70 pb-2 hover:bg-white transition-all"
 
             >
 

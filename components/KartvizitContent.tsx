@@ -5,6 +5,7 @@ import { CreditCard, Clock, Shield, Zap, Search, ChevronDown, User, Phone, Mail,
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import QRGenerateButton from '@/components/QRGenerateButton';
 
 export default function KartvizitContent() {
   const router = useRouter();
@@ -506,13 +507,13 @@ END:VCARD`;
 
           {/* Action Button */}
           <div className="mt-4 md:mt-6">
-            <button
+            <QRGenerateButton
               onClick={handleGenerate}
-              disabled={loading || !formData.firstName || !formData.lastName || !formData.phone || !formData.email}
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
-            >
-              {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
-            </button>
+              loading={loading}
+              disabled={!formData.firstName || !formData.lastName || !formData.phone || !formData.email}
+              label="QR Kod Oluştur"
+              loadingLabel="Oluşturuluyor..."
+            />
           </div>
         </motion.div>
 

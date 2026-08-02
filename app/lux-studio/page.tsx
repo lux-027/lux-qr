@@ -55,14 +55,14 @@ export default function LuxStudioPage() {
         }
       `}</style>
 
-      {/* Desktop back button */}
+      {/* Back button */}
       <button
         type="button"
         onClick={() => router.back()}
-        className="hidden md:flex absolute top-4 left-4 z-50 items-center gap-2 text-white/90 hover:text-white bg-white/10 hover:bg-white/15 px-4 py-2 rounded-2xl backdrop-blur-md transition-all"
+        className="flex absolute top-3 left-3 md:top-4 md:left-4 z-50 items-center gap-2 text-white/90 hover:text-white bg-white/10 hover:bg-white/15 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl backdrop-blur-md transition-all"
       >
-        <ArrowLeft className="w-5 h-5" />
-        <span className="text-sm font-semibold">Geri</span>
+        <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+        <span className="text-xs md:text-sm font-semibold">Geri</span>
       </button>
       {/* deep space gradient */}
       <div
@@ -134,7 +134,7 @@ export default function LuxStudioPage() {
                 unoptimized
               />
               <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-lg mb-2">
-                Lux<span className="text-purple-400">Qr</span>
+                Lux<span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Qr</span>
               </h2>
               <p className="text-white/60 text-xs md:text-base mb-4 md:mb-6 max-w-xs">
                 Modern, ücretsiz ve güvenli QR kod çözümleri.

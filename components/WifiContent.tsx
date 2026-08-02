@@ -5,6 +5,7 @@ import { Wifi, Clock, Shield, Zap, HelpCircle, FileText, Eye, EyeOff, Lock as Lo
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import QRGenerateButton from '@/components/QRGenerateButton';
 
 export default function WifiContent() {
   const router = useRouter();
@@ -310,13 +311,13 @@ export default function WifiContent() {
 
           {/* Action Button */}
           <div className="mt-4 md:mt-6">
-            <button
+            <QRGenerateButton
               onClick={handleGenerate}
-              disabled={loading || !formData.ssid || (formData.security !== 'nopass' && !formData.password)}
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
-            >
-              {loading ? 'Oluşturuluyor...' : 'QR Kod Oluştur'}
-            </button>
+              loading={loading}
+              disabled={!formData.ssid || (formData.security !== 'nopass' && !formData.password)}
+              label="QR Kod Oluştur"
+              loadingLabel="Oluşturuluyor..."
+            />
           </div>
         </motion.div>
 

@@ -1018,7 +1018,7 @@ export default function QRResultPage({ params }: { params: { id: string } }) {
                           className={`relative w-9 h-9 rounded-xl transition-all duration-200 ${
                             qrColor === c.key
                               ? 'ring-2 ring-white ring-offset-2 ring-offset-gray-100 scale-110 shadow-lg'
-                              : 'hover:scale-105 opacity-70 hover:opacity-100'
+                              : 'hover:scale-105 opacity-90 hover:opacity-100 hover:shadow-md'
                           }`}
                           style={{ background: `linear-gradient(135deg, ${c.from}, ${c.to})` }}
                         >

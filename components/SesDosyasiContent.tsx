@@ -1,10 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mic, Clock, Shield, Zap, Upload, FileText, Square, Play, QrCode, Timer, AlarmClock, CalendarDays, CalendarRange } from 'lucide-react';
+import { Mic, Clock, Shield, Zap, Upload, FileText, Square, X, Play, QrCode, Timer, AlarmClock, CalendarDays, CalendarRange } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/components/Notification';
+import QRGenerateButton from '@/components/QRGenerateButton';
 
 export default function SesDosyasiContent() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function SesDosyasiContent() {
   const [showError, setShowError] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [recordingName, setRecordingName] = useState('');
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -58,7 +60,9 @@ export default function SesDosyasiContent() {
 
       mediaRecorderRef.current.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        const audioFile = new File([audioBlob], 'kayit-ses.webm', { type: 'audio/webm' });
+        const baseName = recordingName.trim() || 'kayit-ses';
+        const safeName = baseName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9ıİğĞüÜşŞöÖçÇ._-]/g, '') || 'kayit-ses';
+        const audioFile = new File([audioBlob], `${safeName}.webm`, { type: 'audio/webm' });
         
         setFile(audioFile);
         setShowError(false);
@@ -233,96 +237,103 @@ export default function SesDosyasiContent() {
           className="card-premium p-4 md:p-8 md:p-12 mb-6 md:mb-8"
         >
           <div>
-            <label className="flex items-center gap-2 text-gray-900 font-semibold mb-2 md:mb-3">
-              <Upload className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
-              Ses Dosyası Yükle
-            </label>
-            <div className="relative">
-              {file && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setFile(null);
-                    setPreviewUrl(null);
-                    setShowError(false);
-                  }}
-                  className="absolute top-2 right-2 z-10 bg-gray-500/60 hover:bg-gray-500/80 text-gray-900 rounded-full p-1 md:p-2 transition-colors backdrop-blur-sm"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              )}
-              <div className="flex gap-3">
-                <div
-                  onClick={() => !loading && fileInputRef.current?.click()}
-                  className={`flex-1 border-2 border-dashed rounded-xl p-4 md:p-8 text-center transition-colors ${
-                    loading ? 'pointer-events-none opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  } ${
-                    showError ? 'border-red-500' : 'border-gray-300 hover:border-blue-500/50'
-                  }`}
-                >
-                  {previewUrl ? (
-                    <div className="mb-4">
-                      <audio src={previewUrl} controls className="w-full max-w-md mx-auto" />
-                    </div>
-                  ) : (
-                    <Upload className="w-8 h-8 md:w-12 md:h-12 text-orange-400 mx-auto mb-2 md:mb-4" />
-                  )}
-                  <p className="text-gray-600 mb-1 md:mb-2 text-sm md:text-base">
-                    {file ? file.name : 'Dosya seçmek için tıklayın veya ses kaydedin'}
-                  </p>
-                  <p className="text-gray-600 text-xs md:text-sm">
-                    MP3, WAV, M4A (max 50MB) veya ses kaydı
-                  </p>
+            <div className="grid grid-cols-2 gap-3 md:gap-6 mb-4 md:mb-6">
+              {/* Ses Kaydı */}
+              <div className="card-premium p-3 md:p-4 flex flex-col items-center justify-center gap-3">
+                <div className="flex items-center gap-2 text-gray-900 font-semibold text-sm">
+                  <Mic className="w-4 h-4 text-orange-400" />
+                  <span>Ses Kaydı</span>
                 </div>
-                <div className="flex flex-col items-center justify-center gap-3">
-                  {/* Record button */}
-                  <div className="relative">
-                    {/* Pulsing rings when recording */}
-                    {isRecording && (
-                      <>
-                        <span className="absolute inset-0 rounded-full bg-red-500/30 animate-ping" />
-                        <span className="absolute -inset-2 rounded-full bg-red-500/15 animate-ping" style={{ animationDelay: '0.3s' }} />
-                      </>
+                {!isRecording && !file && (
+                  <input
+                    type="text"
+                    value={recordingName}
+                    onChange={(e) => setRecordingName(e.target.value)}
+                    disabled={loading || uploading}
+                    placeholder="Kayıt adı (opsiyonel)"
+                    className="w-full md:w-56 text-center bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-50 shadow-sm"
+                    maxLength={40}
+                  />
+                )}
+                <div className="relative">
+                  {isRecording && (
+                    <>
+                      <span className="absolute inset-0 rounded-full bg-red-500/30 animate-ping" />
+                      <span className="absolute -inset-2 rounded-full bg-red-500/15 animate-ping" style={{ animationDelay: '0.3s' }} />
+                    </>
+                  )}
+                  <button
+                    onClick={isRecording ? stopRecording : startRecording}
+                    disabled={uploading || loading}
+                    className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed ${
+                      isRecording
+                        ? 'bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.25),0_8px_24px_rgba(239,68,68,0.4)] scale-110'
+                        : 'shadow-[0_4px_20px_rgba(59,130,246,0.35),0_0_0_3px_rgba(59,130,246,0.15)] hover:scale-110 hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_0_0_4px_rgba(59,130,246,0.2)]'
+                    }`}
+                    style={!isRecording ? { background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' } : {}}
+                  >
+                    <span className="absolute inset-0 rounded-full pointer-events-none"
+                      style={{ background: 'linear-gradient(160deg, rgba(255,255,255,0.35) 0%, transparent 60%)' }} />
+                    {isRecording ? (
+                      <Square className="w-5 h-5 md:w-6 md:h-6 text-white drop-shadow" fill="white" />
+                    ) : (
+                      <Mic className="w-5 h-5 md:w-6 md:h-6 text-white drop-shadow" />
                     )}
-                    <button
-                      onClick={isRecording ? stopRecording : startRecording}
-                      disabled={uploading || loading}
-                      className={`relative w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed ${
-                        isRecording
-                          ? 'bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.25),0_8px_24px_rgba(239,68,68,0.4)] scale-110'
-                          : 'shadow-[0_4px_20px_rgba(59,130,246,0.35),0_0_0_3px_rgba(59,130,246,0.15)] hover:scale-110 hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_0_0_4px_rgba(59,130,246,0.2)]'
-                      }`}
-                      style={!isRecording ? {
-                        background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-                      } : {}}
-                    >
-                      {/* Inner glass highlight */}
-                      <span className="absolute inset-0 rounded-full pointer-events-none"
-                        style={{ background: 'linear-gradient(160deg, rgba(255,255,255,0.35) 0%, transparent 60%)' }} />
-                      {isRecording ? (
-                        <Square className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow" fill="white" />
-                      ) : (
-                        <Mic className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow" />
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Label + timer */}
-                  {isRecording ? (
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200">
-                      <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-                      <span className="text-red-600 text-xs font-bold tabular-nums">{formatRecordingTime(recordingTime)}</span>
-                      <span className="text-red-400 text-xs">Kaydediliyor</span>
-                    </div>
-                  ) : (
-                    <span className="text-xs font-semibold text-gray-600 tracking-wide uppercase">Ses Kaydı</span>
-                  )}
+                  </button>
                 </div>
+                {isRecording ? (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                    <span className="text-red-600 text-xs font-bold tabular-nums">{formatRecordingTime(recordingTime)}</span>
+                    <span className="text-red-400 text-xs">Kaydediliyor</span>
+                  </div>
+                ) : (
+                  <span className="text-xs font-semibold text-gray-600 tracking-wide uppercase">Kaydetmek için tıklayın</span>
+                )}
+              </div>
+
+              {/* Ses Dosyası Ekle */}
+              <div
+                onClick={() => !loading && !uploading && fileInputRef.current?.click()}
+                className={`card-premium p-3 md:p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${
+                  loading || uploading ? 'pointer-events-none opacity-50' : 'hover:border-blue-500/50'
+                } ${showError ? 'border-red-500' : ''}`}
+              >
+                <div className="flex items-center gap-2 text-gray-900 font-semibold text-sm">
+                  <Upload className="w-4 h-4 text-orange-400" />
+                  <span>Ses Dosyası Ekle</span>
+                </div>
+                <Upload className="w-8 h-8 md:w-10 md:h-10 text-orange-400" />
+                <p className="text-gray-600 text-xs md:text-sm text-center">
+                  Dosya seçmek için tıklayın
+                </p>
+                <p className="text-gray-600 text-[10px] md:text-xs text-center">
+                  MP3, WAV, M4A (max 50MB)
+                </p>
               </div>
             </div>
+
+            {file && (
+              <div className="relative rounded-xl border border-gray-200 bg-white/80 p-4 md:p-6 mb-4 md:mb-6">
+                <audio src={previewUrl || ''} controls className="w-full max-w-md mx-auto mb-3" />
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm md:text-base text-gray-900 font-medium truncate">
+                    {file.name}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setFile(null);
+                      setPreviewUrl(null);
+                      setShowError(false);
+                    }}
+                    className="flex-shrink-0 bg-gray-500/60 hover:bg-red-500/80 text-gray-900 rounded-full p-1.5 md:p-2 transition-colors backdrop-blur-sm"
+                  >
+                    <X className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                  </button>
+                </div>
+              </div>
+            )}
+
             {showError && (
               <p className="text-red-400 text-xs mt-1">Lütfen ses dosyası seçin veya ses kaydedin</p>
             )}
@@ -382,13 +393,13 @@ export default function SesDosyasiContent() {
 
           {/* Action Button */}
           <div className="mt-4 md:mt-6">
-            <button
+            <QRGenerateButton
               onClick={handleGenerate}
-              disabled={loading || uploading || !file}
-              className="btn-primary w-full py-3 md:py-4 rounded-2xl text-white font-semibold disabled:opacity-50 text-sm md:text-base"
-            >
-              {loading ? uploadStatus || 'Oluşturuluyor...' : uploading ? uploadStatus || 'Yükleniyor...' : 'QR Kod Oluştur'}
-            </button>
+              loading={loading || uploading}
+              disabled={uploading || !file}
+              label="QR Kod Oluştur"
+              loadingLabel={uploading ? uploadStatus || 'Yükleniyor...' : 'Oluşturuluyor...'}
+            />
           </div>
         </motion.div>
 
