@@ -57,6 +57,45 @@ export async function POST(request: Request) {
       }, { status: 413 });
     }
 
+    // Dosya türü kontrolü
+    const ALLOWED_PREFIXES = ['image/', 'video/', 'audio/'];
+    const ALLOWED_MIME_TYPES = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'text/plain',
+      'application/zip',
+      'application/x-zip-compressed',
+    ];
+    const ALLOWED_EXTENSIONS = [
+      'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
+      'mp4', 'mov', 'avi', 'mkv', 'webm',
+      'mp3', 'wav', 'ogg', 'm4a', 'flac', 'aac',
+      'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'zip'
+    ];
+
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+    const isAllowed =
+      ALLOWED_PREFIXES.some((p) => file.type.startsWith(p)) ||
+      ALLOWED_MIME_TYPES.includes(file.type) ||
+      ALLOWED_EXTENSIONS.includes(ext);
+
+    if (!isAllowed) {
+      console.error('File type not allowed:', { type: file.type, name: file.name, ext });
+      return NextResponse.json(
+        {
+          error: 'Bu dosya türü desteklenmiyor.',
+          details: `Yüklenen: ${file.type || ext}`,
+          code: 'UNSUPPORTED_FILE_TYPE'
+        },
+        { status: 415 }
+      );
+    }
+
     // Dosyayı buffer'a güvenli çevirme (Sunucu çökmesini engeller)
     console.log('Converting file to buffer...');
     const bytes = await file.arrayBuffer();

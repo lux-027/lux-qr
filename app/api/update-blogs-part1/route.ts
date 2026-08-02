@@ -46,7 +46,7 @@ Tüm sosyal medya ve web bağlantılarınızı tek sayfada toplar.
 
 ---
 
-## ⚡ Adım Adım QR Oluşturma
+## Adım Adım QR Oluşturma
 
 **1. Adım:** luxqrpro.site adresine gidin (kayıt gerekmez).
 
@@ -112,7 +112,7 @@ Pandemi sonrası dönemde müşteriler ortak kullanılan nesnelere temkinli yakl
 
 ---
 
-## ⚡ Anında Güncelleme
+## Anında Güncelleme
 
 Stokta kalmayan ürün mü var? Fiyat değişikliği mi? QR menüde saniyeler içinde yayına girer:
 - Günün özel yemeğini ekleyin
@@ -161,7 +161,7 @@ Her katılımcıya benzersiz QR içeren dijital bilet gönderilir. Girişte tara
 
 ---
 
-## ⚡ Hız Karşılaştırması
+## Hız Karşılaştırması
 
 | Yöntem | Kişi Başı Süre |
 |--------|---------------|
@@ -250,7 +250,7 @@ Masahiro Hara liderliğindeki ekip, geleneksel barkodun sınırlamalarını aşm
 
 ---
 
-## ⚡ Statik vs Dinamik
+## Statik vs Dinamik
 
 **Statik:** Oluşturulduktan sonra değişmez. Ucuz ama esnek değil.
 
