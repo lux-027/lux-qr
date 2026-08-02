@@ -1,0 +1,15 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Her 2 günde bir çalıştır (7 günlük durdurma süresinden önce)
+    - cron: '0 0 */2 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping keepalive endpoint
+        run: |
+          curl -sS -f https://luxqrpro.site/api/keep-supabase-alive || exit 1
