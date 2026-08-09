@@ -161,7 +161,7 @@ export default function HomeContent() {
       transition={{ duration: 0.2 }}
       className="min-h-screen"
     >
-      <div className="px-4 max-w-7xl mx-auto">
+      <div className="px-4 md:px-6 max-w-7xl mx-auto">
         {/* ── Hero ─────────────────────────────────────────────── */}
         <section className="relative flex flex-col items-center justify-center text-center pt-36 pb-28 md:pt-60 md:pb-52 overflow-visible md:overflow-hidden w-screen left-1/2 -translate-x-1/2">
 

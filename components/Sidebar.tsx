@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { X, Globe2, QrCode, FileText, MessageSquare, Phone, Scale, Lock, Info, Type, CreditCard, Wifi, Share2, Mic, Landmark, Image as ImageIcon, ShoppingBag, ExternalLink, ChevronDown, ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import ShareButton from './ShareButton';
 
 import { useState, useEffect } from 'react';
@@ -190,7 +190,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
             <Link href="/" className="flex items-center gap-3">
 
-              <Image src="/favicon.svg" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
+              <NextImage src="/favicon.svg" alt="LuxQr" width={40} height={40} className="rounded-lg shadow-lg" />
 
               <span className="text-2xl font-bold text-gradient">LuxQr</span>
 
