@@ -120,7 +120,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
     { href: '/blog', label: 'LuxQr Blog', icon: FileText, color: 'text-sky-600' },
 
-    { href: '/faq', label: 'Sıkça Sorulan Sorular', icon: MessageSquare, color: 'text-indigo-600' },
+    { href: '/faq', label: 'SSS', icon: MessageSquare, color: 'text-indigo-600' },
 
     { href: '/contact', label: 'İletişim', icon: Phone, color: 'text-teal-600' },
 
@@ -164,7 +164,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
       <div
 
-        className={`fixed top-0 left-0 h-full w-64 bg-white/95 backdrop-blur-md z-50 border-r border-black/08 shadow-xl transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-56 bg-white/95 backdrop-blur-md z-50 border-r border-black/08 shadow-xl transition-transform duration-300 ease-in-out flex flex-col ${
 
           isOpen ? 'translate-x-0' : '-translate-x-full'
 
@@ -286,145 +286,71 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
             {/* QR Categories Wrapper */}
 
-            <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-2 mb-1 space-y-1">
+            <div className="mb-1 space-y-1">
 
-
-
-            {/* QR Category 1: Temel */}
-
-            <button
-
-              onClick={() => { setQrOpen(o => !o); setQrOpen2(false); }}
-
-              className="cursor-pointer w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-2 rounded-lg border-b border-blue-200/70 pb-2 hover:bg-white transition-all"
-
-            >
-
-              <div className="flex items-center gap-2">
-
-                <QrCode className="w-4 h-4 text-blue-600" />
-
-                <span className="text-xs text-gray-700 font-bold uppercase tracking-wider">Temel QR Türleri</span>
-
+              {/* QR Category 1: Temel */}
+              <div>
+                <button
+                  onClick={() => { setQrOpen(o => !o); setQrOpen2(false); }}
+                  className="cursor-pointer w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  <ChevronRight className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${qrOpen ? 'rotate-90' : ''}`} />
+                  <QrCode className="w-4 h-4 text-blue-600" />
+                  <span>Temel QR Türleri</span>
+                </button>
+                <div className={`overflow-hidden transition-all duration-200 ${qrOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="pl-6 border-l border-gray-200 ml-3 space-y-0.5">
+                    {qrItemsBasic.map((item) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors ${
+                            isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : item.color}`} />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
-              <ChevronDown className={`w-3.5 h-3.5 text-gray-600 transition-transform duration-200 ${qrOpen ? 'rotate-180' : ''}`} />
-
-            </button>
-
-
-
-            <div className={`space-y-1 pl-1 overflow-hidden transition-all duration-200 ${qrOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-
-              {qrItemsBasic.map((item) => {
-
-                const isActive = pathname === item.href;
-
-                return (
-
-                  <Link
-
-                    key={item.href}
-
-                    href={item.href}
-
-                    onClick={() => setIsOpen(false)}
-
-                    className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ${
-
-                      isActive
-
-                        ? 'bg-blue-50 border border-blue-200 text-blue-700'
-
-                        : 'text-gray-800 hover:bg-gray-100 hover:text-gray-950'
-
-                    }`}
-
-                    style={isActive ? { boxShadow: '0 2px 8px rgba(59,130,246,0.15)' } : {}}
-
-                  >
-
-                    <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : item.color}`} />
-
-                    <span className="font-semibold text-sm">{item.label}</span>
-
-                  </Link>
-
-                );
-
-              })}
-
-            </div>
-
-
-
-            {/* QR Category 2: Gelişmiş */}
-
-            <button
-
-              onClick={() => { setQrOpen2(o => !o); setQrOpen(false); }}
-
-              className="cursor-pointer w-full flex items-center justify-between gap-2 px-2 py-1.5 mb-2 mt-1 rounded-lg border-b border-blue-200/70 pb-2 hover:bg-white transition-all"
-
-            >
-
-              <div className="flex items-center gap-2">
-
-                <QrCode className="w-4 h-4 text-purple-600" />
-
-                <span className="text-xs text-gray-700 font-bold uppercase tracking-wider">Gelişmiş QR Türleri</span>
-
+              {/* QR Category 2: Gelişmiş */}
+              <div>
+                <button
+                  onClick={() => { setQrOpen2(o => !o); setQrOpen(false); }}
+                  className="cursor-pointer w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  <ChevronRight className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${qrOpen2 ? 'rotate-90' : ''}`} />
+                  <QrCode className="w-4 h-4 text-purple-600" />
+                  <span>Gelişmiş QR Türleri</span>
+                </button>
+                <div className={`overflow-hidden transition-all duration-200 ${qrOpen2 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="pl-6 border-l border-gray-200 ml-3 space-y-0.5">
+                    {qrItemsAdvanced.map((item) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors ${
+                            isActive ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          <item.icon className={`w-4 h-4 ${isActive ? 'text-purple-600' : item.color}`} />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-
-              <ChevronDown className={`w-3.5 h-3.5 text-gray-600 transition-transform duration-200 ${qrOpen2 ? 'rotate-180' : ''}`} />
-
-            </button>
-
-
-
-            <div className={`space-y-1 pl-1 overflow-hidden transition-all duration-200 ${qrOpen2 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-
-              {qrItemsAdvanced.map((item) => {
-
-                const isActive = pathname === item.href;
-
-                return (
-
-                  <Link
-
-                    key={item.href}
-
-                    href={item.href}
-
-                    onClick={() => setIsOpen(false)}
-
-                    className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ${
-
-                      isActive
-
-                        ? 'bg-purple-50 border border-purple-200 text-purple-700'
-
-                        : 'text-gray-800 hover:bg-gray-100 hover:text-gray-950'
-
-                    }`}
-
-                    style={isActive ? { boxShadow: '0 2px 8px rgba(139,92,246,0.15)' } : {}}
-
-                  >
-
-                    <item.icon className={`w-4 h-4 ${isActive ? 'text-purple-600' : item.color}`} />
-
-                    <span className="font-semibold text-sm">{item.label}</span>
-
-                  </Link>
-
-                );
-
-              })}
-
-            </div>
-
-
 
             </div>{/* end QR wrapper */}
 

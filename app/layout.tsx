@@ -14,10 +14,7 @@ const inter = Inter({ subsets: ["latin"], display: 'optional' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://luxqrpro.site'),
-  title: {
-    default: "LuxQr Ücretsiz QR Kod Oluştur | WiFi, Kartvizit, Sosyal Medya",
-    template: "%s | LuxQr"
-  },
+  title: "LuxQr Ücretsiz QR Kod Oluştur | WiFi, Kartvizit, Sosyal Medya",
   description: "Türkiye'nin en hızlı ve ücretsiz QR kod oluşturucusu. Metin, WiFi, kartvizit, sosyal medya, ses ve dosyalarınız için saniyeler içinde QR kod hazırlayın. Şimdi ücretsiz deneyin!",
   keywords: ["qr kod oluşturucu", "ücretsiz qr kod", "bedava qr kod", "wifi qr kod", "kartvizit qr", "instagram qr", "tiktok qr", "metin qr", "dosya qr", "türkiye qr kod", "online qr kod", "hızlı qr kod", "qr kod yap"],
   authors: [{ name: "LuxQr Team" }],
