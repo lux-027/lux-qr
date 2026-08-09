@@ -164,7 +164,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
       <div
 
-        className={`fixed top-0 left-0 h-full w-56 bg-white/95 backdrop-blur-md z-50 border-r border-black/08 shadow-xl transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-60 bg-white/95 backdrop-blur-md z-50 border-r border-black/08 shadow-xl transition-transform duration-300 ease-in-out flex flex-col ${
 
           isOpen ? 'translate-x-0' : '-translate-x-full'
 
@@ -258,7 +258,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
                   )}
 
-                  <item.icon className={`w-4 h-4 ${isActive ? (isLux ? 'text-purple-600 drop-shadow-sm' : 'text-blue-600 drop-shadow-sm') : item.color}`} />
+                  <item.icon className={`w-4 h-4 shrink-0 ${isActive ? (isLux ? 'text-purple-600 drop-shadow-sm' : 'text-blue-600 drop-shadow-sm') : item.color}`} />
 
                   <span className="font-semibold text-sm">{item.label}</span>
 
@@ -311,7 +311,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
                             isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'
                           }`}
                         >
-                          <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : item.color}`} />
+                          <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-600' : item.color}`} />
                           <span>{item.label}</span>
                         </Link>
                       );
@@ -343,7 +343,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
                             isActive ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'
                           }`}
                         >
-                          <item.icon className={`w-4 h-4 ${isActive ? 'text-purple-600' : item.color}`} />
+                          <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-purple-600' : item.color}`} />
                           <span>{item.label}</span>
                         </Link>
                       );
@@ -410,7 +410,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
                   )}
 
-                  <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600 drop-shadow-sm' : item.color}`} />
+                  <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-600 drop-shadow-sm' : item.color}`} />
 
                   <span className="font-semibold text-sm">{item.label}</span>
 
@@ -468,7 +468,7 @@ export default function Sidebar({ isOpen, setIsOpen, isCollapsed = false, setIsC
 
                   >
 
-                    <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : item.color}`} />
+                    <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-600' : item.color}`} />
 
                     <span>{item.label}</span>
 
