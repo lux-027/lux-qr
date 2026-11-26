@@ -32,7 +32,7 @@ export default function LayoutWrapper({ children, footer }: { children: React.Re
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
       />
-      <div className={`pt-16 md:pt-0 px-8 md:px-20 transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-60'}`}>
+      <div className={`pt-16 md:pt-0 px-3 md:px-20 transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-60'}`}>
         {children}
         {!hideFooter && footer}
       </div>
